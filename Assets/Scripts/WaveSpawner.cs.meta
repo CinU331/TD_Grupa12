@@ -6,6 +6,9 @@ MonoImporter:
   defaultReferences:
   - enemy: {fileID: 1713781036754730, guid: 0f8a471e5537f864ebdb454fe82308eb, type: 2}
   - boss: {fileID: 1713781036754730, guid: 9a0fbb2e5cfb27e4889f2e364c86416e, type: 2}
+  - startGate: {instanceID: 0}
+  - countResources: {fileID: 114413776739690114, guid: 2d9ae7ae202cc7443a5f1cf4e23fba8a,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

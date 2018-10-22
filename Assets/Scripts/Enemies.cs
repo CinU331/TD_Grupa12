@@ -4,6 +4,7 @@ public class Enemies : MonoBehaviour {
     private Transform exitGate;
     private int numberOfWaypoint = 0;
     public float speed = 50f;
+    public static int resources = 20;
 
     void Start () {
         exitGate = Waypoints.waypoints[0];
@@ -15,6 +16,10 @@ public class Enemies : MonoBehaviour {
 
         if (Vector3.Distance(transform.position, exitGate.position) <= 0.4f)
         {
+            if (numberOfWaypoint == 28)
+            {
+                resources--;
+            }
             GoToNextWaypoint();
         }
     }
