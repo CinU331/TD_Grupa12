@@ -3125,6 +3125,7 @@ GameObject:
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
   - component: {fileID: 534669906}
+  - component: {fileID: 534669907}
   m_Layer: 0
   m_Name: TacticalCamera
   m_TagString: Untagged
@@ -3203,6 +3204,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af010fe066ee00b44985827a971b651c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &534669907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1badf1d02dc1e7f4496b24661f1931d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera1: {fileID: 534669904}
+  camera2: {fileID: 1826755818}
 --- !u!1 &536508409
 GameObject:
   m_ObjectHideFlags: 0
@@ -3638,7 +3652,6 @@ GameObject:
   - component: {fileID: 656645560}
   - component: {fileID: 656645559}
   - component: {fileID: 656645558}
-  - component: {fileID: 656645562}
   m_Layer: 0
   m_Name: KnightCharacter
   m_TagString: Untagged
@@ -3662,7 +3675,7 @@ MonoBehaviour:
   animator: {fileID: 656645560}
   TppCamera: {fileID: 1846004076}
   Velocity: 2
-  JumpHeight: 4
+  JumpHeight: 3
   ActualHeight: 0
   RunningVelocity: 2
   SensitivityOfMouse: 3
@@ -3722,19 +3735,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &656645562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 656645557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1badf1d02dc1e7f4496b24661f1931d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera1: {fileID: 534669904}
-  camera2: {fileID: 1826755818}
 --- !u!1001 &669373753
 Prefab:
   m_ObjectHideFlags: 0
@@ -10915,13 +10915,13 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1788754649}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 50, y: 50, z: 50}
   m_Children: []
   m_Father: {fileID: 656645561}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!137 &1788754651
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -11194,7 +11194,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1826755814}
   m_LocalRotation: {x: 0.052335896, y: 0, z: 0, w: 0.9986295}
-  m_LocalPosition: {x: 0, y: 1.78, z: -6.334}
+  m_LocalPosition: {x: 0, y: 3.46, z: -7.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1846004077}

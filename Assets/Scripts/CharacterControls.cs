@@ -52,7 +52,14 @@ public class CharacterControls : MonoBehaviour
             Velocity -= RunningVelocity;    
 
         Vector3 Move = GetInput(Velocity); //Tworzymy wektor odpowiedzialny za ruch. (lewo/prawo, góra/dół, przód/tył)
-        Move = transform.rotation * Move;  //Aktualny obrót gracza razy kierunek w którym sie poruszamy (poprawka na obrót myszką abyśmy szli w kierunku w którym patrzymy).
+
+
+        if (!TppCamera.GetComponentInChildren<Camera>().enabled && (Move.x != 0 || Move.z != 0)) //Rotating in Tactical Mode
+        {
+
+            transform.localRotation = Quaternion.LookRotation(new Vector3(Move.x, 0, Move.z), Vector3.up);
+        }
+        else Move = transform.rotation * Move;
 
         ToAnimator(Move);
         characterControler.Move(Move * Time.deltaTime);
@@ -61,14 +68,17 @@ public class CharacterControls : MonoBehaviour
     private void ToAnimator(Vector3 v)
     {
         int velocity=0;
-        if (v.x != 0 || v.z != 0) velocity = 1;
-        if (Input.GetKey("left shift")) velocity = 2;
+        if (v.x != 0 || v.z != 0)
+        {
+            velocity++;
+            if (Input.GetKey("left shift")) velocity = 2;
+        }
         animator.SetInteger("velocity", velocity);
     }
 
     private Vector3 GetInput(float v) //returns the basic values, if it's 0 than it's not active.
     { 
-        Vector3 p_Velocity = new Vector3();
+        Vector3 p_Velocity = new Vector3(0,0,0);
         if (Input.GetKey(KeyCode.W))
             p_Velocity += new Vector3(0, 0, v);
         if (Input.GetKey(KeyCode.S))
