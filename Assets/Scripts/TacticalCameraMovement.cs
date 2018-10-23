@@ -12,8 +12,11 @@ public class TacticalCameraMovement : MonoBehaviour {
  
     // Update is called once per frame
     void Update () {
-        MoveCamera();
-        RotateCamera();
+        if (camera.enabled)
+        {
+            MoveCamera();
+            RotateCamera();
+        }
     }
  
     private void MoveCamera() {
