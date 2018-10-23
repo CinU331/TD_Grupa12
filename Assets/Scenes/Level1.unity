@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 4
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -587,7 +587,7 @@ Transform:
   m_GameObject: {fileID: 99120659}
   m_LocalRotation: {x: -0.4606599, y: 0.536463, z: -0.53646284, w: 0.46065983}
   m_LocalPosition: {x: 0.00019, y: 0.00123, z: -0.00106}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1.5}
   m_Children: []
   m_Father: {fileID: 741756105}
   m_RootOrder: 1
@@ -3661,14 +3661,13 @@ MonoBehaviour:
   characterControler: {fileID: 656645559}
   animator: {fileID: 656645560}
   TppCamera: {fileID: 1846004076}
-  predkoscPoruszania: 5
-  wysokoscSkoku: 2
-  aktualnaWysokoscSkoku: 0
-  predkoscBiegania: 5
-  czuloscMyszki: 3
-  myszGoraDol: 0
-  zakresMyszyGoraDol: 90
-  predkosc: 0
+  Velocity: 2
+  JumpHeight: 4
+  ActualHeight: 0
+  RunningVelocity: 2
+  SensitivityOfMouse: 3
+  MouseUpDown: 0
+  RangeOfMouseUpDown: 90
 --- !u!143 &656645559
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3686,7 +3685,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.52, z: 0}
+  m_Center: {x: 0, y: 1.8, z: 0}
 --- !u!95 &656645560
 Animator:
   serializedVersion: 3
@@ -4801,14 +4800,14 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 811073732}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 50, y: 50, z: 50}
   m_Children:
   - {fileID: 1406612190}
   m_Father: {fileID: 656645561}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1001 &811228092
 Prefab:
   m_ObjectHideFlags: 0

@@ -7,18 +7,15 @@ public class CharacterControls : MonoBehaviour
     public Animator animator; //Obiekt odpowiedzialny za animacje modelu gracza.
     public GameObject TppCamera;
 
-    public float predkoscPoruszania = 9.0f; //Prędkość poruszania się gracza.
-    public float wysokoscSkoku = 2.0f; //Wysokość skoku.
-    public float aktualnaWysokoscSkoku = 0f;  //Aktualna wysokosc skoku.
-    public float predkoscBiegania = 7.0f;   //Predkosc biegania.
+    public float Velocity = 2.0f; //Prędkość poruszania się gracza.
+    public float JumpHeight = 4.0f; //Wysokość skoku.
+    public float ActualHeight = 0f;  //Aktualna wysokosc skoku.
+    public float RunningVelocity = 2.0f;   //Predkosc biegania.
 
-    //Sensitivity
-    public float czuloscMyszki = 3.0f;
-    public float myszGoraDol = 0.0f;
+    public float SensitivityOfMouse = 3.0f;
+    public float MouseUpDown = 0.0f;
     
-    public float zakresMyszyGoraDol = 90.0f; //Zakres patrzenia w górę i dół.
-    public float predkosc = 0; //Szybkość poruszania (bezczynność, chód, bieg)
-
+    public float RangeOfMouseUpDown = 90.0f; //Zakres patrzenia w górę i dół.
 
     void Start()
     {
@@ -27,65 +24,79 @@ public class CharacterControls : MonoBehaviour
 
     void Update()
     {
-        if(TppCamera.GetComponentInChildren<Camera>().enabled)
+        Keyboard();
+        if (TppCamera.GetComponentInChildren<Camera>().enabled)
         {
-            klawiatura();
-            myszka();
+            Mouse();
         }
     }
 
     /**
      * Metoda odpowiedzialna za poruszanie się na klawiaturze.
      */
-    private void klawiatura()
+    private void Keyboard()
     {
-        predkosc = 0;
-        float rochPrzodTyl = Input.GetAxis("Vertical") * predkoscPoruszania; //Pobranie prędkości poruszania się przód/tył. Jeżeli wartość dodatnia to poruszamy się do przodu, a jeżeli wartość ujemna to poruszamy się do tyłu.
-        float rochLewoPrawo = Input.GetAxis("Horizontal") * predkoscPoruszania; //Pobranie prędkości poruszania się lewo/prawo. Jeżeli wartość dodatnia to poruszamy się w prawo, jeżeli wartość ujemna to poruszamy się w lewo.
-
-        if (Input.GetAxis("Vertical") != 0) predkosc = 2;
-
-        //Skakanie
+        //Jumping
         if (characterControler.isGrounded && Input.GetButton("Jump"))  // Jeżeli znajdujemy się na ziemi i została naciśnięta spacja (skok)
         {
-            //aktualnaWysokoscSkoku = wysokoscSkoku;
+            ActualHeight = JumpHeight;
             animator.SetTrigger("skok");
         }
         else if (!characterControler.isGrounded) //Jezeli jestesmy w powietrzu(skok)
-            aktualnaWysokoscSkoku += Physics.gravity.y * Time.deltaTime; //Fizyka odpowiadająca za grawitacje (os Y).
+            ActualHeight += Physics.gravity.y * Time.deltaTime; //Fizyka odpowiadająca za grawitacje (os Y).
 
-        //Bieganie
-        if (Input.GetKey("left shift")) predkosc = 5;
+        //Running
         if (Input.GetKeyDown("left shift"))
-            predkoscPoruszania += predkoscBiegania;
+            Velocity += RunningVelocity;
         else if (Input.GetKeyUp("left shift"))
-            predkoscPoruszania -= predkoscBiegania;
+            Velocity -= RunningVelocity;    
 
-        animator.SetFloat("predkosc", predkosc);
+        Vector3 Move = GetInput(Velocity); //Tworzymy wektor odpowiedzialny za ruch. (lewo/prawo, góra/dół, przód/tył)
+        Move = transform.rotation * Move;  //Aktualny obrót gracza razy kierunek w którym sie poruszamy (poprawka na obrót myszką abyśmy szli w kierunku w którym patrzymy).
 
-        Vector3 ruch = new Vector3(rochLewoPrawo, aktualnaWysokoscSkoku, rochPrzodTyl); //Tworzymy wektor odpowiedzialny za ruch. (lewo/prawo, góra/dół, przód/tył)
-        
-        ruch = transform.rotation * ruch;  //Aktualny obrót gracza razy kierunek w którym sie poruszamy (poprawka na obrót myszką abyśmy szli w kierunku w którym patrzymy).
+        ToAnimator(Move);
+        characterControler.Move(Move * Time.deltaTime);
+    }
 
-        characterControler.Move(ruch * Time.deltaTime);
+    private void ToAnimator(Vector3 v)
+    {
+        int velocity=0;
+        if (v.x != 0 || v.z != 0) velocity = 1;
+        if (Input.GetKey("left shift")) velocity = 2;
+        animator.SetInteger("velocity", velocity);
+    }
+
+    private Vector3 GetInput(float v) //returns the basic values, if it's 0 than it's not active.
+    { 
+        Vector3 p_Velocity = new Vector3();
+        if (Input.GetKey(KeyCode.W))
+            p_Velocity += new Vector3(0, 0, v);
+        if (Input.GetKey(KeyCode.S))
+            p_Velocity += new Vector3(0, 0, -v);
+        if (Input.GetKey(KeyCode.A))
+            p_Velocity += new Vector3(-v, 0, 0);
+        if (Input.GetKey(KeyCode.D))
+            p_Velocity += new Vector3(v, 0, 0);
+        p_Velocity += new Vector3(0, ActualHeight, 0);
+        return p_Velocity;
     }
 
     /**
-     * Metoda odpowiedzialna za ruch myszką.
+     * Metoda odpowiedzialna za myszkę.
      */
-    private void myszka()
+    private void Mouse()
     {
-        float myszLewoPrawo = Input.GetAxis("Mouse X") * czuloscMyszki; //Pobranie wartości ruchu myszki lewo/prawo. Jeżeli wartość dodatnia to poruszamy w prawo, a jeżeli wartość ujemna to poruszamy w lewo.
-        transform.Rotate(0, myszLewoPrawo, 0);
+        float MouseLeftRight = Input.GetAxis("Mouse X") * SensitivityOfMouse; //Pobranie wartości ruchu myszki lewo/prawo. Jeżeli wartość dodatnia to poruszamy w prawo, a jeżeli wartość ujemna to poruszamy w lewo.
+        transform.Rotate(0, MouseLeftRight, 0);
 
-        myszGoraDol -= Input.GetAxis("Mouse Y") * czuloscMyszki; //Pobranie wartości ruchu myszki góra/dół. Jeżeli wartość dodatnia to poruszamy w górę, a jeżeli wartość ujemna to poruszamy w dół.
+        MouseUpDown -= Input.GetAxis("Mouse Y") * SensitivityOfMouse; //Pobranie wartości ruchu myszki góra/dół. Jeżeli wartość dodatnia to poruszamy w górę, a jeżeli wartość ujemna to poruszamy w dół.
 
-        myszGoraDol = Mathf.Clamp(myszGoraDol, -zakresMyszyGoraDol, zakresMyszyGoraDol); //Funkcja nie pozwala aby wartość przekroczyła dane zakresy.
+        MouseUpDown = Mathf.Clamp(MouseUpDown, -RangeOfMouseUpDown, RangeOfMouseUpDown); //Funkcja nie pozwala aby wartość przekroczyła dane zakresy.
 
-        if (Input.GetKey("mouse 0") && characterControler.isGrounded) animator.SetTrigger("atak");
+        if (Input.GetKeyDown("mouse 0") && characterControler.isGrounded) animator.SetTrigger("atak");
 
         //Camera.main.transform.localRotation = Quaternion.Euler(myszGoraDol, 0, 0); //Ponieważ CharacterController nie obraca się góra/dół obracamy tylko kamerę.
-        TppCamera.transform.localRotation = Quaternion.Euler(myszGoraDol, 0, 0);
+        TppCamera.transform.localRotation = Quaternion.Euler(MouseUpDown, 0, 0);
     }
 
 }
