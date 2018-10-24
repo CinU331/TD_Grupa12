@@ -32,6 +32,7 @@ public class ChangingCamera : MonoBehaviour {
             camera2.GetComponent<Camera>().enabled = true;
             camera2.GetComponent<AudioListener>().enabled = true;
             zmiana = true;
+            Cursor.lockState = CursorLockMode.Locked;
         }
         if (Input.GetKeyDown("c") && (startCamera == 2) && !zmiana)
         {
@@ -43,6 +44,7 @@ public class ChangingCamera : MonoBehaviour {
             camera2.GetComponent<Camera>().enabled = false;
             camera2.GetComponent<AudioListener>().enabled = false;
             zmiana = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }
