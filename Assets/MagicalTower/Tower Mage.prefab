@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 95993255876964340}
   - component: {fileID: 114679058932354610}
   - component: {fileID: 82268010141062560}
+  - component: {fileID: 136059277488164628}
   m_Layer: 0
   m_Name: Tower Mage
   m_TagString: Untagged
@@ -176,8 +177,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1870117282977766}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 199.92177, y: 39.992676, z: 97.52432}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 106.96776, y: 116.778145, z: 49.937622}
   m_LocalScale: {x: 6, y: 8, z: 6}
   m_Children:
   - {fileID: 4234988054946210}
@@ -609,3 +610,16 @@ MonoBehaviour:
   bolts: []
   audioSource: {fileID: 0}
   maxTargets: 3
+--- !u!136 &136059277488164628
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1870117282977766}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 3
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
