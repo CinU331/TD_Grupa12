@@ -8,12 +8,15 @@ public class WaveSpawner : MonoBehaviour {
     public GameObject boss;
     public Transform startGate;
 
+    private bool waveSpawningInProgress = false;
+
     void Update()
     {
-        if (aliveEnemies == 0 && wave < 3)
+        if (aliveEnemies == 0 && !waveSpawningInProgress && wave < 3)
         {
-             StartCoroutine(SpawnWave());
-             wave++;
+            waveSpawningInProgress = true;
+            StartCoroutine(SpawnWave());
+            wave++;
         }
     }
 
@@ -29,9 +32,12 @@ public class WaveSpawner : MonoBehaviour {
                 yield return new WaitForSeconds(0.5f);
             }
         }
-        else
+        else {
             SpawnEnemy(1);
+            aliveEnemies++;
+        }
 
+        waveSpawningInProgress = false;
     }
 
     private void SpawnEnemy(int enemyType)

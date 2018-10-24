@@ -9,9 +9,12 @@ public class Enemies : MonoBehaviour {
     public float iMaxHp = 400;
     public float iCurrentHp;
 
+    private bool isAlive;
+
     void Start () {
         exitGate = Waypoints.waypoints[0];
-	iCurrentHp = iMaxHp;
+	    iCurrentHp = iMaxHp;
+        isAlive = true;
     }
 	
 	void Update () {
@@ -48,8 +51,9 @@ public class Enemies : MonoBehaviour {
     {
         iCurrentHp -= aValue;
         transform.Find("HealthBar").Find("Background").Find("Foreground").GetComponent<Image>().fillAmount = iCurrentHp / iMaxHp;  
-        if (iCurrentHp <= 0)
+        if (iCurrentHp <= 0 && isAlive)
         {
+            isAlive = false;
             Destroy(gameObject);
             if (WaveSpawner.aliveEnemies > 0)
                 WaveSpawner.aliveEnemies--;
