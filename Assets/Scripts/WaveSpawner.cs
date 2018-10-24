@@ -39,11 +39,17 @@ public class WaveSpawner : MonoBehaviour {
         switch (enemyType)
         {
             case 0:
-                Instantiate(enemy, startGate.position, transform.rotation);
-                break;
+                {
+                    GameObject gameObject = Instantiate(enemy, startGate.position, transform.rotation);
+                    gameObject.tag = "Respawn";
+                    break;
+                }
             case 1:
-                Instantiate(boss, startGate.position, transform.rotation);
-                break;
+                {
+                    GameObject gameObject = Instantiate(boss, startGate.position, transform.rotation);
+                    gameObject.tag = "Respawn";
+                    break;
+                }
         }
     }
 }
