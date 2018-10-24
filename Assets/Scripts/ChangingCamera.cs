@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class ChangingCamera : MonoBehaviour {
 
-    public Camera camera1; //kamery
-    public Camera camera2;
+    public GameObject camera1;
+    public GameObject camera2;
 
     int startCamera = 1;
 
     // Use this for initialization
     void Start()
     {
-        camera1.enabled = true;
-        camera2.enabled = false;
+        camera1.GetComponent<Camera>().enabled = true;
+        camera1.GetComponent<AudioListener>().enabled = true;
+
+        camera2.GetComponent<Camera>().enabled = false;
+        camera2.GetComponent<AudioListener>().enabled = false;
     }
 
     // Update is called once per frame
@@ -23,16 +26,22 @@ public class ChangingCamera : MonoBehaviour {
         {
             startCamera = 2;
 
-            camera1.enabled = false;
-            camera2.enabled = true;
+            camera1.GetComponent<Camera>().enabled = false;
+            camera1.GetComponent<AudioListener>().enabled = false;
+
+            camera2.GetComponent<Camera>().enabled = true;
+            camera2.GetComponent<AudioListener>().enabled = true;
             zmiana = true;
         }
         if (Input.GetKeyDown("c") && (startCamera == 2) && !zmiana)
         {
             startCamera = 1;
 
-            camera1.enabled = true;
-            camera2.enabled = false;
+            camera1.GetComponent<Camera>().enabled = true;
+            camera1.GetComponent<AudioListener>().enabled = true;
+
+            camera2.GetComponent<Camera>().enabled = false;
+            camera2.GetComponent<AudioListener>().enabled = false;
             zmiana = true;
         }
     }

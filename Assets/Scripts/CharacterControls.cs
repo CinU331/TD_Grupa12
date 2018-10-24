@@ -53,10 +53,8 @@ public class CharacterControls : MonoBehaviour
 
         Vector3 Move = GetInput(Velocity); //Tworzymy wektor odpowiedzialny za ruch. (lewo/prawo, góra/dół, przód/tył)
 
-
-        if (!TppCamera.GetComponentInChildren<Camera>().enabled && (Move.x != 0 || Move.z != 0)) //Rotating in Tactical Mode
+        if (!TppCamera.GetComponentInChildren<Camera>().enabled && (Move.x != 0 || Move.z != 0)) //Rotating our character in Tactical Mode
         {
-
             transform.localRotation = Quaternion.LookRotation(new Vector3(Move.x, 0, Move.z), Vector3.up);
         }
         else Move = transform.rotation * Move;
@@ -65,9 +63,26 @@ public class CharacterControls : MonoBehaviour
         characterControler.Move(Move * Time.deltaTime);
     }
 
+    /**
+     * Metoda odpowiedzialna za myszkę.
+     */
+    private void Mouse()
+    {
+        float MouseLeftRight = Input.GetAxis("Mouse X") * SensitivityOfMouse;
+        transform.Rotate(0, MouseLeftRight, 0);
+
+        MouseUpDown -= Input.GetAxis("Mouse Y") * SensitivityOfMouse;
+        MouseUpDown = Mathf.Clamp(MouseUpDown, -RangeOfMouseUpDown, RangeOfMouseUpDown);
+        TppCamera.transform.localRotation = Quaternion.Euler(MouseUpDown, 0, 0);
+
+        if (Input.GetKeyDown("mouse 0") && characterControler.isGrounded) animator.SetTrigger("atak");
+
+        //Camera.main.transform.localRotation = Quaternion.Euler(myszGoraDol, 0, 0); //Ponieważ CharacterController nie obraca się góra/dół obracamy tylko kamerę.
+    }
+
     private void ToAnimator(Vector3 v)
     {
-        int velocity=0;
+        int velocity = 0;
         if (v.x != 0 || v.z != 0)
         {
             velocity++;
@@ -77,8 +92,8 @@ public class CharacterControls : MonoBehaviour
     }
 
     private Vector3 GetInput(float v) //returns the basic values, if it's 0 than it's not active.
-    { 
-        Vector3 p_Velocity = new Vector3(0,0,0);
+    {
+        Vector3 p_Velocity = new Vector3(0, 0, 0);
         if (Input.GetKey(KeyCode.W))
             p_Velocity += new Vector3(0, 0, v);
         if (Input.GetKey(KeyCode.S))
@@ -90,23 +105,4 @@ public class CharacterControls : MonoBehaviour
         p_Velocity += new Vector3(0, ActualHeight, 0);
         return p_Velocity;
     }
-
-    /**
-     * Metoda odpowiedzialna za myszkę.
-     */
-    private void Mouse()
-    {
-        float MouseLeftRight = Input.GetAxis("Mouse X") * SensitivityOfMouse; //Pobranie wartości ruchu myszki lewo/prawo. Jeżeli wartość dodatnia to poruszamy w prawo, a jeżeli wartość ujemna to poruszamy w lewo.
-        transform.Rotate(0, MouseLeftRight, 0);
-
-        MouseUpDown -= Input.GetAxis("Mouse Y") * SensitivityOfMouse; //Pobranie wartości ruchu myszki góra/dół. Jeżeli wartość dodatnia to poruszamy w górę, a jeżeli wartość ujemna to poruszamy w dół.
-
-        MouseUpDown = Mathf.Clamp(MouseUpDown, -RangeOfMouseUpDown, RangeOfMouseUpDown); //Funkcja nie pozwala aby wartość przekroczyła dane zakresy.
-
-        if (Input.GetKeyDown("mouse 0") && characterControler.isGrounded) animator.SetTrigger("atak");
-
-        //Camera.main.transform.localRotation = Quaternion.Euler(myszGoraDol, 0, 0); //Ponieważ CharacterController nie obraca się góra/dół obracamy tylko kamerę.
-        TppCamera.transform.localRotation = Quaternion.Euler(MouseUpDown, 0, 0);
-    }
-
 }

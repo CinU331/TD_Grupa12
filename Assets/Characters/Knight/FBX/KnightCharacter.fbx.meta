@@ -1,9 +1,7 @@
 fileFormatVersion: 2
 guid: 4e32b3aa5184177488907f7c9c5161ca
-timeCreated: 1539801455
-licenseType: Free
 ModelImporter:
-  serializedVersion: 22
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: Abdomen
     100002: Body
@@ -104,9 +102,9 @@ ModelImporter:
     7400010: HumanArmature|Roll
     7400012: HumanArmature|Roll_sword
     7400014: HumanArmature|Run
-    7400016: HumanArmature|Run_swordAttack
+    7400016: Run_swordAttack
     7400018: HumanArmature|Run_swordRight
-    7400020: HumanArmature|swordAttackJump
+    7400020: swordAttackJump
     7400022: HumanArmature|Walking
     9500000: //RootNode
     13700000: Knight
@@ -144,6 +142,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -377,7 +376,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HumanArmature|Run_swordAttack
+      name: Run_swordAttack
       takeName: HumanArmature|Run_swordAttack
       firstFrame: 0
       lastFrame: 20
@@ -433,7 +432,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HumanArmature|swordAttackJump
+      name: swordAttackJump
       takeName: HumanArmature|swordAttackJump
       firstFrame: 0
       lastFrame: 28
@@ -504,11 +503,15 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -528,7 +531,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

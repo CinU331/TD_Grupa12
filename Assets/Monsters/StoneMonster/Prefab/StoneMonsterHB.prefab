@@ -54,6 +54,7 @@ GameObject:
   - component: {fileID: 224684332862794160}
   - component: {fileID: 111055254854499640}
   - component: {fileID: 114402511021330356}
+  - component: {fileID: 135013904798273544}
   m_Layer: 0
   m_Name: StoneMonsterHB
   m_TagString: Untagged
@@ -358,6 +359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  iMaxHp: 400
+  iCurrentHp: 0
 --- !u!114 &114462585719662212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -433,6 +436,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!135 &135013904798273544
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1413949020212204}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!137 &137413818388014852
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -584,7 +599,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1413949020212204}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 97.25763}
+  m_LocalPosition: {x: 0, y: 0, z: 82.98074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4462795770778246}
@@ -595,6 +610,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 196.00432, y: 39.60813}
+  m_AnchoredPosition: {x: 216.90483, y: 39.79125}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

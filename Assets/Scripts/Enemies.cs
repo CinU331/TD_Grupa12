@@ -48,7 +48,7 @@ public class Enemies : MonoBehaviour {
     {
         iCurrentHp -= aValue;
         transform.Find("HealthBar").Find("Background").Find("Foreground").GetComponent<Image>().fillAmount = iCurrentHp / iMaxHp;  
-        if (iCurrentHp == 0)
+        if (iCurrentHp <= 0)
         {
             Destroy(gameObject);
             if (WaveSpawner.aliveEnemies > 0)
