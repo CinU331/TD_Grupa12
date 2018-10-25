@@ -6,6 +6,7 @@ public class Enemies : MonoBehaviour {
     private int numberOfWaypoint = 0;
     public float speed = 50f;
     public static int resources = 20;
+    private int tmpResources = 0;
     public float iMaxHp = 400;
     public float iCurrentHp;
 
@@ -28,7 +29,13 @@ public class Enemies : MonoBehaviour {
         {
             if (numberOfWaypoint == 28)
             {
-                resources--;
+                if (GameObject.Find("StoneMonsterBossHB(Clone)"))
+                {
+                    tmpResources = resources;
+                    resources = 0;
+                }
+                else
+                    resources--;
             }
             GoToNextWaypoint();
         }
@@ -54,10 +61,16 @@ public class Enemies : MonoBehaviour {
         if (iCurrentHp <= 0 && isAlive)
         {
             isAlive = false;
+            if (numberOfWaypoint > 28)
+            {
+                if (GameObject.Find("StoneMonsterBossHB(Clone)"))
+                    resources = tmpResources;
+                else
+                    resources++;
+            }
             Destroy(gameObject);
             if (WaveSpawner.aliveEnemies > 0)
                 WaveSpawner.aliveEnemies--;
         }
-        
     }
 }
