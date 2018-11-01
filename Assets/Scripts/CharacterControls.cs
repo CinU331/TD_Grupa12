@@ -28,7 +28,7 @@ public class CharacterControls : MonoBehaviour
         if (TppCamera.GetComponentInChildren<Camera>().enabled)
         {
             Mouse();
-        }
+        }        
     }
 
     /**

@@ -25,9 +25,10 @@ public class MageTower : MonoBehaviour
             bolts[i].transform.GetChild(0).transform.position += new Vector3(0, 12, 0);
             bolts[i].SetActive(false);
 
-            InvokeRepeating("FindTarget", 0f, 0.5f);
-            InvokeRepeating("AttackEnemy", 0f, 0.5f);
         }
+
+        InvokeRepeating("FindTarget", 0f, 0.5f);
+        InvokeRepeating("AttackEnemy", 0f, 0.5f);
     }
 
     // Update is called once per frame
@@ -52,7 +53,7 @@ public class MageTower : MonoBehaviour
     {
         if (inRange.Count != 0)
         {
-            if(!audioSource.isPlaying)
+            if (!audioSource.isPlaying)
             {
                 audioSource.Play();
             }
@@ -74,7 +75,7 @@ public class MageTower : MonoBehaviour
                     bolts[i].SetActive(true);
                     inRange[i].SendMessage("DealDamage", 5.0);
                 }
-                for (int i = inRange.Count - 1; i < bolts.Length; i++)
+                for (int i = inRange.Count; i < bolts.Length; i++)
                 {
                     bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
                     inRange[0].SendMessage("DealDamage", 5.0);

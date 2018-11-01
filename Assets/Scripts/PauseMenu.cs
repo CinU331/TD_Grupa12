@@ -1,42 +1,99 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseMenu : MonoBehaviour {
+public class PauseMenu : MonoBehaviour
+{
+    public GameObject characterCamera;
+    public GameObject tacticalCamera;
 
-	public static bool IsPaused = false;
-	public GameObject pauseMenuUI;
+    public TacticalCameraMovement tacticalCameraMovement;
+    private float initialTacticalCameraSpeed;
 
-	void Update() {
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-			if (IsPaused) {
-				Resume();
-			} else {
-				Pause();
-			}
-		}
-	}
+    public BuildController buildController;
 
-	public void Resume() {
-		pauseMenuUI.SetActive(false);
-		Time.timeScale = 1f;
-		IsPaused = false;
-		Cursor.lockState = CursorLockMode.Locked; 
-	}
+    public static bool IsPaused = false;
+    public GameObject pauseMenuUI;
 
-	void Pause() {
-		pauseMenuUI.SetActive(true);
-		Time.timeScale = 0f;
-		IsPaused = true;
-		Cursor.lockState = CursorLockMode.None; 
-	}
+    private string cam = "";
 
-	public void LoadMenu() {
-		SceneManager.LoadScene(0);
-	}
+    void Start()
+    {
+        initialTacticalCameraSpeed = tacticalCameraMovement.timeDeltaTime;
+    }
 
-	public void QuitGame() {
-		Application.Quit();
-	}
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (IsPaused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+    }
+
+    public void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+
+        if(cam == "characterCamera")
+        {
+            cam = "";
+            characterCamera.GetComponent<Camera>().enabled = true;
+            characterCamera.GetComponent<AudioListener>().enabled = true;
+
+            tacticalCamera.GetComponent<Camera>().enabled = false;
+            tacticalCamera.GetComponent<AudioListener>().enabled = false;            
+        }
+        
+
+        Time.timeScale = 1f;
+        if (buildController.IsPaused)
+        {
+            Time.timeScale = 0f;
+        }
+        tacticalCameraMovement.timeDeltaTime = initialTacticalCameraSpeed;
+        IsPaused = false;
+
+        Cursor.lockState = CursorLockMode.Locked;
+
+    }
+
+    void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+
+        if (characterCamera.GetComponent<Camera>().enabled == true)
+        {
+            cam = "characterCamera";
+            tacticalCamera.GetComponent<Camera>().enabled = true;
+            tacticalCamera.GetComponent<AudioListener>().enabled = true;
+
+            characterCamera.GetComponent<Camera>().enabled = false;
+            characterCamera.GetComponent<AudioListener>().enabled = false;
+        }
+
+        Time.timeScale = 0f;
+        tacticalCameraMovement.timeDeltaTime = 0;
+        IsPaused = true;
+
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void LoadMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

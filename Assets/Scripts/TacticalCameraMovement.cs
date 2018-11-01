@@ -5,6 +5,7 @@ using UnityEngine;
 public class TacticalCameraMovement : MonoBehaviour {
 
 	private new Camera camera;
+    public float timeDeltaTime;
     // Use this for initialization
     void Start () {
 		camera = GetComponent<Camera>();
@@ -41,7 +42,8 @@ public class TacticalCameraMovement : MonoBehaviour {
 		}
 
 		//keyboard movement
-        movement += GetBaseInput() * Time.deltaTime * ResourceManager.KeyboardScrollSpeed;
+        ///movement += GetBaseInput() * Time.deltaTime * ResourceManager.KeyboardScrollSpeed;
+        movement += GetBaseInput() * timeDeltaTime * ResourceManager.KeyboardScrollSpeed;
 
         // make sure movement is in the direction the camera is pointing
         // but ignore the vertical tilt of the camera to get sensible scrolling
@@ -49,8 +51,9 @@ public class TacticalCameraMovement : MonoBehaviour {
         movement.y = 0;
  
 		// scroll to move closer
-		movement += camera.transform.TransformDirection(Vector3.forward * Time.deltaTime * ResourceManager.ScrollZoomSpeed * Input.GetAxis("Mouse ScrollWheel"));
- 
+		//movement += camera.transform.TransformDirection(Vector3.forward * Time.deltaTime * ResourceManager.ScrollZoomSpeed * Input.GetAxis("Mouse ScrollWheel"));
+        movement += camera.transform.TransformDirection(Vector3.forward * timeDeltaTime * ResourceManager.ScrollZoomSpeed * Input.GetAxis("Mouse ScrollWheel"));
+
         // calculate desired camera position based on received input
         Vector3 origin = camera.transform.position;
         Vector3 destination = origin;
@@ -77,7 +80,8 @@ public class TacticalCameraMovement : MonoBehaviour {
  
         // if a change in position is detected perform the necessary update
         if(destination != origin) {
-            camera.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.ScrollSpeed);
+            //camera.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.ScrollSpeed);
+            camera.transform.position = Vector3.MoveTowards(origin, destination, timeDeltaTime * ResourceManager.ScrollSpeed);
         }
     }
  
@@ -97,7 +101,8 @@ public class TacticalCameraMovement : MonoBehaviour {
  
         // if a change in position is detected perform the necessary update
         if(destination != origin) {
-            camera.transform.eulerAngles = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.RotateSpeed);
+            //camera.transform.eulerAngles = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.RotateSpeed);
+            camera.transform.eulerAngles = Vector3.MoveTowards(origin, destination, timeDeltaTime * ResourceManager.RotateSpeed);
         }
     }
 

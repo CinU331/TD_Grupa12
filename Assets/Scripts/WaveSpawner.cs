@@ -2,7 +2,8 @@
 using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour {
-    private int wave = 0;
+    public static int wave = 0;
+    public static int numberOfWaves = 3;
     public static int aliveEnemies = 0; 
     public GameObject enemy;
     public GameObject boss;
@@ -12,7 +13,7 @@ public class WaveSpawner : MonoBehaviour {
 
     void Update()
     {
-        if (aliveEnemies == 0 && !waveSpawningInProgress && wave < 3)
+        if (aliveEnemies == 0 && !waveSpawningInProgress && wave < numberOfWaves)
         {
             waveSpawningInProgress = true;
             StartCoroutine(SpawnWave());
@@ -22,7 +23,7 @@ public class WaveSpawner : MonoBehaviour {
 
     IEnumerator SpawnWave()
     {
-        if (wave < 2)
+        if (wave < numberOfWaves-1)
         {
             for (int i = 0; i < 10; i++)
             {
