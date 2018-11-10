@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -51,7 +48,19 @@ namespace Assets.Scripts
             Cursor.lockState = CursorLockMode.None;
             IsPaused = true;
 
+            GameObject buildingSpots = GameObject.Find("BuildingSpots");
             shopPanel.SetActive(true);
+
+            foreach (Transform transform in buildingSpots.transform)
+            {
+                GameObject lightGameObject = new GameObject();
+                lightGameObject.tag = "Information";
+                Light lightComp = lightGameObject.AddComponent<Light>();
+                lightComp.color = Color.green;
+                lightComp.range = 5;
+                lightComp.intensity = 100;
+                lightGameObject.transform.position = transform.position;
+            }
         }
 
         public void StopBuild()
@@ -61,6 +70,12 @@ namespace Assets.Scripts
             IsPaused = false;
 
             shopPanel.SetActive(false);
+
+            GameObject [] lights = GameObject.FindGameObjectsWithTag("Information");
+            for(int i = 0; i < lights.Length; i++)
+            {
+                GameObject.Destroy(lights[i]);
+            }
         }
     }
 }

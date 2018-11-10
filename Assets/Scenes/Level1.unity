@@ -465,6 +465,16 @@ Prefab:
       propertyPath: m_Name
       value: Tower Mage (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: maxTargets
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
   m_IsPrefabAsset: 0
@@ -1306,6 +1316,16 @@ Prefab:
     - target: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
       propertyPath: m_Name
       value: Tower Mage (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: maxTargets
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: range
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
@@ -3236,6 +3256,16 @@ Prefab:
     - target: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
       propertyPath: m_Name
       value: Tower Mage (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: maxTargets
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: range
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
@@ -5410,6 +5440,16 @@ Prefab:
     - target: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
       propertyPath: m_Name
       value: Tower Mage (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679058932354610, guid: 1b1bdd5bbf761384190bb3841c081284,
+        type: 2}
+      propertyPath: maxTargets
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b1bdd5bbf761384190bb3841c081284, type: 2}
