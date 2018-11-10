@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -7,20 +8,37 @@ namespace Assets.Scripts
     {
         public GameObject shopPanel;
         public GameObject camera;
-        
-        public Boolean IsPaused;
-        int build = 1;
+        List<GameObject> buildingSpots;
 
-        
+        public Boolean IsPaused;
+        private int build = 1;
+
+
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
+            buildingSpots = new List<GameObject>();
+            GameObject spotsSource = GameObject.Find("BuildingSpots");
+            int i = 0;
+            foreach(Transform transform in spotsSource.transform)
+            {
+                buildingSpots.Add(transform.gameObject);
+                buildingSpots[i].tag = "BuildingSpot";
+
+                Light lightComp = buildingSpots[i].AddComponent<Light>();
+                lightComp.color = Color.green;
+                lightComp.range = 5;
+                lightComp.intensity = 100;
+                lightComp.enabled = false;
+                buildingSpots[i].transform.position += new Vector3(0, 2, 0);
+                i++;
+            }
             shopPanel.SetActive(false);
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
             Boolean change = false;
             if (camera.GetComponent<Camera>().enabled == true && Input.GetKeyDown("b") && (build == 1) && !change)
@@ -40,7 +58,20 @@ namespace Assets.Scripts
                 build = 1;
                 StopBuild();
             }
-        }       
+
+            if (Input.GetMouseButton(1))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.gameObject != null)
+                    {
+                        Debug.Log(hit.transform.gameObject.name);
+                    }
+                }
+            }
+        }
 
         public void StartBuild()
         {
@@ -48,18 +79,14 @@ namespace Assets.Scripts
             Cursor.lockState = CursorLockMode.None;
             IsPaused = true;
 
-            GameObject buildingSpots = GameObject.Find("BuildingSpots");
             shopPanel.SetActive(true);
 
-            foreach (Transform transform in buildingSpots.transform)
+            foreach (GameObject buildingSpot in buildingSpots)
             {
-                GameObject lightGameObject = new GameObject();
-                lightGameObject.tag = "Information";
-                Light lightComp = lightGameObject.AddComponent<Light>();
-                lightComp.color = Color.green;
-                lightComp.range = 5;
-                lightComp.intensity = 100;
-                lightGameObject.transform.position = transform.position;
+
+                buildingSpot.GetComponent<Collider>().enabled = true;
+                buildingSpot.GetComponent<Light>().enabled = true;
+
             }
         }
 
@@ -71,10 +98,10 @@ namespace Assets.Scripts
 
             shopPanel.SetActive(false);
 
-            GameObject [] lights = GameObject.FindGameObjectsWithTag("Information");
-            for(int i = 0; i < lights.Length; i++)
+            foreach(GameObject buildingSpot in buildingSpots)
             {
-                GameObject.Destroy(lights[i]);
+                buildingSpot.GetComponent<Collider>().enabled = false;
+                buildingSpot.GetComponent<Light>().enabled = false;
             }
         }
     }
