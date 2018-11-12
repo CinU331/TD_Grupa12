@@ -8,6 +8,7 @@ TagManager:
   - Shop
   - Information
   - BuildingSpot
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
