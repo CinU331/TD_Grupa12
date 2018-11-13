@@ -848,7 +848,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1048277508562314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 227, y: 1.4, z: 213.2}
+  m_LocalPosition: {x: 29.196918, y: 38.016, z: -51.16}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4909325149933402}
@@ -1587,7 +1587,7 @@ Animator:
   m_GameObject: {fileID: 1048277508562314}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 4e32b3aa5184177488907f7c9c5161ca, type: 3}
-  m_Controller: {fileID: 9100000, guid: aff5a11f727aa6c4c93f5e85d12232c5, type: 2}
+  m_Controller: {fileID: 9100000, guid: c94fa17b90c840e4caaa4a886932211a, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1604,20 +1604,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1048277508562314}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 103ce1967ca0acf4c90c3e1365af2bc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 10ab3e182c4b1f246acf794244bce785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   characterControler: {fileID: 143426446707778432}
   animator: {fileID: 95296688611857066}
-  kamera: {fileID: 1058410906314486}
-  predkoscPoruszania: 3
-  wysokoscSkoku: 4
-  aktualnaWysokoscSkoku: 0
-  predkoscBiegania: 10
-  czuloscMyszki: 3
-  myszGoraDol: 0
-  zakresMyszyGoraDol: 70
-  predkosc: 0
+  TppCamera: {fileID: 1058410906314486}
+  Velocity: 2
+  JumpHeight: 3
+  ActualHeight: 0
+  RunningVelocity: 4
+  SensitivityOfMouse: 3
+  MouseUpDown: 0
+  RangeOfMouseUpDown: 60
 --- !u!124 &124128043654536902
 Behaviour:
   m_ObjectHideFlags: 1

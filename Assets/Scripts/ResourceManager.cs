@@ -9,10 +9,10 @@ public static class ResourceManager {
     public static float MinCameraHeight { get { return 45; } }
     public static float MaxCameraHeight { get { return 70; } }
     
-    public static float MinCameraX { get { return 50; } }
-    public static float MaxCameraX { get { return 250; } }
-    public static float MinCameraZ { get { return 20; } }
-    public static float MaxCameraZ { get { return 215; } }
+    public static float MinCameraX { get { return -200; } }
+    public static float MaxCameraX { get { return 50; } }
+    public static float MinCameraZ { get { return -130; } }
+    public static float MaxCameraZ { get { return 50; } }
 
     public static float MinCameraRotationX { get { return 50; } }
     public static float MaxCameraRotationX { get { return 250; } }

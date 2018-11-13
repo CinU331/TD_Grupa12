@@ -67,15 +67,15 @@ public class TacticalCameraMovement : MonoBehaviour {
         } else if(destination.y < ResourceManager.MinCameraHeight) {
             destination.y = ResourceManager.MinCameraHeight;
         }
-		if(destination.x > ResourceManager.MaxCameraRotationX) {
-            destination.x = ResourceManager.MaxCameraRotationX;
-        } else if(destination.x < ResourceManager.MinCameraRotationX) {
-            destination.x = ResourceManager.MinCameraRotationX;
+		if(destination.x > ResourceManager.MaxCameraX) {
+            destination.x = ResourceManager.MaxCameraX;
+        } else if(destination.x < ResourceManager.MinCameraX) {
+            destination.x = ResourceManager.MinCameraX;
         }
-		if(destination.z > ResourceManager.MaxCameraRotationZ) {
-            destination.z = ResourceManager.MaxCameraRotationZ;
-        } else if(destination.z < ResourceManager.MinCameraRotationZ) {
-            destination.z = ResourceManager.MinCameraRotationZ;
+		if(destination.z > ResourceManager.MaxCameraZ) {
+            destination.z = ResourceManager.MaxCameraZ;
+        } else if(destination.z < ResourceManager.MinCameraZ) {
+            destination.z = ResourceManager.MinCameraZ;
         }
  
         // if a change in position is detected perform the necessary update
