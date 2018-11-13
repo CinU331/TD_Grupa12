@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 136059277488164628}
   m_Layer: 0
   m_Name: Tower Mage
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
