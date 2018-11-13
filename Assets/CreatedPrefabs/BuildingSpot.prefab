@@ -108,5 +108,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8fb9363720a074eb7f157c3f1ac371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOcuppied: 0
   magicalTower: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
     type: 2}
+  cannonTower: {fileID: 1806624437100896, guid: ccb9e5ded4776764abfcb1a28f5e66e7,
+    type: 2}
+  archerTower: {fileID: 1428446874652358, guid: 2063f1890187cbc42925a6386af7502e,
+    type: 2}
+  currentTower: {fileID: 0}

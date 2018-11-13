@@ -1,24 +1,53 @@
 ﻿using UnityEngine;
 
-public class BuildingSpot : MonoBehaviour {
+public class BuildingSpot : MonoBehaviour
+{
 
     public bool isOcuppied = false;
     public GameObject magicalTower;
-    public GameObject currentTower;
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public GameObject cannonTower;
+    public GameObject archerTower;
 
-    public void CreateTower()
+    public GameObject currentTower;
+
+    private void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+
+    }
+
+    public void CreateTower(string aNameOfTower)
     {
         if (!isOcuppied)
         {
-            currentTower = GameObject.Instantiate(magicalTower);
+            switch (aNameOfTower)
+            {
+                case "MagicalTower":
+                    {
+                        currentTower = GameObject.Instantiate(magicalTower);
+                        break;
+                    }
+                case "CannonTower":
+                    {
+                        currentTower = GameObject.Instantiate(cannonTower);
+                        break;
+                    }
+                case "ArcherTower":
+                    {
+                        currentTower = GameObject.Instantiate(archerTower);
+                        break;
+                    }
+                default:
+                    {
+                        return;
+                    }
+            }
+
             currentTower.transform.position = transform.position;
             Vector3 newScale = GetComponent<Collider>().transform.localScale;
             newScale.y = 20;

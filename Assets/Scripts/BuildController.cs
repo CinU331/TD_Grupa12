@@ -72,7 +72,7 @@ namespace Assets.Scripts
                 {
                     if (Input.GetMouseButton(0))
                     {
-                        hit.transform.gameObject.SendMessage("CreateTower");
+                        hit.transform.gameObject.SendMessage("CreateTower", "MagicalTower");
                     }
                     else if(Input.GetMouseButton(1))
                     {

@@ -9,6 +9,7 @@ TagManager:
   - Information
   - BuildingSpot
   - FxTemporaire
+  - Tower
   layers:
   - Default
   - TransparentFX
