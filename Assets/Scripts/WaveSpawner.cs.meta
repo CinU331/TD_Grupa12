@@ -4,11 +4,10 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - enemy: {fileID: 1713781036754730, guid: 0f8a471e5537f864ebdb454fe82308eb, type: 2}
-  - boss: {fileID: 1713781036754730, guid: 9a0fbb2e5cfb27e4889f2e364c86416e, type: 2}
+  - enemy: {fileID: 1181618208688900, guid: 91523630fc1a28d449d8a7fe61a92556, type: 2}
+  - enemy2: {fileID: 1886286395271082, guid: ab408303f2bc02a4bb5a0945bf2355e5, type: 2}
+  - boss: {fileID: 1527313569099514, guid: 95485e0d3a71aca4f81199cb0a7b4b5b, type: 2}
   - startGate: {instanceID: 0}
-  - countResources: {fileID: 114413776739690114, guid: 2d9ae7ae202cc7443a5f1cf4e23fba8a,
-      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

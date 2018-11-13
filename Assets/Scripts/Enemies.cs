@@ -27,9 +27,9 @@ public class Enemies : MonoBehaviour {
 
         if (Vector3.Distance(transform.position, exitGate.position) <= 0.4f)
         {
-            if (numberOfWaypoint == 41)
+            if (numberOfWaypoint == 28)
             {
-                if (GameObject.Find("StoneMonsterBossHB(Clone)"))
+                if (GameObject.Find("OrcHB(Clone)"))
                 {
                     tmpResources = resources;
                     resources = 0;
@@ -63,7 +63,7 @@ public class Enemies : MonoBehaviour {
             isAlive = false;
             if (numberOfWaypoint > 28)
             {
-                if (GameObject.Find("StoneMonsterBossHB(Clone)"))
+                if (GameObject.Find("OrcHB(Clone)"))
                     resources = tmpResources;
                 else
                     resources++;
