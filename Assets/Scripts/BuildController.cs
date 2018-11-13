@@ -12,6 +12,7 @@ namespace Assets.Scripts
         List<BuildingSpot> buildingSpots;
         public Boolean IsPaused;
         private int build = 1;
+        //public ShopButtonControler shopButtonControler;
 
 
 
@@ -72,7 +73,7 @@ namespace Assets.Scripts
                 {
                     if (Input.GetMouseButton(0))
                     {
-                        hit.transform.gameObject.SendMessage("CreateTower", "MagicalTower");
+                        hit.transform.gameObject.SendMessage("CreateTower", ShopButtonControler.towerButtonClicked);
                     }
                     else if(Input.GetMouseButton(1))
                     {

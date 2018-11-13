@@ -2081,6 +2081,16 @@ Prefab:
       value: 
       objectReference: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
         type: 2}
+    - target: {fileID: 114179231170908354, guid: 3ac054b78b097b74ca70e43e5665acef,
+        type: 2}
+      propertyPath: cannonTower
+      value: 
+      objectReference: {fileID: 1957344243}
+    - target: {fileID: 114179231170908354, guid: 3ac054b78b097b74ca70e43e5665acef,
+        type: 2}
+      propertyPath: archerTower
+      value: 
+      objectReference: {fileID: 1093021378}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ac054b78b097b74ca70e43e5665acef, type: 2}
   m_IsPrefabAsset: 0
@@ -3730,6 +3740,16 @@ Prefab:
       value: 
       objectReference: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
         type: 2}
+    - target: {fileID: 114179231170908354, guid: 3ac054b78b097b74ca70e43e5665acef,
+        type: 2}
+      propertyPath: cannonTower
+      value: 
+      objectReference: {fileID: 1957344243}
+    - target: {fileID: 114179231170908354, guid: 3ac054b78b097b74ca70e43e5665acef,
+        type: 2}
+      propertyPath: archerTower
+      value: 
+      objectReference: {fileID: 1093021378}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ac054b78b097b74ca70e43e5665acef, type: 2}
   m_IsPrefabAsset: 0
@@ -4347,8 +4367,9 @@ GameObject:
   - component: {fileID: 718937457}
   - component: {fileID: 718937456}
   - component: {fileID: 718937455}
+  - component: {fileID: 718937459}
   m_Layer: 5
-  m_Name: ShopTowerItem
+  m_Name: CannonTowerItem
   m_TagString: Shop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4365,7 +4386,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 894012253}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4430,12 +4451,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 718937459}
+        m_MethodName: SetTowerButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4462,7 +4483,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 1e64b5448940f7b468856d1dae575f13, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d7bf6650a00429249a5c09189942fde7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4477,6 +4498,17 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 718937453}
   m_CullTransparentMesh: 0
+--- !u!114 &718937459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 718937453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394e0952f110ef48ba20614f220e12a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &724168505
 Prefab:
   m_ObjectHideFlags: 0
@@ -5765,6 +5797,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1852744396}
+  - {fileID: 1347541755}
   - {fileID: 718937454}
   m_Father: {fileID: 425394047}
   m_RootOrder: 0
@@ -6074,8 +6108,8 @@ MonoBehaviour:
   isOcuppied: 0
   magicalTower: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
     type: 2}
-  cannonTower: {fileID: 0}
-  archerTower: {fileID: 0}
+  cannonTower: {fileID: 1957344243}
+  archerTower: {fileID: 1093021378}
   currentTower: {fileID: 0}
 --- !u!65 &962070421
 BoxCollider:
@@ -6681,6 +6715,11 @@ Transform:
   m_Father: {fileID: 1789505225}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1093021378 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1428446874652358, guid: 2063f1890187cbc42925a6386af7502e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1747176022}
 --- !u!4 &1105174259 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4137486168269956, guid: da41fd2967a439d409358c2214a5409e,
@@ -6790,6 +6829,16 @@ Prefab:
       value: 
       objectReference: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
         type: 2}
+    - target: {fileID: 114179231170908354, guid: 3ac054b78b097b74ca70e43e5665acef,
+        type: 2}
+      propertyPath: cannonTower
+      value: 
+      objectReference: {fileID: 1957344243}
+    - target: {fileID: 114179231170908354, guid: 3ac054b78b097b74ca70e43e5665acef,
+        type: 2}
+      propertyPath: archerTower
+      value: 
+      objectReference: {fileID: 1093021378}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ac054b78b097b74ca70e43e5665acef, type: 2}
   m_IsPrefabAsset: 0
@@ -8238,8 +8287,8 @@ MonoBehaviour:
   isOcuppied: 0
   magicalTower: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
     type: 2}
-  cannonTower: {fileID: 0}
-  archerTower: {fileID: 0}
+  cannonTower: {fileID: 1957344243}
+  archerTower: {fileID: 1093021378}
   currentTower: {fileID: 0}
 --- !u!65 &1296247885
 BoxCollider:
@@ -8485,6 +8534,160 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1347541754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1347541755}
+  - component: {fileID: 1347541759}
+  - component: {fileID: 1347541758}
+  - component: {fileID: 1347541757}
+  - component: {fileID: 1347541756}
+  - component: {fileID: 1347541760}
+  m_Layer: 5
+  m_Name: MagicalTowerItem
+  m_TagString: Shop
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1347541755
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347541754}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.0000014, y: 1.0000014, z: 1.0000014}
+  m_Children: []
+  m_Father: {fileID: 894012253}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 150}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &1347541756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347541754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 150
+  m_PreferredHeight: 150
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
+--- !u!114 &1347541757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347541754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1347541758}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1347541760}
+        m_MethodName: SetTowerButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1347541758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347541754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: 1e64b5448940f7b468856d1dae575f13, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1347541759
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347541754}
+  m_CullTransparentMesh: 0
+--- !u!114 &1347541760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347541754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394e0952f110ef48ba20614f220e12a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1347738708 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4860357493123668, guid: 01f585040a083ec458caf38381c29bc9,
@@ -9588,8 +9791,8 @@ MonoBehaviour:
   isOcuppied: 0
   magicalTower: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
     type: 2}
-  cannonTower: {fileID: 0}
-  archerTower: {fileID: 0}
+  cannonTower: {fileID: 1957344243}
+  archerTower: {fileID: 1093021378}
   currentTower: {fileID: 0}
 --- !u!65 &1502758333
 BoxCollider:
@@ -11849,6 +12052,160 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 405256, guid: c44bd9bdc114d4a60932c0087d9d1732,
     type: 2}
   m_PrefabInternal: {fileID: 1851275714}
+--- !u!1 &1852744395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1852744396}
+  - component: {fileID: 1852744400}
+  - component: {fileID: 1852744399}
+  - component: {fileID: 1852744398}
+  - component: {fileID: 1852744397}
+  - component: {fileID: 1852744401}
+  m_Layer: 5
+  m_Name: ArcherTowerItem
+  m_TagString: Shop
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1852744396
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1852744395}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 894012253}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 150}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &1852744397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1852744395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 150
+  m_PreferredHeight: 150
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
+--- !u!114 &1852744398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1852744395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1852744399}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1852744401}
+        m_MethodName: SetTowerButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1852744399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1852744395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: 8ab56d821376e4d49a689e6fbbf892c8, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1852744400
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1852744395}
+  m_CullTransparentMesh: 0
+--- !u!114 &1852744401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1852744395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394e0952f110ef48ba20614f220e12a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1864152364
 Prefab:
   m_ObjectHideFlags: 0
@@ -12620,6 +12977,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4988098599119392, guid: 046bdb6e453627149842e36a20910d0f,
     type: 2}
   m_PrefabInternal: {fileID: 1941412348}
+--- !u!1 &1957344243 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1806624437100896, guid: ccb9e5ded4776764abfcb1a28f5e66e7,
+    type: 2}
+  m_PrefabInternal: {fileID: 945407515}
 --- !u!1001 &1970290673
 Prefab:
   m_ObjectHideFlags: 0

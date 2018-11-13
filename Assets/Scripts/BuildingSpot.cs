@@ -27,17 +27,17 @@ public class BuildingSpot : MonoBehaviour
         {
             switch (aNameOfTower)
             {
-                case "MagicalTower":
+                case "MagicalTowerItem":
                     {
                         currentTower = GameObject.Instantiate(magicalTower);
                         break;
                     }
-                case "CannonTower":
+                case "CannonTowerItem":
                     {
                         currentTower = GameObject.Instantiate(cannonTower);
                         break;
                     }
-                case "ArcherTower":
+                case "ArcherTowerItem":
                     {
                         currentTower = GameObject.Instantiate(archerTower);
                         break;
