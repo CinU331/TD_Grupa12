@@ -20,7 +20,9 @@ public class Enemies : MonoBehaviour {
 	
 	void Update () {
         Vector3 lookDirection = (exitGate.position - transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(lookDirection);
+        if (lookDirection != Vector3.zero) {
+            transform.rotation = Quaternion.LookRotation(lookDirection);
+        }
 
         Vector3 directions = exitGate.position - transform.position;
         transform.Translate(directions.normalized * speed * Time.deltaTime, Space.World);

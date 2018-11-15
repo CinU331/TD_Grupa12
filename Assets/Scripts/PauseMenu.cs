@@ -10,7 +10,6 @@ public class PauseMenu : MonoBehaviour
     public GameObject tacticalCamera;
 
     public TacticalCameraMovement tacticalCameraMovement;
-    private float initialTacticalCameraSpeed;
 
     public BuildController buildController;
 
@@ -21,7 +20,6 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        initialTacticalCameraSpeed = tacticalCameraMovement.timeDeltaTime;
     }
 
     void Update()
@@ -59,7 +57,7 @@ public class PauseMenu : MonoBehaviour
         {
             Time.timeScale = 0f;
         }
-        tacticalCameraMovement.timeDeltaTime = initialTacticalCameraSpeed;
+        tacticalCameraMovement.isMovementRestricted = false;
         IsPaused = false;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -81,7 +79,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         Time.timeScale = 0f;
-        tacticalCameraMovement.timeDeltaTime = 0;
+        tacticalCameraMovement.isMovementRestricted = true;
         IsPaused = true;
 
         Cursor.lockState = CursorLockMode.None;

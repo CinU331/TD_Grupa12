@@ -5,7 +5,21 @@ using UnityEngine;
 public class TacticalCameraMovement : MonoBehaviour {
 
 	private new Camera camera;
-    public float timeDeltaTime;
+
+    public bool isMovementRestricted = false;
+
+    public float panSpeed = 80f;
+    public float scrollSpeed = 8000f;
+    public float rotationSpeed = 80f;
+    public float panBorderThickness = 10f;
+    public Vector2 panLimitMin = new Vector2(-150, -110);
+    public Vector2 panLimitMax = new Vector2(120, 80);
+    public float scrollMin = 40f;
+    public float scrollMax = 140;
+
+    public float groundLevelY = 38f;
+    public float maxCameraMovePerSecond = 200f;
+
     // Use this for initialization
     void Start () {
 		camera = GetComponent<Camera>();
@@ -13,10 +27,11 @@ public class TacticalCameraMovement : MonoBehaviour {
  
     // Update is called once per frame
     void Update () {
-        if (camera.enabled)
+        if (camera.enabled && !isMovementRestricted)
         {
             MoveCamera();
             RotateCamera();
+            LockMouseWhenMoving();
         }
     }
  
@@ -25,34 +40,9 @@ public class TacticalCameraMovement : MonoBehaviour {
         float ypos = Input.mousePosition.y;
         Vector3 movement = new Vector3(0,0,0);
  
-		if (!Input.GetMouseButton(1)) {
-        	// horizontal camera movement
-        	if(xpos >= 0 && xpos < ResourceManager.ScrollWidth) {
-        	    movement.x -= ResourceManager.ScrollSpeed;
-        	} else if(xpos <= Screen.width && xpos > Screen.width - ResourceManager.ScrollWidth) {
-        	    movement.x += ResourceManager.ScrollSpeed;
-        	}
-	
-        	// vertical camera movement
-        	if(ypos >= 0 && ypos < ResourceManager.ScrollWidth) {
-        	    movement.z -= ResourceManager.ScrollSpeed;
-        	} else if(ypos <= Screen.height && ypos > Screen.height - ResourceManager.ScrollWidth) {
-        	    movement.z += ResourceManager.ScrollSpeed;
-        	}
-		}
-
-		//keyboard movement
-        ///movement += GetBaseInput() * Time.deltaTime * ResourceManager.KeyboardScrollSpeed;
-        movement += GetBaseInput() * timeDeltaTime * ResourceManager.KeyboardScrollSpeed;
-
-        // make sure movement is in the direction the camera is pointing
-        // but ignore the vertical tilt of the camera to get sensible scrolling
-        movement = camera.transform.TransformDirection(movement);
-        movement.y = 0;
- 
-		// scroll to move closer
-		//movement += camera.transform.TransformDirection(Vector3.forward * Time.deltaTime * ResourceManager.ScrollZoomSpeed * Input.GetAxis("Mouse ScrollWheel"));
-        movement += camera.transform.TransformDirection(Vector3.forward * timeDeltaTime * ResourceManager.ScrollZoomSpeed * Input.GetAxis("Mouse ScrollWheel"));
+        movement = HandleHorizontalCameraMovement(movement);
+        movement = Quaternion.Euler(new Vector3(0, camera.transform.eulerAngles.y, 0)) * movement;
+        movement += camera.transform.TransformDirection(Vector3.forward * scrollSpeed * Time.deltaTime * Input.GetAxis("Mouse ScrollWheel"));
 
         // calculate desired camera position based on received input
         Vector3 origin = camera.transform.position;
@@ -61,65 +51,79 @@ public class TacticalCameraMovement : MonoBehaviour {
         destination.y += movement.y;
         destination.z += movement.z;
 
-        // limit away from ground movement to be between a minimum and maximum distance
-        if(destination.y > ResourceManager.MaxCameraHeight) {
-            destination.y = ResourceManager.MaxCameraHeight;
-        } else if(destination.y < ResourceManager.MinCameraHeight) {
-            destination.y = ResourceManager.MinCameraHeight;
-        }
-		if(destination.x > ResourceManager.MaxCameraX) {
-            destination.x = ResourceManager.MaxCameraX;
-        } else if(destination.x < ResourceManager.MinCameraX) {
-            destination.x = ResourceManager.MinCameraX;
-        }
-		if(destination.z > ResourceManager.MaxCameraZ) {
-            destination.z = ResourceManager.MaxCameraZ;
-        } else if(destination.z < ResourceManager.MinCameraZ) {
-            destination.z = ResourceManager.MinCameraZ;
-        }
+        destination = ApplyLimits(destination);
  
-        // if a change in position is detected perform the necessary update
         if(destination != origin) {
-            //camera.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.ScrollSpeed);
-            camera.transform.position = Vector3.MoveTowards(origin, destination, timeDeltaTime * ResourceManager.ScrollSpeed);
+            camera.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * maxCameraMovePerSecond);
         }
     }
  
     private void RotateCamera() {
-        Vector3 origin = camera.transform.eulerAngles;
-        Vector3 destination = origin;
- 
-        // detect Right mouse button is down
-        if(Input.GetMouseButton(1)) {
-            destination.x -= Input.GetAxis("Mouse Y") * ResourceManager.RotateAmount;
-            destination.y += Input.GetAxis("Mouse X") * ResourceManager.RotateAmount;
+        Vector3 rotationPoint = GetGroundRotationPoint();
+        float rotateDegrees = 0f;
 
-			// destination = new Vector3(Mathf.Clamp(destination.x, ResourceManager.MinCameraRotationX, ResourceManager.MaxCameraRotationX),
-   	 		// 						  Mathf.Clamp(destination.y, ResourceManager.MinCameraRotationY, ResourceManager.MaxCameraRotationY),
-   	 		// 						  destination.z);
-        }
- 
-        // if a change in position is detected perform the necessary update
-        if(destination != origin) {
-            //camera.transform.eulerAngles = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.RotateSpeed);
-            camera.transform.eulerAngles = Vector3.MoveTowards(origin, destination, timeDeltaTime * ResourceManager.RotateSpeed);
+        // detect Right mouse button is down
+        if(Input.GetMouseButton(2)) {
+            rotateDegrees += Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+            rotateDegrees += Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+            camera.transform.RotateAround(rotationPoint, Vector3.up, rotateDegrees);
         }
     }
 
-    private Vector3 GetBaseInput() { //returns the basic values, if it's 0 than it's not active.
-        Vector3 p_Velocity = new Vector3();
-        if (Input.GetKey(KeyCode.UpArrow)){
-            p_Velocity += new Vector3(0, 0 , 1);
+    private Vector3 HandleHorizontalCameraMovement(Vector3 cameraPosition) {
+        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= (Screen.height - panBorderThickness)) {
+            cameraPosition.z += panSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.DownArrow)){
-            p_Velocity += new Vector3(0, 0, -1);
+        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness) {
+            cameraPosition.z -= panSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.LeftArrow)){
-            p_Velocity += new Vector3(-1, 0, 0);
+        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= (Screen.width - panBorderThickness)) {
+            cameraPosition.x += panSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.RightArrow)){
-            p_Velocity += new Vector3(1, 0, 0);
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness) {
+            cameraPosition.x -= panSpeed * Time.deltaTime;
         }
-        return p_Velocity;
-	}
+
+        if (Input.GetMouseButton(1)) {
+            cameraPosition.z += Input.GetAxis("Mouse Y") * panSpeed * Time.deltaTime;
+            cameraPosition.x += Input.GetAxis("Mouse X") * panSpeed * Time.deltaTime;
+        }
+
+        return cameraPosition;
+    }
+
+    private Vector3 ApplyLimits(Vector3 cameraPosition) {
+        Vector3 groundCameraPoint = GetGroundRotationPoint();
+        cameraPosition.x = Mathf.Clamp(cameraPosition.x, panLimitMin.x, panLimitMax.x);
+        cameraPosition.y = Mathf.Clamp(cameraPosition.y, scrollMin, scrollMax);
+        cameraPosition.z = Mathf.Clamp(cameraPosition.z, panLimitMin.y, panLimitMax.y);
+
+        return cameraPosition;
+    }
+
+    private Vector3 GetGroundRotationPoint() {
+        Ray ray = camera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+        Plane hPlane = new Plane(Vector3.up, new Vector3(0, groundLevelY, 0));
+        float distance = 0;
+
+        if (hPlane.Raycast(ray, out distance))
+        {
+            return ray.GetPoint(distance);
+        } 
+        else 
+        {
+            return Vector3.zero;
+        }
+    }
+
+    private void LockMouseWhenMoving() {
+        if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2)) {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        if ((Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2)) && 
+            !(Input.GetMouseButton(1) || Input.GetMouseButton(2))) {
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
 }
