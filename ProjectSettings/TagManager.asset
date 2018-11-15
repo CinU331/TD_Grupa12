@@ -3,13 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Weapon
-  - Shop
-  - Information
-  - BuildingSpot
-  - FxTemporaire
-  - Tower
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -19,7 +13,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Player
   - 
   - 
   - 
