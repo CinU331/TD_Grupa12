@@ -27,7 +27,7 @@ public class Enemies : MonoBehaviour {
 
         if (Vector3.Distance(transform.position, exitGate.position) <= 0.4f)
         {
-            if (numberOfWaypoint == 28)
+            if (numberOfWaypoint == 41)
             {
                 if (GameObject.Find("OrcHB(Clone)"))
                 {
@@ -61,7 +61,7 @@ public class Enemies : MonoBehaviour {
         if (iCurrentHp <= 0 && isAlive)
         {
             isAlive = false;
-            if (numberOfWaypoint > 28)
+            if (numberOfWaypoint > 41)
             {
                 if (GameObject.Find("OrcHB(Clone)"))
                     resources = tmpResources;

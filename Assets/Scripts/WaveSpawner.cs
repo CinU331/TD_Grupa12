@@ -6,13 +6,14 @@ public class WaveSpawner : MonoBehaviour
     public static int wave = 0;
     public static int numberOfWaves = 3;
     public static int aliveEnemies = 0;
+    private float delay;
+    private int spawnedEnemies;
     public GameObject enemy;
     public GameObject enemy2;
     public GameObject boss;
     public Transform startGate;
 
     private bool waveSpawningInProgress = false;
-    private int choice;
     System.Random rnd = new System.Random();
 
     void Update()
@@ -29,12 +30,18 @@ public class WaveSpawner : MonoBehaviour
     {
         if (wave < numberOfWaves - 1)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
-                choice = rnd.Next(2);
-                SpawnEnemy(choice);
+                if (spawnedEnemies < 5)
+                {
+                    SpawnEnemy(0);
+                    spawnedEnemies++;
+                }
+                else
+                    SpawnEnemy(1);
                 aliveEnemies++;
-                yield return new WaitForSeconds(0.5f);
+                delay = rnd.Next(15, 40) / 10;
+                yield return new WaitForSeconds(delay);
             }
         }
         else
