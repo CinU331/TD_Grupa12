@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
+        Resume();
     }
 
     void Update()
@@ -60,7 +61,7 @@ public class PauseMenu : MonoBehaviour
         tacticalCameraMovement.isMovementRestricted = false;
         IsPaused = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
 
     }
 

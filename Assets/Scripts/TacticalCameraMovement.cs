@@ -118,12 +118,11 @@ public class TacticalCameraMovement : MonoBehaviour {
 
     private void LockMouseWhenMoving() {
         if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2)) {
-            Cursor.lockState = CursorLockMode.Locked;
+
         }
 
         if ((Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2)) && 
             !(Input.GetMouseButton(1) || Input.GetMouseButton(2))) {
-            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

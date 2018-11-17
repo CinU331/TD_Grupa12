@@ -104,7 +104,7 @@ namespace Assets.Scripts
         public void StopBuild()
         {
             Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked;
             IsPaused = false;
 
             shopPanel.SetActive(false);
