@@ -8,8 +8,7 @@ namespace Assets.Scripts
     {
         public GameObject shopPanel;
         public GameObject camera;
-        List<GameObject> buildingSpotsObjects;
-        List<BuildingSpot> buildingSpots;
+        private List<GameObject> buildingSpotsObjects;
         public Boolean IsPaused;
         private int build = 1;
         //public ShopButtonControler shopButtonControler;
@@ -20,7 +19,6 @@ namespace Assets.Scripts
         private void Start()
         {
             buildingSpotsObjects = new List<GameObject>();
-            buildingSpots = new List<BuildingSpot>();
 
             GameObject spotsSource = GameObject.Find("BuildingSpots");
             int i = 0;
@@ -29,16 +27,7 @@ namespace Assets.Scripts
             foreach (Transform transform in spotsSource.transform)
             {
                 buildingSpotsObjects.Add(transform.gameObject);
-                buildingSpots.Add(buildingSpotsObjects[i].GetComponent<BuildingSpot>());
                 buildingSpotsObjects[i].tag = "BuildingSpot";
-
-                Light lightComp = buildingSpotsObjects[i].AddComponent<Light>();
-                lightComp.color = Color.green;
-                lightComp.range = 2.5f;
-                lightComp.intensity = 50;
-                lightComp.enabled = false;
-                buildingSpotsObjects[i].transform.position += new Vector3(0, 0.1f, 0);
-                i++;
             }
             shopPanel.SetActive(false);
         }
@@ -46,6 +35,7 @@ namespace Assets.Scripts
         // Update is called once per frame
         private void Update()
         {
+
             Boolean change = false;
             if (camera.GetComponent<Camera>().enabled == true && Input.GetKeyDown("b") && (build == 1) && !change)
             {
@@ -67,6 +57,8 @@ namespace Assets.Scripts
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
+
+
             if (Physics.Raycast(ray, out hit))
             {
                 if (hit.transform.gameObject.tag == "BuildingSpot")
@@ -75,13 +67,12 @@ namespace Assets.Scripts
                     {
                         hit.transform.gameObject.SendMessage("CreateTower", ShopButtonControler.towerButtonClicked);
                     }
-                    else if(Input.GetMouseButton(1))
+                    else if (Input.GetMouseButton(1))
                     {
                         hit.transform.gameObject.SendMessage("SellTower");
                     }
                 }
             }
-
         }
 
         public void StartBuild()
@@ -92,13 +83,16 @@ namespace Assets.Scripts
 
             shopPanel.SetActive(true);
 
-            foreach (GameObject buildingSpot in buildingSpotsObjects)
+            foreach(GameObject buildingSpot in buildingSpotsObjects)
             {
-
                 buildingSpot.GetComponent<Collider>().enabled = true;
-                buildingSpot.GetComponent<Light>().enabled = true;
-
+                buildingSpot.SendMessage("SetLightEnabled", true);
+                if (buildingSpot.GetComponent<BuildingSpot>().isOcuppied)
+                    buildingSpot.SendMessage("SetLightRadiusExpanded");
+                else
+                    buildingSpot.SendMessage("SetLightRadiusDefault", true);
             }
+            
         }
 
         public void StopBuild()
@@ -109,11 +103,18 @@ namespace Assets.Scripts
 
             shopPanel.SetActive(false);
 
-            foreach(GameObject buildingSpot in buildingSpotsObjects)
+            foreach (GameObject buildingSpot in buildingSpotsObjects)
             {
                 buildingSpot.GetComponent<Collider>().enabled = false;
-                buildingSpot.GetComponent<Light>().enabled = false;
+                if (!buildingSpot.GetComponent<BuildingSpot>().isOcuppied)
+                    buildingSpot.SendMessage("SetLightEnabled", false);
+                else
+                {
+                    buildingSpot.SendMessage("SetLightRadiusExpanded");
+                    buildingSpot.SendMessage("SetLightEnabled", false);
+                }
             }
         }
+
     }
 }

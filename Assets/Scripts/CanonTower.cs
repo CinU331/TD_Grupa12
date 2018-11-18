@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class CanonTower : MonoBehaviour
 {
-    private bool isShotInProgress;
-    public float range = 20;
-    public float splashRange = 5;
-    public float turnSpeed = 10;
-    public float ballSpeed = 25;
+    private bool isShotInProgress = false;
+    private float range = 15;
+    private float splashRange = 5;
+    private float turnSpeed = 10;
+    private float ballSpeed = 25;
+    private float cooldown = 4f;
+    private int directHitDamage = 600;
+    private int splashDamage = 200;
 
     private ParticleSystem directionalSmoke;
     private ParticleSystem smallExplosion;
@@ -33,7 +36,7 @@ public class CanonTower : MonoBehaviour
         inRange = new List<GameObject>();
         InvokeRepeating("FindTarget", 0f, 0.05f);
         InvokeRepeating("UpdateRotation", 0f, 0.05f);
-        InvokeRepeating("AttackEnemy", 0f, 4f);
+        InvokeRepeating("AttackEnemy", 0f, cooldown);
 
         directionalSmoke = transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>();
         ParticleSystem.MainModule mM = directionalSmoke.main;
@@ -63,7 +66,7 @@ public class CanonTower : MonoBehaviour
                 directionalSmoke.transform.position = target.transform.position;
                 directionalSmoke.Play();
 
-                target.SendMessage("DealDamage", 600);
+                target.SendMessage("DealDamage", directHitDamage);
 
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Respawn");
 
@@ -72,7 +75,7 @@ public class CanonTower : MonoBehaviour
                 {
                     if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < splashRange && enemies[i] != target)
                     {
-                        enemies[i].SendMessage("DealDamage", 200);
+                        enemies[i].SendMessage("DealDamage", splashDamage);
                     }
                 }
 
@@ -141,6 +144,11 @@ public class CanonTower : MonoBehaviour
             audioSource.Play();
         }
         inRange.Clear();
+    }
+
+    public float GetRange()
+    {
+        return range;
     }
 
     public void OnDrawGizmosSelected()

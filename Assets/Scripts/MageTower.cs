@@ -3,14 +3,19 @@ using UnityEngine;
 
 public class MageTower : MonoBehaviour
 {
-    public float range;
+    private float range = 20f;
+    private float cooldown = 0.05f;
+    private float damage = 5;
+    private int maxTargets = 3;
+
+
     public GameObject objectToSpawn;
     public GameObject[] bolts;
 
-    public AudioSource audioSource;
+    private AudioSource audioSource;
 
     private List<GameObject> inRange;
-    public int maxTargets;
+    
     // Use this for initialization
     private void Start()
     {
@@ -27,8 +32,8 @@ public class MageTower : MonoBehaviour
 
         }
 
-        InvokeRepeating("FindTarget", 0f, 0.5f);
-        InvokeRepeating("AttackEnemy", 0f, 0.5f);
+        InvokeRepeating("FindTarget", 0f, 0.01f);
+        InvokeRepeating("AttackEnemy", 0f, cooldown);
     }
 
     // Update is called once per frame
@@ -62,24 +67,33 @@ public class MageTower : MonoBehaviour
             {
                 for (int i = 0; i < bolts.Length; i++)
                 {
-                    bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
-                    bolts[i].SetActive(true);
-                    inRange[i].SendMessage("DealDamage", 5.0);
+                    if (inRange[i] != null)
+                    {
+                        bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
+                        bolts[i].SetActive(true);
+                        inRange[i].SendMessage("DealDamage", damage);
+                    }
                 }
             }
             else
             {
                 for (int i = 0; i < inRange.Count; i++)
                 {
-                    bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
-                    bolts[i].SetActive(true);
-                    inRange[i].SendMessage("DealDamage", 5.0);
+                    if (inRange[i] != null)
+                    {
+                        bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
+                        bolts[i].SetActive(true);
+                        inRange[i].SendMessage("DealDamage", damage);
+                    }
                 }
                 for (int i = inRange.Count; i < bolts.Length; i++)
                 {
-                    bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
-                    inRange[0].SendMessage("DealDamage", 5.0);
-                    bolts[i].SetActive(true);
+                    if (inRange[0] != null)
+                    {
+                        bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
+                        inRange[0].SendMessage("DealDamage", damage);
+                        bolts[i].SetActive(true);
+                    }
                 }
             }
         }
@@ -93,10 +107,25 @@ public class MageTower : MonoBehaviour
         inRange.Clear();
     }
 
+
+    public void StopAllAnimations()
+    {
+        foreach(GameObject bolt in bolts)
+        {
+            bolt.SetActive(false);
+            GameObject.Destroy(bolt);
+        }
+    }
+
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, range);
     }
 
+    public float GetRange()
+    {
+        return range;
+    }
+    
 }

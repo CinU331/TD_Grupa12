@@ -14,9 +14,11 @@ public class Tuple<T1, T2>
 
 public class ArcherTower : MonoBehaviour
 {
-    public float range;
-    public float arrowSpeed = 20;
-    public int maxTargets = 1;
+    private float range = 20;
+    private float arrowSpeed = 20;
+    private int maxTargets = 2;
+    private int damage = 60;
+
     public GameObject arrowToSpawn;
     public GameObject[] arrows;
     public AudioSource audioSource;
@@ -144,7 +146,7 @@ public class ArcherTower : MonoBehaviour
                 {
                     if (Vector3.Distance(inRange[indexOfTarget].transform.position, arrows[indexOfArrow].transform.position) < 0.5)
                     {
-                        inRange[indexOfTarget].SendMessage("DealDamage", 100f);
+                        inRange[indexOfTarget].SendMessage("DealDamage", damage);
                         arrows[indexOfArrow].transform.position = startPoint;
                         itemTargets.RemoveAt(i);
                     }
@@ -161,6 +163,12 @@ public class ArcherTower : MonoBehaviour
             }
         }
     }
+
+    public float GetRange()
+    {
+        return range;
+    }
+
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
