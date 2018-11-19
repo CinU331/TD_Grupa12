@@ -15,10 +15,12 @@ public class Tuple<T1, T2>
 public class ArcherTower : MonoBehaviour
 {
     private float range = 20;
-    private float arrowSpeed = 20;
-    private int maxTargets = 2;
-    private int damage = 60;
-
+    private float arrowSpeed = 40;
+    private int maxTargets = 3;
+    private int damage = 80;
+    private float cooldown = 3;
+    private float startTime;
+    private float endTime;
     public GameObject arrowToSpawn;
     public GameObject[] arrows;
     public AudioSource audioSource;
@@ -50,7 +52,10 @@ public class ArcherTower : MonoBehaviour
     private void Update()
     {
         FindTarget();
-        AttackEnemy();
+        endTime = Time.time;
+        if(endTime - startTime >= cooldown)
+            AttackEnemy();
+        
         MoveArrows();
     }
 
@@ -84,7 +89,7 @@ public class ArcherTower : MonoBehaviour
                     audioSource.Play();
                 }
 
-
+                startTime = Time.time;
                 if (arrows.Length <= inRange.Count)
                 {
                     for (int i = 0; i < arrows.Length; i++)
@@ -146,7 +151,7 @@ public class ArcherTower : MonoBehaviour
                 {
                     if (Vector3.Distance(inRange[indexOfTarget].transform.position, arrows[indexOfArrow].transform.position) < 0.5)
                     {
-                        inRange[indexOfTarget].SendMessage("DealDamage", damage);
+                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.8f, slowDownFactor = 0.8f});//damage);
                         arrows[indexOfArrow].transform.position = startPoint;
                         itemTargets.RemoveAt(i);
                     }
@@ -154,9 +159,7 @@ public class ArcherTower : MonoBehaviour
                     {
                         Vector3 direction = inRange[indexOfTarget].transform.position - arrows[indexOfArrow].transform.position;
                         float distance = arrowSpeed * Time.deltaTime;
-                //        arrows[indexOfArrow].transform.rotation = Quaternion.Euler(-arrows[indexOfArrow].transform.rotation.eulerAngles);
                         arrows[indexOfArrow].transform.Translate(direction.normalized * distance, Space.World);
-                 //       arrows[indexOfArrow].transform.rotation = Quaternion.Euler(-arrows[indexOfArrow].transform.rotation.eulerAngles);
 
                     }
                 }
