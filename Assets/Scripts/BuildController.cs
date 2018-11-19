@@ -9,6 +9,7 @@ namespace Assets.Scripts
         public GameObject shopPanel;
         public GameObject camera;
         private List<GameObject> buildingSpotsObjects;
+        private GameObject previousBuildingSpot;
         public Boolean IsPaused;
         private int build = 1;
         //public ShopButtonControler shopButtonControler;
@@ -55,23 +56,76 @@ namespace Assets.Scripts
                 StopBuild();
             }
 
+
+            foreach (GameObject spot in buildingSpotsObjects)
+            {
+                if (build == 1)
+                {
+                    spot.GetComponent<BuildingSpot>().SetNotOccupiedVisible(false);
+                }
+                else
+                {
+                    spot.GetComponent<BuildingSpot>().SetNotOccupiedVisible(true);
+                }
+            }
+
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-
+            bool isMockRangeCreated = false;
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.gameObject.tag == "BuildingSpot")
+                if (hit.transform.gameObject.tag == "BuildingSpot" && build == 2)
                 {
                     if (Input.GetMouseButton(0))
                     {
                         hit.transform.gameObject.SendMessage("CreateTower", ShopButtonControler.towerButtonClicked);
+                        hit.transform.gameObject.SendMessage("SpawnRocks");
                     }
                     else if (Input.GetMouseButton(1))
                     {
                         hit.transform.gameObject.SendMessage("SellTower");
+                        hit.transform.gameObject.SendMessage("SpawnRocks");
+                    }
+                    else if (Input.GetMouseButton(2))
+                    {
+                        int val = 0;
+                        switch (ShopButtonControler.towerButtonClicked)
+                        {
+                            case "MagicalTowerItem":
+                                {
+                                    val = 1;
+                                    break;
+                                }
+                            case "CannonTowerItem":
+                                {
+                                    val = 2;
+                                    break;
+                                }
+                            case "ArcherTowerItem":
+                                {
+                                    val = 3;
+                                    break;
+                                }
+                        }
+                        hit.transform.gameObject.SendMessage("SpawnRocksMock", val);
+                        if (val != 0)
+                        {
+                            isMockRangeCreated = true;
+                        }
+                    }
+                    previousBuildingSpot = hit.transform.gameObject;
+                }
+                if (!isMockRangeCreated)
+                {
+                    int zeroValue = 0;
+                    if (previousBuildingSpot != null)
+                    {
+                        previousBuildingSpot.SendMessage("SpawnRocksMock", zeroValue);
                     }
                 }
+
             }
         }
 
@@ -83,16 +137,11 @@ namespace Assets.Scripts
 
             shopPanel.SetActive(true);
 
-            foreach(GameObject buildingSpot in buildingSpotsObjects)
+            foreach (GameObject buildingSpot in buildingSpotsObjects)
             {
                 buildingSpot.GetComponent<Collider>().enabled = true;
-                buildingSpot.SendMessage("SetLightEnabled", true);
-                if (buildingSpot.GetComponent<BuildingSpot>().isOcuppied)
-                    buildingSpot.SendMessage("SetLightRadiusExpanded");
-                else
-                    buildingSpot.SendMessage("SetLightRadiusDefault", true);
             }
-            
+
         }
 
         public void StopBuild()
@@ -106,13 +155,6 @@ namespace Assets.Scripts
             foreach (GameObject buildingSpot in buildingSpotsObjects)
             {
                 buildingSpot.GetComponent<Collider>().enabled = false;
-                if (!buildingSpot.GetComponent<BuildingSpot>().isOcuppied)
-                    buildingSpot.SendMessage("SetLightEnabled", false);
-                else
-                {
-                    buildingSpot.SendMessage("SetLightRadiusExpanded");
-                    buildingSpot.SendMessage("SetLightEnabled", false);
-                }
             }
         }
 

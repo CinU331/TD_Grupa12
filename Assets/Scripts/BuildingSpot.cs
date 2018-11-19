@@ -1,46 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class BuildingSpot : MonoBehaviour
 {
     public GameObject rock1;
     public GameObject rock2;
     public GameObject rock3;
+    public GameObject rock4;
+    private GameObject[] rockPrefabs;
 
-    public bool isOcuppied = false;
+
+    public bool isOccupied = false;
     public GameObject magicalTower;
     public GameObject cannonTower;
     public GameObject archerTower;
     private float defaultRange = 2.5f;
-
-    public Light light;
-    public GameObject lightHolder;
-
+    public List<GameObject> mockRocks;
+    private List<GameObject> spawnedRocks;
     public GameObject currentTower;
     private int currentTowerType;
 
     private LineRenderer line;
     private void Start()
     {
-        lightHolder = new GameObject();
-        Transform newTransform = lightHolder.GetComponent<Transform>();
-        float oldX = GetComponent<Transform>().position.x;
-        float oldY = GetComponent<Transform>().position.y;
-        float oldZ = GetComponent<Transform>().position.z;
-
-        Vector3 newPostion = new Vector3(oldX, oldY, oldZ);
-        newTransform.position = newPostion;
-        lightHolder.transform.position = newPostion;
-        transform.position += new Vector3(0, 0.2f, 0);
-
-
-        light = lightHolder.AddComponent<Light>();
-        light.type = LightType.Spot;
-        lightHolder.transform.Translate(0, 20, 0);
-        lightHolder.transform.Rotate(90, 0, 0);
-        light.intensity = 1000000;
-        light.color = Color.red;
-        light.range = 20.5f;
-        light.enabled = false;
+        rockPrefabs = new GameObject[] { rock1, rock2, rock3, rock4 };
+        spawnedRocks = new List<GameObject>();
+        mockRocks = new List<GameObject>();
+        SpawnRocks();
     }
 
     // Update is called once per frame
@@ -51,7 +37,7 @@ public class BuildingSpot : MonoBehaviour
 
     public void CreateTower(string aNameOfTower)
     {
-        if (!isOcuppied)
+        if (!isOccupied)
         {
             switch (aNameOfTower)
             {
@@ -83,7 +69,7 @@ public class BuildingSpot : MonoBehaviour
             Vector3 newScale = GetComponent<Collider>().transform.localScale;
             newScale.y = 20;
             GetComponent<Collider>().transform.localScale = newScale;
-            isOcuppied = true;
+            isOccupied = true;
         }
 
     }
@@ -97,7 +83,7 @@ public class BuildingSpot : MonoBehaviour
         GetComponent<Collider>().transform.localScale = newScale;
 
         //DODAJ CZĘŚĆ jej kosztu
-        isOcuppied = false;
+        isOccupied = false;
 
         if (currentTower != null && currentTowerType == 1)
         {
@@ -106,60 +92,182 @@ public class BuildingSpot : MonoBehaviour
         currentTowerType = 0;
     }
 
-    public void SetLightEnabled(bool aState)
+    public void SpawnRocks()
     {
-        light.enabled = aState;
-    }
-
-    public void SetLightRadiusDefault()
-    {
-        float expectedRadius = 5;
-        float halvedRadius = expectedRadius / 2.0f;
-        float tangensValue = halvedRadius / light.range;
-        float computedAngle = Mathf.Atan(tangensValue) * Mathf.Rad2Deg;
-        computedAngle *= 2;
-        light.spotAngle = computedAngle;
-    }
-
-    public void SetLightRadiusExpanded()
-    {
-        if (currentTower != null)
+        foreach (GameObject rock in spawnedRocks)
         {
-            
-
+            Destroy(rock);
+        }
+        spawnedRocks.Clear();
+        Color rockColor = new Color(255, 255, 0);
+        float radius;
+        if (isOccupied == false)
+        {
+            radius = defaultRange;
+        }
+        else
+        {
             switch (currentTowerType)
             {
                 case 1:
                     {
-                        float expectedRadius = currentTower.GetComponent<MageTower>().GetRange() * 2;
-                        float tangensValue = expectedRadius / light.range;
-                        float computedAngle = Mathf.Atan(tangensValue) * Mathf.Rad2Deg;
-                        computedAngle *= 2;
-                        light.spotAngle = computedAngle;
+                        radius = currentTower.GetComponent<MageTower>().GetRange();
+                        rockColor = Color.blue;
                         break;
                     }
                 case 2:
                     {
-                        float expectedRadius = currentTower.GetComponent<CanonTower>().GetRange() * 2;
-                        float tangensValue = expectedRadius / light.range;
-                        float computedAngle = Mathf.Atan(tangensValue) * Mathf.Rad2Deg;
-                        computedAngle *= 2;
-                        light.spotAngle = computedAngle;
+                        radius = currentTower.GetComponent<CanonTower>().GetRange();
+                        rockColor = Color.black;
                         break;
                     }
                 case 3:
                     {
-                        float expectedRadius = currentTower.GetComponent<ArcherTower>().GetRange() * 2;
-                        float tangensValue = expectedRadius / light.range;
-                        float computedAngle = Mathf.Atan(tangensValue) * Mathf.Rad2Deg;
-                        computedAngle *= 2;
-                        light.spotAngle = computedAngle;
+                        radius = currentTower.GetComponent<ArcherTower>().GetRange();
+                        rockColor = Color.magenta;
                         break;
                     }
+                default:
+                    {
+                        radius = 0;
+                        break;
+                    }
+            }
+        }
+        if (radius != 0)
+        {
+            int numObjects = (int)(4 * Mathf.PI * radius);
+
+            Vector3 center = transform.position + new Vector3(0, 0.2f, 0);
+            for (int i = 0; i < numObjects; i++)
+            {
+                Vector3 pos;
+                float ang = i * (360.0f / numObjects);
+                pos.x = center.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
+                pos.y = center.y;
+                pos.z = center.z + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
+
+                Quaternion rot = Quaternion.FromToRotation(Vector3.forward, center - pos);
+
+
+
+                GameObject prefab = rockPrefabs[(int)Mathf.Round(Random.Range(0, 3))];
+                GameObject newRock = Instantiate(prefab, pos, rot);
+                newRock.GetComponent<MeshRenderer>().material.color = rockColor;
+
+                if (radius != defaultRange)
+                {
+                    newRock.transform.localScale = new Vector3(0.1f, 0.4f, 0.01f);
+                    newRock.GetComponent<MeshCollider>().enabled = false;
+                    newRock.GetComponent<Collider>().enabled = false;
+
+                    newRock.GetComponent<MeshRenderer>().material.color = rockColor;
+                }
+                else
+                {
+                    newRock.GetComponent<MeshCollider>().enabled = true;
+                }
+                newRock.GetComponent<MeshRenderer>().enabled = true;
+                spawnedRocks.Add(newRock);
+            }
+        }
+    }
+
+
+    public void SpawnRocksMock(int typeVal)
+    {
+        if(typeVal == 0)
+        {
+            foreach (GameObject rock in mockRocks)
+            {
+                Destroy(rock);
+            }
+            mockRocks.Clear();
+        }
+        else if(mockRocks.Count == 0)
+        {
+            
+            Color rockColor = new Color(255, 255, 0);
+            float radius;
+
+
+            switch (typeVal)
+            {
+                case 1:
+                    {
+                        radius = magicalTower.GetComponent<MageTower>().GetRange();
+                        rockColor = Color.blue;
+                        break;
+                    }
+                case 2:
+                    {
+                        radius = cannonTower.GetComponent<CanonTower>().GetRange();
+                        rockColor = Color.black;
+                        break;
+                    }
+                case 3:
+                    {
+                        radius = archerTower.GetComponent<ArcherTower>().GetRange();
+                        rockColor = Color.magenta;
+                        break;
+                    }
+                default:
+                    {
+                        radius = 0;
+                        break;
+                    }
+
+            }
+            if (radius != 0)
+            {
+                int numObjects = (int)(4 * Mathf.PI * radius);
+
+                Vector3 center = transform.position + new Vector3(0, 0.2f, 0);
+                for (int i = 0; i < numObjects; i++)
+                {
+                    Vector3 pos;
+                    float ang = i * (360.0f / numObjects);
+                    pos.x = center.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
+                    pos.y = center.y;
+                    pos.z = center.z + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
+
+                    Quaternion rot = Quaternion.FromToRotation(Vector3.forward, center - pos);
+
+
+
+                    GameObject prefab = rockPrefabs[(int)Mathf.Round(Random.Range(0, 3))];
+                    GameObject newRock = Instantiate(prefab, pos, rot);
+                    newRock.GetComponent<MeshRenderer>().material.color = rockColor;
+
+                    if (radius != defaultRange)
+                    {
+                        newRock.transform.localScale = new Vector3(0.15f, 0.4f, 0.15f);
+                        newRock.GetComponent<MeshCollider>().enabled = false;
+                        newRock.GetComponent<Collider>().enabled = false;
+
+                        newRock.GetComponent<MeshRenderer>().material.color = rockColor;
+                    }
+                    else
+                    {
+                        newRock.GetComponent<MeshCollider>().enabled = true;
+                    }
+                    newRock.GetComponent<MeshRenderer>().enabled = true;
+                    mockRocks.Add(newRock);
+                }
             }
         }
 
     }
 
-
+    public void SetNotOccupiedVisible(bool state)
+    {
+        if(!isOccupied)
+        {
+            foreach(GameObject rock in spawnedRocks)
+            {
+                rock.GetComponent<MeshCollider>().enabled = state;
+                rock.GetComponent<MeshRenderer>().enabled = state;
+            }
+        }
+    }
 }
