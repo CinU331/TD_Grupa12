@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
+        IsPaused = false;
         Resume();
     }
 

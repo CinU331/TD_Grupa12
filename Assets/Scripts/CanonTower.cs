@@ -21,8 +21,6 @@ public class CanonTower : MonoBehaviour
     private GameObject mockBall;
     public GameObject cannonBall;
     private GameObject target;
-    private GameObject[] currentEnemies;
-
 
     // Use this for initialization
     private void Start()
@@ -114,7 +112,6 @@ public class CanonTower : MonoBehaviour
         {
             target = null;
         }
-        currentEnemies = inRange.ToArray();
         inRange.Clear();
     }
 

@@ -43,10 +43,13 @@ public class TarSplash : MonoBehaviour
         int numberOfSlowed = 0;
         for (int i = 0; i < monsters.Count; i++)
         {
-            if (Vector3.Distance(monsters[i].transform.position, transform.position) <= transform.localScale.x / 2)
+            if (monsters[i] != null)
             {
-                monsters[i].SendMessage("DealDamage", new DamageParameters { damageAmount = 0, duration = 0.1f, slowDownFactor = 0.3f });
-                numberOfSlowed++;
+                if (Vector3.Distance(monsters[i].transform.position, transform.position) <= transform.localScale.x / 2)
+                {
+                    monsters[i].SendMessage("DealDamage", new DamageParameters { damageAmount = 0, duration = 0.1f, slowDownFactor = 0.3f });
+                    numberOfSlowed++;
+                }
             }
         }
 
@@ -57,10 +60,12 @@ public class TarSplash : MonoBehaviour
     {
         for (int i = 0; i < monsters.Count; i++)
         {
-
-            if (monsters.Count == numberOfTargets && CheckAndSlow() == 0)
+            if (monsters[i] != null)
             {
-                Destroy(gameObject);
+                if (monsters.Count == numberOfTargets && CheckAndSlow() == 0)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }

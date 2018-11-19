@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public struct DamageParameters
@@ -9,12 +10,13 @@ public struct DamageParameters
 }
 
 
-public class Enemies : MonoBehaviour {
+public class Enemies : MonoBehaviour
+{
     private Transform exitGate;
     private int numberOfWaypoint = 0;
     public float speed = 50f;
-    public static int resources = 20;
-    private int tmpResources = 0;
+    public static int resources = 5;
+    public static int credits = 10;
     public float iMaxHp = 400;
     public float iCurrentHp;
 
@@ -27,19 +29,20 @@ public class Enemies : MonoBehaviour {
     float startTime;
     float endTime;
 
-    void Start () {
-
+    void Start()
+    {
         exitGate = Waypoints.waypoints[0];
-	    iCurrentHp = iMaxHp;
+        iCurrentHp = iMaxHp;
         isAlive = true;
     }
-	
-	void Update () {
-        
-        if(isSlowed)
+
+    void Update()
+    {
+
+        if (isSlowed)
         {
             endTime = Time.time;
-            if((endTime - startTime) >= duration)
+            if ((endTime - startTime) >= duration)
             {
                 isSlowed = false;
                 slowDownFactor = 1;
@@ -47,7 +50,8 @@ public class Enemies : MonoBehaviour {
         }
 
         Vector3 lookDirection = (exitGate.position - transform.position).normalized;
-        if (lookDirection != Vector3.zero) {
+        if (lookDirection != Vector3.zero)
+        {
             transform.rotation = Quaternion.LookRotation(lookDirection);
         }
 
@@ -56,16 +60,17 @@ public class Enemies : MonoBehaviour {
 
         if (Vector3.Distance(transform.position, exitGate.position) <= 0.4f)
         {
-            if (numberOfWaypoint == 41)
+            if (numberOfWaypoint == 40)
             {
                 if (GameObject.Find("OrcHB(Clone)"))
                 {
-                    tmpResources = resources;
-                    resources = 0;
+                    resources -= 4;
                 }
                 else
                     resources--;
             }
+            if (resources <= 0)
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             GoToNextWaypoint();
         }
     }
@@ -74,6 +79,12 @@ public class Enemies : MonoBehaviour {
     {
         if (numberOfWaypoint >= Waypoints.waypoints.Length - 1)
         {
+            if (GameObject.Find("OrcHB(Clone)"))
+            {
+                credits -= 20;
+            }
+            else
+                credits -= 10;
             WaveSpawner.aliveEnemies--;
             Destroy(gameObject);
             return;
@@ -85,7 +96,7 @@ public class Enemies : MonoBehaviour {
 
     public void DealDamage(DamageParameters damageParameters)
     {
-        if(!isSlowed)
+        if (!isSlowed)
         {
             duration = damageParameters.duration;
             slowDownFactor = damageParameters.slowDownFactor;
@@ -93,22 +104,19 @@ public class Enemies : MonoBehaviour {
             startTime = Time.time;
         }
         iCurrentHp -= damageParameters.damageAmount;
-        transform.Find("HealthBar").Find("Background").Find("Foreground").GetComponent<Image>().fillAmount = iCurrentHp / iMaxHp;  
+        transform.Find("HealthBar").Find("Background").Find("Foreground").GetComponent<Image>().fillAmount = iCurrentHp / iMaxHp;
         if (iCurrentHp <= 0 && isAlive)
         {
             isAlive = false;
-            if (numberOfWaypoint > 41)
+            if (GameObject.Find("OrcHB(Clone)"))
             {
-                if (GameObject.Find("OrcHB(Clone)"))
-                    resources = tmpResources;
-                else
-                    resources++;
+                credits += 87 - numberOfWaypoint;
             }
+            else
+                credits += (87 - numberOfWaypoint) / 10;
             Destroy(gameObject);
             if (WaveSpawner.aliveEnemies > 0)
                 WaveSpawner.aliveEnemies--;
         }
-
-
     }
 }
