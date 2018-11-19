@@ -6,9 +6,11 @@ public class TarSplash : MonoBehaviour
     private List<GameObject> monsters;
     private int numberOfTargets = 5;
 
+    AudioSource audioSource;
     // Use this for initialization
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         monsters = new List<GameObject>();
     }
 
@@ -30,6 +32,7 @@ public class TarSplash : MonoBehaviour
                 if (!monsters.Contains(monster) && monsters.Count < numberOfTargets)
                 {
                     monsters.Add(monster);
+                    audioSource.Play();
                 }
             }
         }

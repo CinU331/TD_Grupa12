@@ -11,13 +11,16 @@ public class SpikeTrap : MonoBehaviour {
     float endTime;
 
     List<GameObject> monstersInRange;
+
+    AudioSource audioSource;
     Animation animation;
     Collider collider;
 	// Use this for initialization
 	void Start () {
         collider = GetComponent<Collider>();
         animation = GetComponent<Animation>();
-        
+        audioSource = GetComponent<AudioSource>();
+
         monstersInRange = new List<GameObject>();
         animation.wrapMode = WrapMode.Once;
     }
@@ -37,9 +40,10 @@ public class SpikeTrap : MonoBehaviour {
             if(!animation.isPlaying && monstersInRange.Count != 0)
             {
                 animation.Play();
+                audioSource.Play();
                 foreach(GameObject monster in monstersInRange)
                 {
-                    monster.SendMessage("DealDamage", new DamageParameters { damageAmount = 1000, duration = 1.5f, slowDownFactor = 0.3f });
+                    monster.SendMessage("DealDamage", new DamageParameters { damageAmount = 700, duration = 1.5f, slowDownFactor = 0.3f });
                 }
                 durubality--;
                 isAvailable = false;
