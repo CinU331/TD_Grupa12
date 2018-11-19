@@ -464,7 +464,7 @@ MonoBehaviour:
   rock2: {fileID: 1205383696455894}
   rock3: {fileID: 1614379843889504}
   rock4: {fileID: 1469174167110914}
-  isOcuppied: 0
+  isOccupied: 0
   magicalTower: {fileID: 1870117282977766, guid: 1b1bdd5bbf761384190bb3841c081284,
     type: 2}
   cannonTower: {fileID: 1806624437100896, guid: ccb9e5ded4776764abfcb1a28f5e66e7,

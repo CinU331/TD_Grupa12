@@ -19,17 +19,7 @@ namespace Assets.Scripts
         // Use this for initialization
         private void Start()
         {
-            buildingSpotsObjects = new List<GameObject>();
-
-            GameObject spotsSource = GameObject.Find("BuildingSpots");
-            int i = 0;
-
-
-            foreach (Transform transform in spotsSource.transform)
-            {
-                buildingSpotsObjects.Add(transform.gameObject);
-                buildingSpotsObjects[i].tag = "BuildingSpot";
-            }
+            buildingSpotsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("BuildingSpot"));
             shopPanel.SetActive(false);
         }
 
@@ -56,20 +46,13 @@ namespace Assets.Scripts
                 StopBuild();
             }
 
-
-            foreach (GameObject spot in buildingSpotsObjects)
+            foreach(GameObject buildingSpot in buildingSpotsObjects)
             {
+                if(build == 2)
+                    buildingSpot.GetComponent<BuildingSpot>().SendMessage("SetNotOccupiedVisible", true);
                 if (build == 1)
-                {
-                    spot.GetComponent<BuildingSpot>().SetNotOccupiedVisible(false);
-                }
-                else
-                {
-                    spot.GetComponent<BuildingSpot>().SetNotOccupiedVisible(true);
-                }
+                    buildingSpot.GetComponent<BuildingSpot>().SendMessage("SetNotOccupiedVisible", false);
             }
-
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -127,6 +110,8 @@ namespace Assets.Scripts
                 }
 
             }
+
+
         }
 
         public void StartBuild()
