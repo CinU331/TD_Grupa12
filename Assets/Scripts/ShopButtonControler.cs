@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ShopButtonControler : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class ShopButtonControler : MonoBehaviour
     public void SetTowerButton()
     {
         towerButtonClicked = EventSystem.current.currentSelectedGameObject.name;
+        GetComponent<Image>().color = Color.yellow;
     }
 
 }

@@ -258,7 +258,7 @@ public class BuildingSpot : MonoBehaviour
         }
 
     }
-
+    
     public void SetNotOccupiedVisible(bool state)
     {
         if(!isOccupied)
@@ -270,4 +270,5 @@ public class BuildingSpot : MonoBehaviour
             }
         }
     }
+    
 }

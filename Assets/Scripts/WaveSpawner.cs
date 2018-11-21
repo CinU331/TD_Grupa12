@@ -24,6 +24,9 @@ public class WaveSpawner : MonoBehaviour
     public Button mainMenu;
     public Button b_continue;
 
+    public ChangingCamera changingCamera;
+    
+
     void Start()
     {
         wave = 0;
@@ -41,7 +44,9 @@ public class WaveSpawner : MonoBehaviour
 
     void NextWaveClicked()
     {
-        nextWaveClicked = true;
+        nextWaveClicked = true;        
+        changingCamera.SetActiveThirdCam();
+        changingCamera.canChangeCamera = false;
     }
 
     void MainMenuClicked()
@@ -70,6 +75,8 @@ public class WaveSpawner : MonoBehaviour
         else if (!nextWaveClicked && !waveSpawningInProgress && aliveEnemies == 0 && wave < numberOfWaves)
         {
             nextWaveButton.gameObject.SetActive(true);
+
+            changingCamera.canChangeCamera = true;
         }
 
         if (aliveEnemies == 0 && wave == numberOfWaves)
