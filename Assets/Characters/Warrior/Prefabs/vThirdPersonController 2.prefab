@@ -594,6 +594,7 @@ GameObject:
   - component: {fileID: 114339827242210770}
   - component: {fileID: 54359404001721218}
   - component: {fileID: 136881643016223968}
+  - component: {fileID: 114275131591845582}
   m_Layer: 0
   m_Name: vThirdPersonController 2
   m_TagString: Player
@@ -1632,24 +1633,6 @@ GameObject:
   m_Layer: 0
   m_Name: ear.R.003
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1506301633374054
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4688255973208692}
-  - component: {fileID: 20925396510199598}
-  - component: {fileID: 81841851802711032}
-  - component: {fileID: 114845218643623772}
-  m_Layer: 0
-  m_Name: vThirdPersonCamera
-  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3360,7 +3343,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4776369475794648}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4092599476884960
 Transform:
@@ -4344,7 +4327,7 @@ Transform:
   m_Children:
   - {fileID: 4135141868926050}
   m_Father: {fileID: 4776369475794648}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4470008996230718
 Transform:
@@ -4436,7 +4419,7 @@ Transform:
   m_GameObject: {fileID: 1929902299074762}
   m_LocalRotation: {x: -0.028840695, y: -0, z: -0, w: 0.9995841}
   m_LocalPosition: {x: 0.00054, y: -0.00284, z: -0.00177}
-  m_LocalScale: {x: 0.0100000035, y: 0.010000003, z: 0.010000003}
+  m_LocalScale: {x: 0.0100000035, y: 0.008322002, z: 0.010000003}
   m_Children: []
   m_Father: {fileID: 4041562024994650}
   m_RootOrder: 0
@@ -4980,19 +4963,6 @@ Transform:
   m_Father: {fileID: 4257919237330696}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4688255973208692
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1506301633374054}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.4, y: -40.39, z: 23.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4776369475794648}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4712079001548046
 Transform:
   m_ObjectHideFlags: 1
@@ -5126,10 +5096,9 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1173603900130102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.4, y: 40.39, z: -23.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.88, y: 45.9, z: -35.6}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_Children:
-  - {fileID: 4688255973208692}
   - {fileID: 4089848485351156}
   - {fileID: 4463488735005954}
   m_Father: {fileID: 0}
@@ -5912,46 +5881,6 @@ Transform:
   m_Father: {fileID: 4555531779628646}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &20925396510199598
-Camera:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1506301633374054}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.01
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!23 &23770535860060882
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -6038,13 +5967,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6344816, y: 1.8247391, z: 0.10714401}
   m_Center: {x: -0.061932594, y: -0.26288953, z: 5.8758476e-10}
---- !u!81 &81841851802711032
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1506301633374054}
-  m_Enabled: 1
 --- !u!95 &95361071553778600
 Animator:
   serializedVersion: 3
@@ -6063,6 +5985,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114275131591845582
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1173603900130102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2640ef98c25a7f047ba04249815c8cd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthPoints: 100
 --- !u!114 &114339827242210770
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6099,37 +6033,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 964e605ec61f33d48bc418b879d18ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114845218643623772
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1506301633374054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a1bfe72fbc87d04e885296b53e91c66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 4776369475794648}
-  smoothCameraRotation: 12
-  cullingLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  lockCamera: 0
-  rightOffset: 0
-  defaultDistance: 2.5
-  height: 1.4
-  smoothFollow: 10
-  xMouseSensitivity: 3
-  yMouseSensitivity: 3
-  yMinLimit: -40
-  yMaxLimit: 80
-  indexList: 0
-  indexLookPoint: 0
-  offSetPlayerPivot: 0
-  currentStateName: 
-  currentTarget: {fileID: 0}
-  movementSpeed: {x: 0, y: 0}
 --- !u!114 &114861708676784290
 MonoBehaviour:
   m_ObjectHideFlags: 1

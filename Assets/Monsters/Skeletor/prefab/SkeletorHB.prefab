@@ -882,7 +882,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   iMaxHp: 2000
+  damage: 20
   iCurrentHp: 0
+  attackDistance: 3
+  detourMaxDistance: 20
+  detourMaxTimeInSec: 5
+  returnToPathSpeedup: 0.2
 --- !u!114 &114110035290312426
 MonoBehaviour:
   m_ObjectHideFlags: 1

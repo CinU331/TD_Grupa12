@@ -64,7 +64,7 @@ public class CanonTower : MonoBehaviour
                 directionalSmoke.transform.position = target.transform.position;
                 directionalSmoke.Play();
 
-                target.SendMessage("DealDamage", new DamageParameters { damageAmount = directHitDamage, duration = 2.000f, slowDownFactor = 0.4f });
+                target.SendMessage("DealDamage", new DamageParameters { damageAmount = directHitDamage, duration = 2.000f, slowDownFactor = 0.4f, damageSourceObject = gameObject });
 
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Respawn");
 
@@ -73,7 +73,7 @@ public class CanonTower : MonoBehaviour
                 {
                     if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < splashRange && enemies[i] != target)
                     {
-                        enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = 0.75f });
+                        enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = 0.75f, damageSourceObject = gameObject });
                     }
                 }
 

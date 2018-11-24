@@ -151,7 +151,7 @@ public class ArcherTower : MonoBehaviour
                 {
                     if (Vector3.Distance(inRange[indexOfTarget].transform.position, arrows[indexOfArrow].transform.position) < 0.5)
                     {
-                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.8f, slowDownFactor = 0.8f});//damage);
+                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.8f, slowDownFactor = 0.8f, damageSourceObject = gameObject });//damage);
                         arrows[indexOfArrow].transform.position = startPoint;
                         itemTargets.RemoveAt(i);
                     }

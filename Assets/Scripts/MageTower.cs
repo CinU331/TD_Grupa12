@@ -71,7 +71,7 @@ public class MageTower : MonoBehaviour
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f, damageSourceObject = gameObject });
                     }
                 }
             }
@@ -83,7 +83,7 @@ public class MageTower : MonoBehaviour
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f, damageSourceObject = gameObject });
                     }
                 }
                 for (int i = inRange.Count; i < bolts.Length; i++)
@@ -91,7 +91,7 @@ public class MageTower : MonoBehaviour
                     if (inRange[0] != null)
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
-                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f });
+                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f, damageSourceObject = gameObject });
                         bolts[i].SetActive(true);
                     }
                 }
