@@ -23,10 +23,13 @@ public class ShopController : MonoBehaviour
 
         foreach (Transform child in transform)
         {
-            if (child.CompareTag("Shop"))
+            foreach (Transform childOfChild in child)
             {
-                shopButtons.Add(child);
-                child.GetComponent<Button>().onClick.AddListener(() => ShopButtonClicked(child));
+                if (childOfChild.CompareTag("Shop"))
+                {
+                    shopButtons.Add(childOfChild);
+                    childOfChild.GetComponent<Button>().onClick.AddListener(() => ShopButtonClicked(childOfChild));
+                }
             }
         }
 
@@ -66,8 +69,14 @@ public class ShopController : MonoBehaviour
         }
         else
         {
-            selectedTower = null;
+            DeselectTower();
         }
+    }
+
+    public void DeselectTower()
+    {
+        selectedTower = null;
+        SetAppropriateColors();
     }
 
     private void CheckTowerCostAndSetIfValid(Transform button)
