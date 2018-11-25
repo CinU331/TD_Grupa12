@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CanonTower : MonoBehaviour
+public class CanonTower : AbstractTower
 {
     private bool isShotInProgress = false;
     private float range = 15;

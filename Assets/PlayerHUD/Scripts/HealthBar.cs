@@ -23,7 +23,6 @@ public class HealthBar : MonoBehaviour {
             mCurrentPercent = mCurrentValue / Max;
 
             TxtHealth.text = string.Format("{0} %", Mathf.RoundToInt(mCurrentPercent * 100));
-            Debug.Log("Setting new health display value: " + TxtHealth.text);
 
             ImgHealthBar.fillAmount = mCurrentPercent;
         }

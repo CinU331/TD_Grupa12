@@ -44,7 +44,6 @@ public class PlayerCharacterState : MonoBehaviour {
 
 	public void DealDamage(DamageParameters damageParameters)
     {
-		Debug.Log("Player hit by: " + damageParameters.damageAmount);
         currentHealthPoints -= damageParameters.damageAmount;
 
 		timeSinceLastDamage = 0f;

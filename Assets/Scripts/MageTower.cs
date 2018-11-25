@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class MageTower : MonoBehaviour
+public class MageTower : AbstractTower
 {
     private float range = 20f;
     private float cooldown = 0.05f;

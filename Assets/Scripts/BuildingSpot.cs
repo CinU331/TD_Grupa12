@@ -35,6 +35,11 @@ public class BuildingSpot : MonoBehaviour
 
     }
 
+    public bool IsOccupied() 
+    {
+        return isOccupied;
+    }
+
     public void CreateTower(string aNameOfTower)
     {
         if (!isOccupied)
@@ -75,21 +80,32 @@ public class BuildingSpot : MonoBehaviour
     }
 
 
-    public void SellTower()
+    public string SellTower()
     {
-        GameObject.Destroy(currentTower);
-        Vector3 newScale = GetComponent<Collider>().transform.localScale;
-        newScale.y = 0.2f;
-        GetComponent<Collider>().transform.localScale = newScale;
-
-        //DODAJ CZĘŚĆ jej kosztu
-        isOccupied = false;
-
-        if (currentTower != null && currentTowerType == 1)
+        if (currentTower != null)
         {
-            currentTower.SendMessage("StopAllAnimations");
+            AbstractTower tower = currentTower.GetComponent<AbstractTower>();
+            string soldTowerName = tower.TowerIdentificator;
+
+            GameObject.Destroy(currentTower);
+            Vector3 newScale = GetComponent<Collider>().transform.localScale;
+            newScale.y = 0.2f;
+            GetComponent<Collider>().transform.localScale = newScale;
+
+            isOccupied = false;
+
+            if (currentTower != null && currentTowerType == 1)
+            {
+                currentTower.SendMessage("StopAllAnimations");
+            }
+
+            currentTowerType = 0;
+            return soldTowerName;
         }
-        currentTowerType = 0;
+        else
+        {
+            return "";
+        }
     }
 
     public void SpawnRocks()

@@ -7,10 +7,7 @@ public class Enemies : MonoBehaviour
     private Transform exitGate;
     private int numberOfWaypoint = 0;
     public float speed = 50f;
-    public static int resources = 5;
-    public static int credits = 10;
     public float iMaxHp = 400;
-
     public float damage = 20;
     public float iCurrentHp;
 
@@ -24,6 +21,7 @@ public class Enemies : MonoBehaviour
     private Vector3 aggroStartingPoint;
 
     private Animator animator;
+    private GameResources gameResources;
 
     private bool isAlive;
     private bool isAggroed;
@@ -41,6 +39,7 @@ public class Enemies : MonoBehaviour
         exitGate = Waypoints.waypoints[0];
 
         animator = GetComponent<Animator>();
+        gameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
 
         iCurrentHp = iMaxHp;
         isAlive = true;
@@ -85,10 +84,12 @@ public class Enemies : MonoBehaviour
         {
             if (GameObject.Find("OrcHB(Clone)"))
             {
-                credits -= 20;
+                gameResources.ChangeCreditsCount(-20);
             }
             else
-                credits -= 10;
+            {
+                gameResources.ChangeCreditsCount(-10);
+            }
             WaveSpawner.aliveEnemies--;
             Destroy(gameObject);
             return;
@@ -108,26 +109,18 @@ public class Enemies : MonoBehaviour
             {
                 if (GameObject.Find("OrcHB(Clone)"))
                 {
-                    resources -= 4;
+                    gameResources.ChangeResourceCount(-4);
                 }
                 else 
                 {
-                    resources--;
+                    gameResources.ChangeResourceCount(-1);
                 }
             }
 
-            if (resources <= 0) 
-            {
-                LoadEndGameScreen();
-            }
             GoToNextWaypoint();
         }
     }
 
-    private void LoadEndGameScreen() 
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
 
     private void Move(Vector3 movePoint) 
     {
@@ -246,11 +239,11 @@ public class Enemies : MonoBehaviour
 	{
         if (GameObject.Find("OrcHB(Clone)"))
         {
-            credits += 87 - numberOfWaypoint;
+            gameResources.ChangeCreditsCount(87 - numberOfWaypoint);
         }
         else
         {
-            credits += (87 - numberOfWaypoint) / 10;
+            gameResources.ChangeCreditsCount((87 - numberOfWaypoint) / 10);
         }
         
         if (WaveSpawner.aliveEnemies > 0)

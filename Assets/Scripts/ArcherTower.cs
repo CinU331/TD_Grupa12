@@ -12,7 +12,7 @@ public class Tuple<T1, T2>
     }
 }
 
-public class ArcherTower : MonoBehaviour
+public class ArcherTower : AbstractTower
 {
     private float range = 20;
     private float arrowSpeed = 40;
