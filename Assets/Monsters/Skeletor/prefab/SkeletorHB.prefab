@@ -505,7 +505,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1886286395271082}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.326416, y: 38.39956, z: -38.917984}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 4302844614578918}
@@ -886,6 +886,7 @@ MonoBehaviour:
   iCurrentHp: 0
   attackDistance: 3
   detourMaxDistance: 20
+  playerMaxDistance: 20
   detourMaxTimeInSec: 5
   returnToPathSpeedup: 0.2
 --- !u!114 &114110035290312426
@@ -991,7 +992,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!137 &137671835133368202
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

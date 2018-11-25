@@ -23,7 +23,9 @@ public class PlayerCharacterState : MonoBehaviour {
         
         if (healthPoints <= 0 && isAlive)
         {
-			animator.Play("Dying", 0, 0.0f);
+			animator.SetTrigger("Death");
+			isAlive = false;
+			Debug.Log("You died!");
         }
 
 		UpdatePlayerHealthBar();
@@ -31,7 +33,7 @@ public class PlayerCharacterState : MonoBehaviour {
 
 	public void DyingFinished() 
 	{
-
+		Debug.Log("Dying animation finished!");
 	}
 
 	private void UpdatePlayerHealthBar()

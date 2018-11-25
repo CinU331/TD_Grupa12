@@ -606,7 +606,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1181618208688900}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4.465439, y: 38.39956, z: -38.6388}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 4477282070707062}
@@ -928,9 +928,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 114038f9e548714449065b0099e9f3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 4
   iMaxHp: 1000
+  damage: 20
   iCurrentHp: 0
+  attackDistance: 3
+  detourMaxDistance: 20
+  playerMaxDistance: 20
+  detourMaxTimeInSec: 5
+  returnToPathSpeedup: 0.2
 --- !u!114 &114833269074693680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -986,7 +992,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!137 &137541336607860120
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

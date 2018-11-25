@@ -49,6 +49,10 @@ public class Enemies : MonoBehaviour
 
     void Update()
     {
+        if (!isAlive) {
+            return;
+        }
+        
         RecalculateSlowDownEffect();
 
         if (!isAggroed) 
@@ -164,7 +168,7 @@ public class Enemies : MonoBehaviour
         if (iCurrentHp <= 0 && isAlive)
         {
             isAlive = false;
-            animator.Play("Dying", 0, 0.0f);
+            animator.SetTrigger("Death");
         }
 
         GameObject player = GameObject.FindWithTag("Player");
@@ -200,10 +204,21 @@ public class Enemies : MonoBehaviour
         if (player != null) {
             float distance = Vector3.Distance(player.transform.position, transform.position);
 
-            if (!isDuringAttackAnimation && distance <= attackDistance) 
+            if (!isDuringAttackAnimation) 
             {
-                isDuringAttackAnimation = true;
-                animator.SetBool("isAttacking", true);
+                if (distance <= attackDistance)
+                {
+                    RotateTowardsMovementDirection(player.transform.position - transform.position);
+
+                    isDuringAttackAnimation = true;
+                    animator.SetBool("isAttacking", true);
+
+                    timeSinceAggro = 0;
+                }
+                else
+                {
+                    Move(player.transform.position - transform.position);
+                }
             } 
             else if (timeSinceAggro >= detourMaxTimeInSec || 
                      distance >= playerMaxDistance || 
@@ -211,10 +226,7 @@ public class Enemies : MonoBehaviour
             {
                 StopPlayerAggro();
             }
-            else 
-            {
-                Move(player.transform.position - transform.position);
-            }
+            
         }
     }
     
