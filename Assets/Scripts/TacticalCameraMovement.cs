@@ -42,7 +42,8 @@ public class TacticalCameraMovement : MonoBehaviour {
  
         movement = HandleHorizontalCameraMovement(movement);
         movement = Quaternion.Euler(new Vector3(0, camera.transform.eulerAngles.y, 0)) * movement;
-        movement += camera.transform.TransformDirection(Vector3.forward * scrollSpeed * Input.GetAxis("Mouse ScrollWheel"));
+
+        movement += ZoomCamera();
 
         // calculate desired camera position based on received input
         Vector3 origin = camera.transform.position;
@@ -54,10 +55,33 @@ public class TacticalCameraMovement : MonoBehaviour {
         destination = ApplyLimits(destination);
  
         if(destination != origin) {
-            camera.transform.position = Vector3.MoveTowards(origin, destination, maxCameraMovePerSecond);
+            camera.transform.position = Vector3.MoveTowards(origin, destination, maxCameraMovePerSecond * (transform.position.y) / scrollMax);
         }
     }
  
+    private Vector3 ZoomCamera()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        Vector3 cameraScroll = camera.transform.TransformDirection(Vector3.forward * scrollSpeed * scroll);
+
+        if (scroll > 0)
+        {
+            if ((transform.position.y + cameraScroll.y) > scrollMin)
+            {
+                return cameraScroll;
+            }
+        } 
+        else if (scroll < 0)
+        {
+            if ((transform.position.y + cameraScroll.y) < scrollMax)
+            {
+                return cameraScroll;
+            }
+        }
+
+        return Vector3.zero;
+    }
+
     private void RotateCamera() {
         Vector3 rotationPoint = GetGroundRotationPoint();
         float rotateDegrees = 0f;
@@ -71,22 +95,29 @@ public class TacticalCameraMovement : MonoBehaviour {
     }
 
     private Vector3 HandleHorizontalCameraMovement(Vector3 cameraPosition) {
-        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= (Screen.height - panBorderThickness)) {
-            cameraPosition.z += panSpeed;
-        }
-        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness) {
-            cameraPosition.z -= panSpeed;
-        }
-        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= (Screen.width - panBorderThickness)) {
-            cameraPosition.x += panSpeed;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness) {
-            cameraPosition.x -= panSpeed;
-        }
-
-        if (Input.GetMouseButton(1)) {
+        if (Input.GetMouseButton(1))
+        {
             cameraPosition.z += Input.GetAxis("Mouse Y") * panSpeed;
             cameraPosition.x += Input.GetAxis("Mouse X") * panSpeed;
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= (Screen.height - panBorderThickness))
+            {
+                cameraPosition.z += panSpeed;
+            }
+            if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness)
+            {
+                cameraPosition.z -= panSpeed;
+            }
+            if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= (Screen.width - panBorderThickness))
+            {
+                cameraPosition.x += panSpeed;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness)
+            {
+                cameraPosition.x -= panSpeed;
+            }
         }
 
         return cameraPosition;

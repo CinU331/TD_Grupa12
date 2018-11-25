@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.EventSystems;
 
 public class BuildController : MonoBehaviour
 {
@@ -63,25 +62,31 @@ public class BuildController : MonoBehaviour
 
     public void BuildingTowers()
     {
+        if(EventSystem.current.IsPointerOverGameObject()) // if blocked by ui
+        {
+            return;
+        }
+
+        int layer_mask = LayerMask.GetMask("BuildLayer");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         bool isMockRangeCreated = false;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, float.MaxValue, layer_mask))
         {
             if (hit.transform.gameObject.tag == "BuildingSpot" && build == 2)
             {
-                if (Input.GetMouseButton(0))
+                if (Input.GetMouseButtonUp(0))
                 {
                     hit.transform.gameObject.SendMessage("CreateTower", ShopButtonControler.towerButtonClicked);
                     hit.transform.gameObject.SendMessage("SpawnRocks");
                 }
-                else if (Input.GetMouseButton(1))
+                else if (Input.GetMouseButtonUp(1))
                 {
                     hit.transform.gameObject.SendMessage("SellTower");
                     hit.transform.gameObject.SendMessage("SpawnRocks");
                 }
-                else if (Input.GetMouseButton(2))
+                else if (Input.GetMouseButtonUp(2))
                 {
                     int val = 0;
                     switch (ShopButtonControler.towerButtonClicked)

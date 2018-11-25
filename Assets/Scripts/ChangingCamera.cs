@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class ChangingCamera : MonoBehaviour {
 
-    public GameObject camera1;
-    public GameObject camera2;
+    public GameObject TacticalCamera;
+    public GameObject ThirdPersonCamera;
 
     public BuildController buildController;
+
+    public GameObject playerHUD;
 
     int startCamera = 1;
     public bool zmiana = false;
@@ -19,12 +21,7 @@ public class ChangingCamera : MonoBehaviour {
     void Start()
     {
         buildController.Start();
-        buildController.StartBuild();
-        camera1.GetComponent<Camera>().enabled = true;
-        camera1.GetComponent<AudioListener>().enabled = true;
-
-        camera2.GetComponent<Camera>().enabled = false;
-        camera2.GetComponent<AudioListener>().enabled = false;
+        SetActiveTacticalCam();
     }
 
     // Update is called once per frame
@@ -50,14 +47,16 @@ public class ChangingCamera : MonoBehaviour {
     {
         startCamera = 1;
 
-        camera1.GetComponent<Camera>().enabled = true;
-        camera1.GetComponent<AudioListener>().enabled = true;
+        TacticalCamera.GetComponent<Camera>().enabled = true;
+        TacticalCamera.GetComponent<AudioListener>().enabled = true;
 
-        camera2.GetComponent<Camera>().enabled = false;
-        camera2.GetComponent<AudioListener>().enabled = false;
+        ThirdPersonCamera.GetComponent<Camera>().enabled = false;
+        ThirdPersonCamera.GetComponent<AudioListener>().enabled = false;
         this.zmiana = true;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        playerHUD.SetActive(false);
 
         buildController.StartBuild();
     }
@@ -66,14 +65,16 @@ public class ChangingCamera : MonoBehaviour {
     {
         startCamera = 2;
 
-        camera1.GetComponent<Camera>().enabled = false;
-        camera1.GetComponent<AudioListener>().enabled = false;
+        TacticalCamera.GetComponent<Camera>().enabled = false;
+        TacticalCamera.GetComponent<AudioListener>().enabled = false;
 
-        camera2.GetComponent<Camera>().enabled = true;
-        camera2.GetComponent<AudioListener>().enabled = true;
+        ThirdPersonCamera.GetComponent<Camera>().enabled = true;
+        ThirdPersonCamera.GetComponent<AudioListener>().enabled = true;
         this.zmiana = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        playerHUD.SetActive(true);
 
         buildController.StopBuild();
     }
