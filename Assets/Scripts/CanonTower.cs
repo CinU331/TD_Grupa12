@@ -4,13 +4,10 @@ using UnityEngine;
 public class CanonTower : AbstractTower
 {
     private bool isShotInProgress = false;
-    private float range = 15;
     private float splashRange = 5;
     private float turnSpeed = 10;
     private float ballSpeed = 25;
     private float cooldown = 4f;
-    private int directHitDamage = 600;
-    private int splashDamage = 200;
 
     private ParticleSystem directionalSmoke;
     private ParticleSystem smallExplosion;
@@ -64,11 +61,11 @@ public class CanonTower : AbstractTower
                 directionalSmoke.transform.position = target.transform.position;
                 directionalSmoke.Play();
 
-                target.SendMessage("DealDamage", new DamageParameters { damageAmount = directHitDamage, duration = 2.000f, slowDownFactor = 0.4f, damageSourceObject = gameObject });
+                target.SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 2.000f, slowDownFactor = 0.4f, damageSourceObject = gameObject });
 
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Respawn");
 
-
+                float splashDamage = damage * 0.33f;
                 for (int i = 0; i < enemies.Length; i++)
                 {
                     if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < splashRange && enemies[i] != target)
@@ -143,11 +140,11 @@ public class CanonTower : AbstractTower
         inRange.Clear();
     }
 
-    public float GetRange()
+    public void StopAllAnimations()
     {
-        return range;
-    }
 
+    }
+    
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

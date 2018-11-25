@@ -11,28 +11,18 @@ public class BuildingSpot : MonoBehaviour
 
 
     public bool isOccupied = false;
-    public GameObject magicalTower;
-    public GameObject cannonTower;
-    public GameObject archerTower;
     private float defaultRange = 2.5f;
     public List<GameObject> mockRocks;
     private List<GameObject> spawnedRocks;
     public GameObject currentTower;
-    private int currentTowerType;
 
     private LineRenderer line;
     private void Start()
     {
-        rockPrefabs = new GameObject[] { rock1, rock2, rock3, rock4 };
+        rockPrefabs = new[] { rock1, rock2, rock3, rock4 };
         spawnedRocks = new List<GameObject>();
         mockRocks = new List<GameObject>();
         SpawnRocks();
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-
     }
 
     public bool IsOccupied() 
@@ -40,36 +30,11 @@ public class BuildingSpot : MonoBehaviour
         return isOccupied;
     }
 
-    public void CreateTower(string aNameOfTower)
+    public void CreateTower(GameObject tower)
     {
         if (!isOccupied)
         {
-            switch (aNameOfTower)
-            {
-                case "MagicalTowerItem":
-                    {
-                        currentTower = GameObject.Instantiate(magicalTower);
-                        currentTowerType = 1;
-                        break;
-                    }
-                case "CannonTowerItem":
-                    {
-                        currentTower = GameObject.Instantiate(cannonTower);
-                        currentTowerType = 2;
-                        break;
-                    }
-                case "ArcherTowerItem":
-                    {
-                        currentTower = GameObject.Instantiate(archerTower);
-                        currentTowerType = 3;
-                        break;
-                    }
-                default:
-                    {
-                        return;
-                    }
-            }
-
+            currentTower = tower;
             currentTower.transform.position = transform.position;
             Vector3 newScale = GetComponent<Collider>().transform.localScale;
             newScale.y = 20;
@@ -78,7 +43,6 @@ public class BuildingSpot : MonoBehaviour
         }
 
     }
-
 
     public string SellTower()
     {
@@ -94,12 +58,11 @@ public class BuildingSpot : MonoBehaviour
 
             isOccupied = false;
 
-            if (currentTower != null && currentTowerType == 1)
+            if (currentTower != null)
             {
                 currentTower.SendMessage("StopAllAnimations");
             }
 
-            currentTowerType = 0;
             return soldTowerName;
         }
         else
@@ -123,33 +86,10 @@ public class BuildingSpot : MonoBehaviour
         }
         else
         {
-            switch (currentTowerType)
-            {
-                case 1:
-                    {
-                        radius = currentTower.GetComponent<MageTower>().GetRange();
-                        rockColor = Color.blue;
-                        break;
-                    }
-                case 2:
-                    {
-                        radius = currentTower.GetComponent<CanonTower>().GetRange();
-                        rockColor = Color.black;
-                        break;
-                    }
-                case 3:
-                    {
-                        radius = currentTower.GetComponent<ArcherTower>().GetRange();
-                        rockColor = Color.magenta;
-                        break;
-                    }
-                default:
-                    {
-                        radius = 0;
-                        break;
-                    }
-            }
+            radius = currentTower.GetComponent<AbstractTower>().range;
+            rockColor = currentTower.GetComponent<AbstractTower>().rockColor;
         }
+
         if (radius != 0)
         {
             int numObjects = (int)(4 * Mathf.PI * radius);
@@ -190,9 +130,9 @@ public class BuildingSpot : MonoBehaviour
     }
 
 
-    public void SpawnRocksMock(int typeVal)
+    public void SpawnRocksMock(GameObject tower)
     {
-        if(typeVal == 0)
+        if (tower == null || mockRocks.Count != 0)
         {
             foreach (GameObject rock in mockRocks)
             {
@@ -200,40 +140,11 @@ public class BuildingSpot : MonoBehaviour
             }
             mockRocks.Clear();
         }
-        else if(mockRocks.Count == 0)
+        else if (mockRocks.Count == 0)
         {
-            
-            Color rockColor = new Color(255, 255, 0);
-            float radius;
+            var radius = tower.GetComponent<AbstractTower>().range;
+            var rockColor = tower.GetComponent<AbstractTower>().rockColor;
 
-
-            switch (typeVal)
-            {
-                case 1:
-                    {
-                        radius = magicalTower.GetComponent<MageTower>().GetRange();
-                        rockColor = Color.blue;
-                        break;
-                    }
-                case 2:
-                    {
-                        radius = cannonTower.GetComponent<CanonTower>().GetRange();
-                        rockColor = Color.black;
-                        break;
-                    }
-                case 3:
-                    {
-                        radius = archerTower.GetComponent<ArcherTower>().GetRange();
-                        rockColor = Color.magenta;
-                        break;
-                    }
-                default:
-                    {
-                        radius = 0;
-                        break;
-                    }
-
-            }
             if (radius != 0)
             {
                 int numObjects = (int)(4 * Mathf.PI * radius);
@@ -248,8 +159,6 @@ public class BuildingSpot : MonoBehaviour
                     pos.z = center.z + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
 
                     Quaternion rot = Quaternion.FromToRotation(Vector3.forward, center - pos);
-
-
 
                     GameObject prefab = rockPrefabs[(int)Mathf.Round(Random.Range(0, 3))];
                     GameObject newRock = Instantiate(prefab, pos, rot);
@@ -286,5 +195,4 @@ public class BuildingSpot : MonoBehaviour
             }
         }
     }
-    
 }

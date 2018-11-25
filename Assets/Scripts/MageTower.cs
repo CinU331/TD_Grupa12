@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class MageTower : AbstractTower
 {
-    private float range = 20f;
     private float cooldown = 0.05f;
-    private float damage = 5;
     private int maxTargets = 3;
 
 

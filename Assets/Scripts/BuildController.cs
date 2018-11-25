@@ -12,8 +12,18 @@ public class BuildController : MonoBehaviour
     private int build = 1;
     // build = 1 -> building is off | build = 2 -> building is on
 
+    public GameObject magicalTower;
+    public GameObject cannonTower;
+    public GameObject archerTower;
+
     private ShopController shopController;
     private GameResources gameResources;
+
+    public Material ConstructionHighlightMaterial;
+    private GameObject constructionHighlight;
+    private bool isConstructionHighlightActive;
+    private bool isHighlightSnapped;
+    private string currentConstructionTower;
 
     public void Start()
     {
@@ -21,6 +31,8 @@ public class BuildController : MonoBehaviour
         shopController = shopPanel.GetComponentInChildren<ShopController>();
 
         gameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
+
+        SetupTowerConstructionHighlight();
     }
 
 
@@ -52,6 +64,7 @@ public class BuildController : MonoBehaviour
         IsPaused = false;
 
         shopPanel.SetActive(false);
+        DisableConstructionHighlight();
 
         foreach (GameObject buildingSpot in buildingSpotsObjects)
         {
@@ -68,23 +81,41 @@ public class BuildController : MonoBehaviour
     {
         if(EventSystem.current.IsPointerOverGameObject()) // if blocked by ui
         {
+            DisableConstructionHighlight();
             return;
         }
 
-        int layer_mask = LayerMask.GetMask("BuildLayer");
+        string chosenTower = shopController.getCurrentlySelectedTower();
+        if (!String.IsNullOrEmpty(chosenTower)) 
+        {
+            EnableConstructionHighlight(chosenTower);
+        }
+        else
+        {
+            DisableConstructionHighlight();
+        }
+
+        int layerMask = LayerMask.GetMask("BuildLayer");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, float.MaxValue, layer_mask))
+        bool isSnapped = false;
+        if (Physics.Raycast(ray, out hit, float.MaxValue, layerMask))
         {
-            if (hit.transform.gameObject.tag == "BuildingSpot" && build == 2)
+            if (hit.transform.gameObject.CompareTag("BuildingSpot") && build == 2)
             {
                 BuildingSpot buildingSpot = hit.transform.gameObject.GetComponent<BuildingSpot>();
-                string chosenTower = shopController.getCurrentlySelectedTower();
 
+                if (!buildingSpot.IsOccupied())
+                {
+                    isSnapped = true;
+                    UpdateConstructionHighlightPositionSnapped(hit.transform.gameObject.transform.position);
+                }
+                
                 if (Input.GetMouseButtonUp(0) && !buildingSpot.IsOccupied() && !String.IsNullOrEmpty(chosenTower))
                 {
-                    buildingSpot.CreateTower(chosenTower);
+                    GameObject newTower = GetTowerInstance(chosenTower);
+                    buildingSpot.CreateTower(newTower);
                     buildingSpot.SpawnRocks();
 
                     gameResources.ChangeCreditsCount(-GetTowerCost(chosenTower));
@@ -94,54 +125,25 @@ public class BuildController : MonoBehaviour
                     string soldTowerName = buildingSpot.SellTower();
                     buildingSpot.SpawnRocks();
 
-                    if (soldTowerName != null && soldTowerName != "")
+                    if (!string.IsNullOrEmpty(soldTowerName))
                     {
                         gameResources.ChangeCreditsCount(GetTowerCost(soldTowerName));
                     }
                 }
                 else if (Input.GetMouseButtonUp(2))
                 {
-                    bool isMockRangeCreated = false;
-                    SpawnRockMock(hit, out isMockRangeCreated);
-
-                    if (!isMockRangeCreated && buildingSpot != null)
+                    if (buildingSpot != null)
                     {
-                        buildingSpot.SpawnRocksMock(0);
+                        GameObject newTower = GetTowerInstance(chosenTower);
+                        buildingSpot.SpawnRocksMock(newTower);
                     }
                 }
             }
         }
-    }
 
-    private void SpawnRockMock(RaycastHit hit, out bool isMockRangeCreated)
-    {
-        isMockRangeCreated = false;
-        int val = 0;
-
-        switch (shopController.getCurrentlySelectedTower())
+        if (!isSnapped)
         {
-            case "MagicalTowerItem":
-                {
-                    val = 1;
-                    break;
-                }
-            case "CannonTowerItem":
-                {
-                    val = 2;
-                    break;
-                }
-            case "ArcherTowerItem":
-                {
-                    val = 3;
-                    break;
-                }
-        }
-
-        hit.transform.gameObject.SendMessage("SpawnRocksMock", val);
-
-        if (val != 0)
-        {
-            isMockRangeCreated = true;
+            UpdateConstructionHighlightPosition();
         }
     }
 
@@ -161,10 +163,100 @@ public class BuildController : MonoBehaviour
         }
     }
 
-    public int GetBuildVariable()
+    private void SetupTowerConstructionHighlight()
     {
-        return this.build;
+        constructionHighlight = new GameObject();
+		constructionHighlight.SetActive(false);
+
+		constructionHighlight.transform.parent = GameObject.Find("Terrain").transform;
     }
 
+    private void DisableConstructionHighlight() 
+    {
+        foreach (Transform child in constructionHighlight.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        constructionHighlight.SetActive(false);
+        isConstructionHighlightActive = false;
+        isHighlightSnapped = false;
+        currentConstructionTower = "";
+    }
+
+    private void EnableConstructionHighlight(string chosenTower)
+    {
+        if (!isConstructionHighlightActive || chosenTower != null && chosenTower != currentConstructionTower)
+        {
+            GameObject towerInstance = GetTowerInstance(chosenTower);
+            foreach (var childRenderer in towerInstance.GetComponentsInChildren<Renderer>())
+            {
+                childRenderer.material = ConstructionHighlightMaterial;
+            }
+            
+            towerInstance.transform.parent = constructionHighlight.transform;
+            towerInstance.transform.localPosition = Vector3.zero;
+
+            currentConstructionTower = chosenTower;
+            constructionHighlight.SetActive(true);
+            isConstructionHighlightActive = true;
+        }
+    }
+    
+    private void UpdateConstructionHighlightPosition()
+    {
+        if (constructionHighlight != null)
+        {
+            if (isHighlightSnapped)
+            {
+                isHighlightSnapped = false;
+            
+                Color snappedColor = new Color(1f, 0, 0, 100/255f);
+                foreach (var childRenderer in constructionHighlight.transform.GetComponentsInChildren<Renderer>())
+                {
+                    childRenderer.material.color = snappedColor;
+                }
+            }
+            
+            int layerMask = LayerMask.GetMask("Terrain");
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+
+            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask)) {
+                constructionHighlight.transform.position = hitInfo.point;
+            }
+        }
+    }
+    
+    private void UpdateConstructionHighlightPositionSnapped(Vector3 transformPosition)
+    {
+        if (!isHighlightSnapped)
+        {
+            isHighlightSnapped = true;
+            
+            Color snappedColor = new Color(0, 0, 1f, 100/255f);
+            foreach (var childRenderer in constructionHighlight.transform.GetComponentsInChildren<Renderer>())
+            {
+                childRenderer.material.color = snappedColor;
+            }
+        }
+        
+        constructionHighlight.transform.position = transformPosition;
+    }
+
+    public GameObject GetTowerInstance(string towerIdentificator)
+    {
+        switch (towerIdentificator)
+        {
+            case "MagicalTowerItem":
+                return Instantiate(magicalTower);
+            case "CannonTowerItem":
+                return Instantiate(cannonTower);
+            case "ArcherTowerItem":
+                return Instantiate(archerTower);
+            default:
+                return null;
+        }
+    }
 }
 

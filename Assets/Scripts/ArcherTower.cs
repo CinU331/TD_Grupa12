@@ -14,10 +14,8 @@ public class Tuple<T1, T2>
 
 public class ArcherTower : AbstractTower
 {
-    private float range = 20;
     private float arrowSpeed = 40;
     private int maxTargets = 3;
-    private int damage = 80;
     private float cooldown = 3;
     private float startTime;
     private float endTime;
@@ -167,9 +165,9 @@ public class ArcherTower : AbstractTower
         }
     }
 
-    public float GetRange()
+    public void StopAllAnimations()
     {
-        return range;
+        
     }
 
     public void OnDrawGizmosSelected()
