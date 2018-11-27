@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,15 +19,18 @@ public class BuildController : MonoBehaviour
 
     private ShopController shopController;
     private GameResources gameResources;
+    private GameObject shop;
 
     public Material ConstructionHighlightMaterial;
     private GameObject constructionHighlight;
     private bool isConstructionHighlightActive;
     private bool isHighlightSnapped;
     private string currentConstructionTower;
+    
 
     public void Start()
     {
+        shop = GameObject.Find("Shop");
         buildingSpotsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("BuildingSpot"));
         shopController = shopPanel.GetComponentInChildren<ShopController>();
 
@@ -38,13 +42,14 @@ public class BuildController : MonoBehaviour
 
     public void StartBuild()
     {
+
         build = 2;
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         IsPaused = true;
 
-        shopPanel.SetActive(true);
-
+        shop.SetActive(true);
+        
         foreach (GameObject buildingSpot in buildingSpotsObjects)
         {
             buildingSpot.GetComponent<Collider>().enabled = true;
@@ -62,8 +67,8 @@ public class BuildController : MonoBehaviour
         build = 1;
         Time.timeScale = 1f;
         IsPaused = false;
-
-        shopPanel.SetActive(false);
+        
+        shop.SetActive(false);
         DisableConstructionHighlight();
 
         foreach (GameObject buildingSpot in buildingSpotsObjects)
@@ -152,11 +157,11 @@ public class BuildController : MonoBehaviour
         switch (towerName)
         {
             case "MagicalTowerItem":
-                return 20;
+                return TowerCost.MagicalTowerCost;
             case "CannonTowerItem":
-                return 50;
+                return TowerCost.CannonTowerCost;
             case "ArcherTowerItem":
-                return 30;
+                return TowerCost.ArcherTowerCost;
             default:
                 Debug.LogError("Tower of given name is not defined!");
                 return 1000000;

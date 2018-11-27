@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,9 +27,14 @@ public class WaveSpawner : MonoBehaviour
 
     public ChangingCamera changingCamera;
     
+    public TextMeshProUGUI endWaveInfo;
+
+    public BuildController buildController;
+
 
     void Start()
     {
+
         wave = 0;
         numberOfWaves = 3;
         aliveEnemies = 0;
@@ -75,6 +81,12 @@ public class WaveSpawner : MonoBehaviour
         else if (!nextWaveClicked && !waveSpawningInProgress && aliveEnemies == 0 && wave < numberOfWaves)
         {
             nextWaveButton.gameObject.SetActive(true);
+            endWaveInfo.text = "Prepare to next wave!";
+
+            if(wave == 0)
+            {
+                endWaveInfo.text = "Prepare to first wave!";
+            }
 
             changingCamera.canChangeCamera = true;
         }
@@ -83,6 +95,11 @@ public class WaveSpawner : MonoBehaviour
         {
             winner.gameObject.SetActive(true);
             winner.gameObject.GetComponent<Text>().text = "You are the winner!";
+        }
+
+        if(aliveEnemies > 0)
+        {
+            endWaveInfo.text = " ";
         }
     }
 
