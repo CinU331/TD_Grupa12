@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Invector.CharacterController;
 using UnityEngine;
 
 public class ChangingCamera : MonoBehaviour {
 
     public GameObject TacticalCamera;
     public GameObject ThirdPersonCamera;
-
     public BuildController buildController;
-
     public GameObject playerHUD;
 
     int startCamera = 1;
@@ -59,6 +58,7 @@ public class ChangingCamera : MonoBehaviour {
         playerHUD.SetActive(false);
 
         buildController.StartBuild();
+        vThirdPersonMotor.lockMovement = true;
     }
 
     public void SetActiveThirdCam()
@@ -77,5 +77,6 @@ public class ChangingCamera : MonoBehaviour {
         playerHUD.SetActive(true);
 
         buildController.StopBuild();
+        vThirdPersonMotor.lockMovement = false;
     }
 }

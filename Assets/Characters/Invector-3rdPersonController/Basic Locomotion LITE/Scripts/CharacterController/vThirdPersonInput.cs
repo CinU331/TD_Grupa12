@@ -74,9 +74,7 @@ namespace Invector.CharacterController
 
         protected virtual void InputHandle()
         {
-            CameraInput();
-
-            if (!cc.lockMovement)
+            if (!vThirdPersonMotor.lockMovement)
             {
                 MoveCharacter();
                 SprintInput();
@@ -84,6 +82,7 @@ namespace Invector.CharacterController
                 ArmedInput();
                 AttackInput();
                 JumpInput();
+                CameraInput();
             }
         }
 
@@ -165,7 +164,7 @@ namespace Invector.CharacterController
 
         protected virtual void RotateWithCamera(Transform cameraTransform)
         {
-            if (cc.isStrafing && !cc.lockMovement && !cc.lockMovement)
+            if (cc.isStrafing && !vThirdPersonMotor.lockMovement)
             {
                 cc.RotateWithAnotherTransform(cameraTransform);
             }

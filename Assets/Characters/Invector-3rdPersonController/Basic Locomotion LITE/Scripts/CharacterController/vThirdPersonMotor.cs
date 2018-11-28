@@ -35,7 +35,7 @@ namespace Invector.CharacterController
 
         public LocomotionType locomotionType = LocomotionType.FreeWithStrafe;
         [Tooltip("lock the player movement")]
-        public bool lockMovement;
+        public static bool lockMovement = false;
         [Tooltip("Speed of the rotation on free directional movement")]
         [SerializeField]
         public float freeRotationSpeed = 10f;

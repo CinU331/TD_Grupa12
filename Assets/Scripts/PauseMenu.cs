@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Invector.CharacterController;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class PauseMenu : MonoBehaviour
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            vThirdPersonMotor.lockMovement = false;
         }
 
 
@@ -84,6 +87,8 @@ public class PauseMenu : MonoBehaviour
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+            vThirdPersonMotor.lockMovement = true;
         }
 
         Time.timeScale = 0f;
