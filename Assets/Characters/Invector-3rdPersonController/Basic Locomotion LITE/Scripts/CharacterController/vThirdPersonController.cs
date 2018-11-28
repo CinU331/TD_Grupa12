@@ -1,11 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Invector.CharacterController
 {
+   
     public class vThirdPersonController : vThirdPersonAnimator
     {
+        private GameObject closestOccupiedTower;
+        public void Update()
+        {
+            List<GameObject> buildingSpots = new List<GameObject> (GameObject.FindGameObjectsWithTag("BuildingSpot"));
+            List<GameObject> filtredList = new List<GameObject>();
+
+            foreach (GameObject buildingSpot in buildingSpots)
+            {
+                buildingSpot.SendMessage("SetOccupiedVisible", false);
+                if (buildingSpot.GetComponent<BuildingSpot>().isOccupied == true)
+                    filtredList.Add(buildingSpot);
+            }
+
+            if (filtredList.Count != 0)
+            {
+                filtredList.Sort(delegate (GameObject a, GameObject b)
+                {
+                    return Vector3.Distance(this.transform.position, a.transform.position)
+                    .CompareTo(
+                      Vector3.Distance(this.transform.position, b.transform.position));
+                });
+                if (filtredList.Count != 0)
+                {
+                    filtredList[0].SendMessage("SetOccupiedVisible", true);
+                }
+            }
+        }
+
         [Header("--- Weapon Setup ---")]
         public GameObject Weapon;
         public GameObject Hand;

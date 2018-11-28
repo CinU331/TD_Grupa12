@@ -184,15 +184,28 @@ public class BuildingSpot : MonoBehaviour
 
     }
     
-    public void SetNotOccupiedVisible(bool state)
+    public void SetNotOccupiedVisible(bool aState)
     {
         if(!isOccupied)
         {
             foreach(GameObject rock in spawnedRocks)
             {
-                rock.GetComponent<MeshCollider>().enabled = state;
-                rock.GetComponent<MeshRenderer>().enabled = state;
+                rock.GetComponent<MeshCollider>().enabled = aState;
+                rock.GetComponent<MeshRenderer>().enabled = aState;
             }
         }
     }
+
+    public void SetOccupiedVisible(bool aState)
+    {
+        if (isOccupied)
+        {
+            foreach (GameObject rock in spawnedRocks)
+            {
+                rock.GetComponent<MeshCollider>().enabled = false;
+                rock.GetComponent<MeshRenderer>().enabled = aState;
+            }
+        }
+    }
+
 }
