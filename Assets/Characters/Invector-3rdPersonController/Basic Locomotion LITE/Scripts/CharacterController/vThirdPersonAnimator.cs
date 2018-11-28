@@ -49,7 +49,7 @@ namespace Invector.CharacterController
                     else
                         ControlSpeed(strafeSprintSpeed);
                 }
-                else if (!isStrafing)
+                else
                 {
                     // free extra speed                
                     if (speed <= 0.5f)

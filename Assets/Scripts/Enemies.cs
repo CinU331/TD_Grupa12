@@ -34,6 +34,14 @@ public class Enemies : MonoBehaviour
     float startTime;
     float endTime;
 
+    //public struct DamageParameters
+    //{
+    //    public float damageAmount;
+    //    public float slowDownFactor;
+    //    public float duration;
+    //    public int criticProbability;
+    //}
+
     void Start()
     {
         exitGate = Waypoints.waypoints[0];
@@ -148,6 +156,7 @@ public class Enemies : MonoBehaviour
 
     public void DealDamage(DamageParameters damageParameters)
     {
+        //FloatingTextController.CreatePopup(damageParameters.damageAmount.ToString(), transform);
         if (!isSlowed)
         {
             duration = damageParameters.duration;
@@ -169,6 +178,14 @@ public class Enemies : MonoBehaviour
         {
             StartPlayerAggro();
         }
+    }
+
+    public void DealCriticlaDamage(DamageParameters damageParameters)
+    {
+        int randomInt = Random.Range(0, 100);
+        Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
+        if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; Debug.Log("Krytyk!"); }
+        DealDamage(damageParameters);
     }
 
     private void StartPlayerAggro() 

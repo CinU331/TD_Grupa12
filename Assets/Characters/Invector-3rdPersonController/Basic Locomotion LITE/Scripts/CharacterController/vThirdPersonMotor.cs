@@ -61,9 +61,9 @@ namespace Invector.CharacterController
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]
         public float freeWalkSpeed = 2.5f;
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]
-        public float freeRunningSpeed = 3f;
+        public float freeRunningSpeed = 4f;
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]
-        public float freeSprintSpeed = 4f;
+        public float freeSprintSpeed = 6f;
         [Tooltip("Add extra speed for the strafe movement, keep this value at 0 if you want to use only root motion speed.")]
         public float strafeWalkSpeed = 2.5f;
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]

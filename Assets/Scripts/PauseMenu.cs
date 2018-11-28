@@ -16,7 +16,7 @@ public class PauseMenu : MonoBehaviour
     public static bool IsPaused = false;
     public GameObject pauseMenuUI;
 
-    private string cam = "";
+    private bool charracterCam = false;
 
     void Start()
     {
@@ -43,16 +43,19 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
 
-        if(cam == "characterCamera")
+        if(charracterCam)
         {
-            cam = "";
+            charracterCam = false;
             characterCamera.GetComponent<Camera>().enabled = true;
             characterCamera.GetComponent<AudioListener>().enabled = true;
 
             tacticalCamera.GetComponent<Camera>().enabled = false;
-            tacticalCamera.GetComponent<AudioListener>().enabled = false;            
+            tacticalCamera.GetComponent<AudioListener>().enabled = false;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
-        
+
 
         Time.timeScale = 1f;
         if (buildController.IsPaused)
@@ -62,7 +65,7 @@ public class PauseMenu : MonoBehaviour
         tacticalCameraMovement.isMovementRestricted = false;
         IsPaused = false;
 
-        //Cursor.lockState = CursorLockMode.Locked;
+        
 
     }
 
@@ -72,19 +75,20 @@ public class PauseMenu : MonoBehaviour
 
         if (characterCamera.GetComponent<Camera>().enabled == true)
         {
-            cam = "characterCamera";
+            charracterCam = true;
             tacticalCamera.GetComponent<Camera>().enabled = true;
             tacticalCamera.GetComponent<AudioListener>().enabled = true;
 
             characterCamera.GetComponent<Camera>().enabled = false;
             characterCamera.GetComponent<AudioListener>().enabled = false;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         Time.timeScale = 0f;
         tacticalCameraMovement.isMovementRestricted = true;
         IsPaused = true;
-
-        Cursor.lockState = CursorLockMode.None;
     }
 
     public void LoadMenu()

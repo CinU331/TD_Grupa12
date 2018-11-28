@@ -13,14 +13,12 @@ namespace Invector.CharacterController
 
         protected virtual void Start()
         {
-#if !UNITY_EDITOR
-                //Cursor.visible = false;
-#endif
+
         }
 
         public virtual void Attack()
         {
-            if (!isGrounded) return;
+            if (!isGrounded && isArmed) return;
             animator.SetTrigger("Attack");
         }
 
@@ -37,6 +35,7 @@ namespace Invector.CharacterController
             {
                 Weapon.transform.SetParent(Hand.transform);
                 Weapon.transform.localPosition = new Vector3(0.00016f, 0.00063f, -0.00089f);
+                Weapon.transform.localEulerAngles = new Vector3(13.931f, -134.905f, -94.051f);
                 freeRunningSpeed = 3;
                 freeSprintSpeed = 4;
                 //Debug.Log("Do ręki");
@@ -44,7 +43,8 @@ namespace Invector.CharacterController
             else
             {
                 Weapon.transform.SetParent(Back.transform);
-                Weapon.transform.localPosition = new Vector3(0.00033f, -0.00044f, -0.00172f);
+                Weapon.transform.localPosition = new Vector3(0.00117f, 0.00024f, -0.00195f);
+                Weapon.transform.localEulerAngles = new Vector3(-3.305f, 0, 0);
                 freeRunningSpeed = 4;
                 freeSprintSpeed = 6;
                 //Debug.Log("Do pleców");

@@ -66,6 +66,7 @@ public class WaveSpawner : MonoBehaviour
         b_continue.gameObject.SetActive(false);
         winner.gameObject.SetActive(false);
         winner.enabled = false;
+        changingCamera.SetActiveThirdCam();
     }
 
     void Update()
@@ -95,6 +96,7 @@ public class WaveSpawner : MonoBehaviour
         {
             winner.gameObject.SetActive(true);
             winner.gameObject.GetComponent<Text>().text = "You are the winner!";
+            changingCamera.SetActiveTacticalCam();
         }
 
         if(aliveEnemies > 0)
