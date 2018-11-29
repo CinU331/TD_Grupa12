@@ -244,26 +244,25 @@ public class vThirdPersonCamera : MonoBehaviour
     bool CullingRayCast(Vector3 from, ClipPlanePoints _to, out RaycastHit hitInfo, float distance, LayerMask cullingLayer, Color color)
     {
         bool value = false;
-
-        if (Physics.Raycast(from, _to.LowerLeft - from, out hitInfo, distance, cullingLayer) && hitInfo.collider.tag != "Weapon")
+        if (Physics.Raycast(from, _to.LowerLeft - from, out hitInfo, distance, cullingLayer))
         {
             value = true;
             cullingDistance = hitInfo.distance;
         }
 
-        if (Physics.Raycast(from, _to.LowerRight - from, out hitInfo, distance, cullingLayer) && hitInfo.collider.tag != "Weapon")
+        if (Physics.Raycast(from, _to.LowerRight - from, out hitInfo, distance, cullingLayer))
         {
             value = true;
             if (cullingDistance > hitInfo.distance) cullingDistance = hitInfo.distance;
         }
 
-        if (Physics.Raycast(from, _to.UpperLeft - from, out hitInfo, distance, cullingLayer) && hitInfo.collider.tag != "Weapon")
+        if (Physics.Raycast(from, _to.UpperLeft - from, out hitInfo, distance, cullingLayer))
         {
             value = true;
             if (cullingDistance > hitInfo.distance) cullingDistance = hitInfo.distance;
         }
 
-        if (Physics.Raycast(from, _to.UpperRight - from, out hitInfo, distance, cullingLayer) && hitInfo.collider.tag != "Weapon")
+        if (Physics.Raycast(from, _to.UpperRight - from, out hitInfo, distance, cullingLayer))
         {
             value = true;
             if (cullingDistance > hitInfo.distance) cullingDistance = hitInfo.distance;

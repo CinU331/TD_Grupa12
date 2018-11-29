@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerCharacterState : MonoBehaviour {
 
@@ -50,9 +51,7 @@ public class PlayerCharacterState : MonoBehaviour {
         
         if (currentHealthPoints <= 0 && isAlive)
         {
-			animator.SetTrigger("Death");
-			isAlive = false;
-			Debug.Log("You died!");
+            StartCoroutine(youDied());
         }
 
 		if (currentHealthPoints < 0) 
@@ -74,13 +73,21 @@ public class PlayerCharacterState : MonoBehaviour {
         mEnergyBar.SetValue(MaxEnergyPoints);
 	}
 
-	public void DyingFinished() 
-	{
-		Debug.Log("Dying animation finished!");
-	}
+	public IEnumerator youDied()
+    {
+        animator.SetTrigger("Death");
+        isAlive = false;
+        yield return new WaitForSeconds(5f);
+        Debug.Log("You died!");
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
+    }
 
 	private void UpdatePlayerHealthBar()
 	{
 		mHealthBar.SetValue(currentHealthPoints);
 	}
+
+
 }

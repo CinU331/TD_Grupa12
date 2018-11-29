@@ -55,6 +55,8 @@ namespace Invector.CharacterController
         public virtual void Sprint(bool value)
         {
             isSprinting = value;
+            if (isSprinting) jumpForward += 2f;
+            else jumpForward -= 2f;
         }
 
         public IEnumerator TakeWeapon()
