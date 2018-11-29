@@ -52,6 +52,8 @@ public class Enemies : MonoBehaviour
         iCurrentHp = iMaxHp;
         isAlive = true;
         isAggroed = false;
+
+        PopupParent.Initialize(gameObject);
     }
 
     void Update()
@@ -156,7 +158,7 @@ public class Enemies : MonoBehaviour
 
     public void DealDamage(DamageParameters damageParameters)
     {
-        //FloatingTextController.CreatePopup(damageParameters.damageAmount.ToString(), transform);
+        if(damageParameters.showPopup) PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
         if (!isSlowed)
         {
             duration = damageParameters.duration;
@@ -183,7 +185,7 @@ public class Enemies : MonoBehaviour
     public void DealCriticlaDamage(DamageParameters damageParameters)
     {
         int randomInt = Random.Range(0, 100);
-        Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
+        //Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
         if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; Debug.Log("Krytyk!"); }
         DealDamage(damageParameters);
     }
