@@ -109,7 +109,7 @@ public class WaveSpawner : MonoBehaviour
     {
         if (wave < numberOfWaves - 1)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 8; i++)
             {
                 if (spawnedEnemies < 5)
                 {

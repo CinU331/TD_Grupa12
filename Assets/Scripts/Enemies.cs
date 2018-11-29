@@ -232,9 +232,11 @@ public class Enemies : MonoBehaviour
                     Move(player.transform.position - transform.position);
                 }
             } 
-            else if (timeSinceAggro >= detourMaxTimeInSec || 
+            
+            if (!isDuringAttackAnimation && 
+                (timeSinceAggro >= detourMaxTimeInSec || 
                      distance >= playerMaxDistance || 
-                     Vector3.Distance(transform.position, aggroStartingPoint) >= detourMaxDistance)
+                     Vector3.Distance(transform.position, aggroStartingPoint) >= detourMaxDistance))
             {
                 StopPlayerAggro();
             }
