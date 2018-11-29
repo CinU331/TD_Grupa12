@@ -22,7 +22,6 @@ public class BuildingSpot : MonoBehaviour
         rockPrefabs = new[] { rock1, rock2, rock3, rock4 };
         spawnedRocks = new List<GameObject>();
         mockRocks = new List<GameObject>();
-        SpawnRocks();
     }
 
     public bool IsOccupied() 
@@ -36,9 +35,7 @@ public class BuildingSpot : MonoBehaviour
         {
             currentTower = tower;
             currentTower.transform.position = transform.position;
-            Vector3 newScale = GetComponent<Collider>().transform.localScale;
-            newScale.y = 20;
-            GetComponent<Collider>().transform.localScale = newScale;
+
             isOccupied = true;
         }
 
@@ -51,11 +48,7 @@ public class BuildingSpot : MonoBehaviour
             AbstractTower tower = currentTower.GetComponent<AbstractTower>();
             string soldTowerName = tower.TowerIdentificator;
 
-            GameObject.Destroy(currentTower);
-            Vector3 newScale = GetComponent<Collider>().transform.localScale;
-            newScale.y = 0.2f;
-            GetComponent<Collider>().transform.localScale = newScale;
-
+            Destroy(currentTower);
             isOccupied = false;
 
             if (currentTower != null)
@@ -82,7 +75,7 @@ public class BuildingSpot : MonoBehaviour
         float radius;
         if (isOccupied == false)
         {
-            radius = defaultRange;
+            radius = 0;
         }
         else
         {
@@ -188,6 +181,7 @@ public class BuildingSpot : MonoBehaviour
     {
         if(!isOccupied)
         {
+            GetComponent<MeshRenderer>().enabled = aState;
             foreach(GameObject rock in spawnedRocks)
             {
                 rock.GetComponent<MeshCollider>().enabled = aState;
@@ -200,6 +194,7 @@ public class BuildingSpot : MonoBehaviour
     {
         if (isOccupied)
         {
+            GetComponent<MeshRenderer>().enabled = false;
             foreach (GameObject rock in spawnedRocks)
             {
                 rock.GetComponent<MeshCollider>().enabled = false;
