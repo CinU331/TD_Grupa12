@@ -13,11 +13,11 @@ public class MainMenu : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name.ToString() == "GameOver")
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            SceneManager.LoadScene("MainMenu");
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadScene("Terrain");
         }
 
         GameResources gameResources = GameObject.Find("GameResources").GetComponent<GameResources>();

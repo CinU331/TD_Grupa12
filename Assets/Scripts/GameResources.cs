@@ -65,6 +65,6 @@ public class GameResources : MonoBehaviour {
 	
     private void LoadEndGameScreen() 
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("GameOver");
     }
 }
