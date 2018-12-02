@@ -57,7 +57,7 @@ public class WaveSpawner : MonoBehaviour
 
     void MainMenuClicked()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MainMenu");
     }
 
     void ContinueClicked()

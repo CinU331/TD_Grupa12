@@ -10,7 +10,7 @@ public class GameResources : MonoBehaviour {
 	public event CountChangedEvent ResourcesChanged;
 
     private int mResources = 5;
-    private int mCredits = 50;
+    private int mCredits = 20;
 	// Use this for initialization
 	void Start () {
 	}
