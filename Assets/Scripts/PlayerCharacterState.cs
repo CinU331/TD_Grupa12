@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,9 +21,16 @@ public class PlayerCharacterState : MonoBehaviour {
 
 	private Animator animator;
 
-	void Start () {
-		animator = GetComponent<Animator>();
+    public GameObject SpikeTrap;
+    public GameObject SplashTrap;
 
+    public System.Diagnostics.Stopwatch timer;
+    void Start () {
+        timer = new System.Diagnostics.Stopwatch();
+        timer.Start();
+
+		animator = GetComponent<Animator>();
+        SpikeTrap.transform.localScale = new Vector3(7, 5, 7);
 		InitHudBars();
 	}
 	
@@ -41,7 +47,30 @@ public class PlayerCharacterState : MonoBehaviour {
 
 			UpdatePlayerHealthBar();
 		}
-	}
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            timer.Reset();
+            timer.Start();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) && ShopController.AvailableSpikeTraps != 0 && timer.ElapsedMilliseconds > 1000)
+        {
+            GameObject tmp = new GameObject();
+            tmp.transform.position = new Vector3(transform.position.x, transform.position.y - 3.4f, transform.position.z);
+            Instantiate(SpikeTrap, tmp.transform);
+            ShopController.AvailableSpikeTraps--;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2) && ShopController.AvailableSplashTraps != 0  && timer.ElapsedMilliseconds > 1000)
+        {
+            GameObject tmp = new GameObject();
+            tmp.transform.position = new Vector3(transform.position.x, transform.position.y + 0.02f, transform.position.z);
+            Instantiate(SplashTrap, tmp.transform);
+            ShopController.AvailableSplashTraps--;
+        }
+    }
 
 	public void DealDamage(DamageParameters damageParameters)
     {
@@ -88,6 +117,4 @@ public class PlayerCharacterState : MonoBehaviour {
 	{
 		mHealthBar.SetValue(currentHealthPoints);
 	}
-
-
 }

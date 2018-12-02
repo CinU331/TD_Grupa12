@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ShopController : MonoBehaviour
 {
+    public static int AvailableSpikeTraps = 3;
+    public static int AvailableSplashTraps = 3;
 
     public TextMeshProUGUI ArcherTowerCostText;
     public TextMeshProUGUI MagicalTowerCostText;
