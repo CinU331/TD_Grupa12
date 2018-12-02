@@ -125,15 +125,7 @@ public class BuildingSpot : MonoBehaviour
 
     public void SpawnRocksMock(GameObject tower)
     {
-        if (tower == null || mockRocks.Count != 0)
-        {
-            foreach (GameObject rock in mockRocks)
-            {
-                Destroy(rock);
-            }
-            mockRocks.Clear();
-        }
-        else if (mockRocks.Count == 0)
+        if(mockRocks.Count == 0 && isOccupied == false)
         {
             var radius = tower.GetComponent<AbstractTower>().range;
             var rockColor = tower.GetComponent<AbstractTower>().rockColor;
@@ -200,6 +192,18 @@ public class BuildingSpot : MonoBehaviour
                 rock.GetComponent<MeshCollider>().enabled = false;
                 rock.GetComponent<MeshRenderer>().enabled = aState;
             }
+        }
+    }
+
+    public void DestroyMockRocks()
+    {
+        if(mockRocks.Count != 0)
+        {
+            for(int i = 0; i < mockRocks.Count; i++)
+            {
+                Destroy(mockRocks[i]);
+            }
+            mockRocks.Clear();
         }
     }
 

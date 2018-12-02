@@ -14,7 +14,7 @@ public class Tuple<T1, T2>
 
 public class ArcherTower : AbstractTower
 {
-    private float arrowSpeed = 40;
+    private float arrowSpeed = 50;
     private int maxTargets = 3;
     private float cooldown = 3;
     private float startTime;
@@ -39,7 +39,7 @@ public class ArcherTower : AbstractTower
         for (int i = 0; i < arrows.Length; i++)
         {
             arrows[i] = Instantiate(arrowToSpawn, transform.position + new Vector3(0f, GetComponent<CapsuleCollider>().bounds.extents.y * 1.25f, 0f), Quaternion.Euler(-90f, 0f, i * 5f));
-            arrows[i].transform.localScale = new Vector3(3, 3, 3);
+            arrows[i].transform.localScale = new Vector3(2, 2, 2);
         }
 
         startPoint = arrows[0].transform.position;
@@ -168,6 +168,13 @@ public class ArcherTower : AbstractTower
     public void StopAllAnimations()
     {
         
+    }
+    private void OnDestroy()
+    {
+        for(int i = 0; i < arrows.Length; i++)
+        {
+            GameObject.Destroy(arrows[i]);
+        }
     }
 
     public void OnDrawGizmosSelected()

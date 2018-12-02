@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -26,7 +25,7 @@ public class BuildController : MonoBehaviour
     private bool isConstructionHighlightActive;
     private bool isHighlightSnapped;
     private string currentConstructionTower;
-    
+
 
     public void Start()
     {
@@ -49,7 +48,7 @@ public class BuildController : MonoBehaviour
         IsPaused = true;
 
         shop.SetActive(true);
-        
+
         foreach (GameObject buildingSpot in buildingSpotsObjects)
         {
             buildingSpot.GetComponent<Collider>().enabled = true;
@@ -67,7 +66,7 @@ public class BuildController : MonoBehaviour
         build = 1;
         Time.timeScale = 1f;
         IsPaused = false;
-        
+
         shop.SetActive(false);
         DisableConstructionHighlight();
 
@@ -84,14 +83,14 @@ public class BuildController : MonoBehaviour
 
     public void BuildingTowers()
     {
-        if(EventSystem.current.IsPointerOverGameObject()) // if blocked by ui
+        if (EventSystem.current.IsPointerOverGameObject()) // if blocked by ui
         {
             DisableConstructionHighlight();
             return;
         }
 
         string chosenTower = shopController.getCurrentlySelectedTower();
-        if (!String.IsNullOrEmpty(chosenTower)) 
+        if (!String.IsNullOrEmpty(chosenTower))
         {
             EnableConstructionHighlight(chosenTower);
         }
@@ -115,8 +114,16 @@ public class BuildController : MonoBehaviour
                 {
                     isSnapped = true;
                     UpdateConstructionHighlightPositionSnapped(hit.transform.gameObject.transform.position);
+                    GameObject tmpTower = GetTowerInstance(chosenTower);
+
+                    if (chosenTower != "")
+                    {
+                        buildingSpot.SpawnRocksMock(tmpTower);
+                    }
+
+                    GameObject.Destroy(tmpTower);
                 }
-                
+
                 if (Input.GetMouseButtonUp(0) && !buildingSpot.IsOccupied() && !String.IsNullOrEmpty(chosenTower))
                 {
                     GameObject newTower = GetTowerInstance(chosenTower);
@@ -135,15 +142,25 @@ public class BuildController : MonoBehaviour
                         gameResources.ChangeCreditsCount(GetTowerCost(soldTowerName));
                     }
                 }
-                else if (Input.GetMouseButtonUp(2))
+            }
+
+            foreach (GameObject bs in buildingSpotsObjects)
+            {
+                if (bs != hit.transform.gameObject)
                 {
-                    if (buildingSpot != null)
-                    {
-                        GameObject newTower = GetTowerInstance(chosenTower);
-                        buildingSpot.SpawnRocksMock(newTower);
-                    }
+                    bs.SendMessage("DestroyMockRocks");
                 }
             }
+
+
+        }
+        else
+        {
+            foreach (GameObject bs in buildingSpotsObjects)
+            {
+                bs.SendMessage("DestroyMockRocks");
+            }
+
         }
 
         if (!isSnapped)
@@ -171,12 +188,12 @@ public class BuildController : MonoBehaviour
     private void SetupTowerConstructionHighlight()
     {
         constructionHighlight = new GameObject();
-		constructionHighlight.SetActive(false);
+        constructionHighlight.SetActive(false);
 
-		constructionHighlight.transform.parent = GameObject.Find("Terrain").transform;
+        constructionHighlight.transform.parent = GameObject.Find("Terrain").transform;
     }
 
-    private void DisableConstructionHighlight() 
+    private void DisableConstructionHighlight()
     {
         foreach (Transform child in constructionHighlight.transform)
         {
@@ -198,7 +215,7 @@ public class BuildController : MonoBehaviour
             {
                 childRenderer.material = ConstructionHighlightMaterial;
             }
-            
+
             towerInstance.transform.parent = constructionHighlight.transform;
             towerInstance.transform.localPosition = Vector3.zero;
 
@@ -207,7 +224,7 @@ public class BuildController : MonoBehaviour
             isConstructionHighlightActive = true;
         }
     }
-    
+
     private void UpdateConstructionHighlightPosition()
     {
         if (constructionHighlight != null)
@@ -215,37 +232,38 @@ public class BuildController : MonoBehaviour
             if (isHighlightSnapped)
             {
                 isHighlightSnapped = false;
-            
-                Color snappedColor = new Color(1f, 0, 0, 100/255f);
+
+                Color snappedColor = new Color(1f, 0, 0, 100 / 255f);
                 foreach (var childRenderer in constructionHighlight.transform.GetComponentsInChildren<Renderer>())
                 {
                     childRenderer.material.color = snappedColor;
                 }
             }
-            
+
             int layerMask = LayerMask.GetMask("Terrain");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask)) {
+            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask))
+            {
                 constructionHighlight.transform.position = hitInfo.point;
             }
         }
     }
-    
+
     private void UpdateConstructionHighlightPositionSnapped(Vector3 transformPosition)
     {
         if (!isHighlightSnapped)
         {
             isHighlightSnapped = true;
-            
-            Color snappedColor = new Color(0, 0, 1f, 100/255f);
+
+            Color snappedColor = new Color(0, 0, 1f, 100 / 255f);
             foreach (var childRenderer in constructionHighlight.transform.GetComponentsInChildren<Renderer>())
             {
                 childRenderer.material.color = snappedColor;
             }
         }
-        
+
         constructionHighlight.transform.position = transformPosition;
     }
 

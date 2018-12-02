@@ -125,5 +125,13 @@ public class MageTower : AbstractTower
     {
         return range;
     }
-    
+
+    private void OnDestroy()
+    {
+        for(int i = 0; i < bolts.Length; i++)
+        {
+            GameObject.Destroy(bolts[i]);
+        }
+    }
+
 }
