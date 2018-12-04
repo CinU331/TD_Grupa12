@@ -170,6 +170,7 @@ public class CanonTower : AbstractTower
 
             iSplashRange *= 1.30f;
             iDamage = (int)(1.30f * iDamage);
+            iRange += 3.0f;
 
             iGameResources.ChangeCreditsCount(-iBaseUpgradeCost * iCurrentUpgradeLevel);
             iCurrentUpgradeLevel++;

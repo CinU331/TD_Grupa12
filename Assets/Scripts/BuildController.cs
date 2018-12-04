@@ -145,6 +145,7 @@ public class BuildController : MonoBehaviour
                 else if(Input.GetKeyDown(KeyCode.U) && buildingSpot.currentTower != null)
                 {
                     buildingSpot.currentTower.SendMessage("UpgradeTower");
+                    buildingSpot.SpawnRocks();
                 }
             }
 

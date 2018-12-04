@@ -133,11 +133,6 @@ public class MageTower : AbstractTower
         Gizmos.DrawWireSphere(transform.position, iRange);
     }
 
-    public float GetRange()
-    {
-        return iRange;
-    }
-
     private void OnDestroy()
     {
         StopAllAnimations();

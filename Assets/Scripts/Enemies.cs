@@ -159,7 +159,7 @@ public class Enemies : MonoBehaviour
     public void DealDamage(DamageParameters damageParameters)
     {
         if(damageParameters.showPopup) PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
-        if (!isSlowed)
+        if (!isSlowed || damageParameters.slowDownFactor <= slowDownFactor)
         {
             duration = damageParameters.duration;
             slowDownFactor = damageParameters.slowDownFactor;

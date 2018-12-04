@@ -38,7 +38,6 @@ public class BuildingSpot : MonoBehaviour
 
             isOccupied = true;
         }
-
     }
 
     public string SellTower()
@@ -47,7 +46,7 @@ public class BuildingSpot : MonoBehaviour
         {
             AbstractTower tower = currentTower.GetComponent<AbstractTower>();
             string soldTowerName = tower.TowerIdentificator;
-
+            
             Destroy(currentTower);
             isOccupied = false;
 
@@ -75,7 +74,8 @@ public class BuildingSpot : MonoBehaviour
         float radius;
         if (isOccupied == false)
         {
-            radius = 0;
+            radius = 3;
+            rockColor = new Color(255, 255, 0);
         }
         else
         {

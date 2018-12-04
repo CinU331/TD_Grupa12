@@ -213,6 +213,7 @@ public class ArcherTower : AbstractTower
             iDamage = (int)(iDamage * 1.5f);
             iSlowDownRatio -= 0.1f;
             iCooldown -= 0.5f;
+            iRange += 4.0f;
 
             iGameResources.ChangeCreditsCount(-iBaseUpgradeCost * iCurrentUpgradeLevel);
             iCurrentUpgradeLevel++;
