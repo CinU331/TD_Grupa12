@@ -139,8 +139,12 @@ public class BuildController : MonoBehaviour
 
                     if (!string.IsNullOrEmpty(soldTowerName))
                     {
-                        gameResources.ChangeCreditsCount(GetTowerCost(soldTowerName));
+                        gameResources.ChangeCreditsCount(GetTowerCost(soldTowerName) + buildingSpot.GetUpgradesCost());
                     }
+                }
+                else if(Input.GetKeyDown(KeyCode.U) && buildingSpot.currentTower != null)
+                {
+                    buildingSpot.currentTower.SendMessage("UpgradeTower");
                 }
             }
 

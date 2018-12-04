@@ -79,7 +79,7 @@ public class BuildingSpot : MonoBehaviour
         }
         else
         {
-            radius = currentTower.GetComponent<AbstractTower>().range;
+            radius = currentTower.GetComponent<AbstractTower>().iRange;
             rockColor = currentTower.GetComponent<AbstractTower>().rockColor;
         }
 
@@ -127,7 +127,7 @@ public class BuildingSpot : MonoBehaviour
     {
         if(mockRocks.Count == 0 && isOccupied == false)
         {
-            var radius = tower.GetComponent<AbstractTower>().range;
+            var radius = tower.GetComponent<AbstractTower>().iRange;
             var rockColor = tower.GetComponent<AbstractTower>().rockColor;
 
             if (radius != 0)
@@ -205,6 +205,16 @@ public class BuildingSpot : MonoBehaviour
             }
             mockRocks.Clear();
         }
+    }
+
+    public int GetUpgradesCost()
+    {
+        int cost = 0;
+        for(int i = currentTower.GetComponent<AbstractTower>().iCurrentUpgradeLevel - 1; i > 0;  i--)
+        {
+            cost += currentTower.GetComponent<AbstractTower>().iBaseUpgradeCost * i;
+        }
+        return cost;
     }
 
 }

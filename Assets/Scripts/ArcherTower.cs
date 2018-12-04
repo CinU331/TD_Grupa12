@@ -14,11 +14,13 @@ public class Tuple<T1, T2>
 
 public class ArcherTower : AbstractTower
 {
-    private float arrowSpeed = 50;
-    private int maxTargets = 3;
-    private float cooldown = 3;
-    private float startTime;
-    private float endTime;
+    private float iArrowSpeed = 50;
+    private int iMaxTargets = 3;
+    private float iCooldown = 2.4f;
+    private float iSlowDownRatio = 0.8f;
+
+    private float iStartTime;
+    private float iEndTime;
     public GameObject arrowToSpawn;
     public GameObject[] arrows;
     public AudioSource audioSource;
@@ -31,10 +33,15 @@ public class ArcherTower : AbstractTower
     // Use this for initialization
     private void Start()
     {
+        iDamage = 80;
+        iBaseUpgradeCost = 10;
+        ColorUtility.TryParseHtmlString("#0000CC", out iUpgradeColor);
+        ChangeColor();
+        iGameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
         audioSource = GetComponent<AudioSource>();
 
         inRange = new List<GameObject>();
-        arrows = new GameObject[maxTargets];
+        arrows = new GameObject[iMaxTargets];
 
         for (int i = 0; i < arrows.Length; i++)
         {
@@ -50,10 +57,12 @@ public class ArcherTower : AbstractTower
     private void Update()
     {
         FindTarget();
-        endTime = Time.time;
-        if(endTime - startTime >= cooldown)
+        iEndTime = Time.time;
+        if (iEndTime - iStartTime >= iCooldown)
+        {
             AttackEnemy();
-        
+        }
+
         MoveArrows();
     }
 
@@ -65,7 +74,7 @@ public class ArcherTower : AbstractTower
             GameObject[] objects = GameObject.FindGameObjectsWithTag("Respawn");
             foreach (GameObject enemy in objects)
             {
-                if (Vector3.Distance(transform.position, enemy.transform.position) <= range)
+                if (Vector3.Distance(transform.position, enemy.transform.position) <= iRange)
                 {
                     inRange.Add(enemy);
                 }
@@ -87,7 +96,7 @@ public class ArcherTower : AbstractTower
                     audioSource.Play();
                 }
 
-                startTime = Time.time;
+                iStartTime = Time.time;
                 if (arrows.Length <= inRange.Count)
                 {
                     for (int i = 0; i < arrows.Length; i++)
@@ -125,7 +134,7 @@ public class ArcherTower : AbstractTower
         }
 
         if (isAttackPerformed)
-        { 
+        {
 
             for (int i = 0; i < itemTargets.Count; i++)
             {
@@ -149,14 +158,14 @@ public class ArcherTower : AbstractTower
                 {
                     if (Vector3.Distance(inRange[indexOfTarget].transform.position, arrows[indexOfArrow].transform.position) < 0.5)
                     {
-                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.8f, slowDownFactor = 0.8f, damageSourceObject = gameObject });//damage);
+                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject });//damage);
                         arrows[indexOfArrow].transform.position = startPoint;
                         itemTargets.RemoveAt(i);
                     }
                     else
                     {
                         Vector3 direction = inRange[indexOfTarget].transform.position - arrows[indexOfArrow].transform.position;
-                        float distance = arrowSpeed * Time.deltaTime;
+                        float distance = iArrowSpeed * Time.deltaTime;
                         arrows[indexOfArrow].transform.Translate(direction.normalized * distance, Space.World);
 
                     }
@@ -167,19 +176,65 @@ public class ArcherTower : AbstractTower
 
     public void StopAllAnimations()
     {
-        
+
     }
     private void OnDestroy()
     {
-        for(int i = 0; i < arrows.Length; i++)
+        for (int i = 0; i < arrows.Length; i++)
         {
             GameObject.Destroy(arrows[i]);
         }
+        arrows = null;
     }
 
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, iRange);
+    }
+
+    public override void UpgradeTower()
+    {
+
+        if (IsUpgradeAvailable && iGameResources.Credits >= iBaseUpgradeCost * (iCurrentUpgradeLevel))
+        {
+            iMaxTargets++;
+
+            StopAllAnimations();
+            arrows = new GameObject[iMaxTargets];
+
+            for (int i = 0; i < arrows.Length; i++)
+            {
+                arrows[i] = Instantiate(arrowToSpawn, transform.position + new Vector3(0f, GetComponent<CapsuleCollider>().bounds.extents.y * 1.25f, 0f), Quaternion.Euler(-90f, 0f, i * 5f));
+                arrows[i].transform.localScale = new Vector3(2, 2, 2);
+            }
+            startPoint = arrows[0].transform.position;
+
+            iDamage = (int)(iDamage * 1.5f);
+            iSlowDownRatio -= 0.1f;
+            iCooldown -= 0.5f;
+
+            iGameResources.ChangeCreditsCount(-iBaseUpgradeCost * iCurrentUpgradeLevel);
+            iCurrentUpgradeLevel++;
+            if (iCurrentUpgradeLevel == 2)
+                ColorUtility.TryParseHtmlString("#CCCC00", out iUpgradeColor);
+            else if (iCurrentUpgradeLevel == 3)
+                ColorUtility.TryParseHtmlString("#CC0000", out iUpgradeColor);
+            ChangeColor();
+
+            Debug.Log("Upgraded");
+        }
+        else
+        {
+            Debug.Log("Not able to upgrade");
+        }
+    }
+
+    public override void ChangeColor()
+    {
+        transform.Find("Tower_Roof").GetComponent<MeshRenderer>().material.SetColor("_Color", iUpgradeColor);
+        transform.Find("Tower_Roof").GetComponent<MeshRenderer>().material.SetColor("_SpecColor", iUpgradeColor);
+        transform.Find("Tower_Roof").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
+        transform.Find("Tower_Roof").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
     }
 }

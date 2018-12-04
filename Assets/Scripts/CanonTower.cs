@@ -4,11 +4,11 @@ using UnityEngine;
 public class CanonTower : AbstractTower
 {
     private bool isShotInProgress = false;
-    private float splashRange = 5;
-    private float turnSpeed = 10;
-    private float ballSpeed = 25;
-    private float cooldown = 4f;
-
+    private float iSplashRange = 5;
+    private float iTurnSpeed = 10;
+    private float iBallSpeed = 25;
+    private float iCooldown = 4f;
+    private float iSlowDownRatio = 0.3f;
     private ParticleSystem directionalSmoke;
     private ParticleSystem smallExplosion;
 
@@ -22,17 +22,24 @@ public class CanonTower : AbstractTower
     // Use this for initialization
     private void Start()
     {
+
+        iDamage = 500;
+        iBaseUpgradeCost = 15;
+
+        ColorUtility.TryParseHtmlString("#000066", out iUpgradeColor);
+        ChangeColor();
+        iGameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
+
         mockBall = new GameObject();
         mockBall.transform.position = cannonBall.transform.position;
-
         mockBall.transform.parent = transform.GetChild(1);
         cannonBallTransform = transform.GetChild(1).GetChild(2);
 
         inRange = new List<GameObject>();
         InvokeRepeating("FindTarget", 0f, 0.05f);
         InvokeRepeating("UpdateRotation", 0f, 0.05f);
-        InvokeRepeating("AttackEnemy", 0f, cooldown);
-
+        InvokeRepeating("AttackEnemy", 0f, iCooldown);
+        
         directionalSmoke = transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>();
         ParticleSystem.MainModule mM = directionalSmoke.main;
         mM.startSize = 5;
@@ -61,16 +68,16 @@ public class CanonTower : AbstractTower
                 directionalSmoke.transform.position = target.transform.position;
                 directionalSmoke.Play();
 
-                target.SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 2.000f, slowDownFactor = 0.4f, damageSourceObject = gameObject });
+                target.SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 2.000f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject });
 
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Respawn");
 
-                float splashDamage = damage * 0.33f;
+                float splashDamage = iDamage * 0.33f;
                 for (int i = 0; i < enemies.Length; i++)
                 {
-                    if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < splashRange && enemies[i] != target)
+                    if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < iSplashRange && enemies[i] != target)
                     {
-                        enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = 0.75f, damageSourceObject = gameObject });
+                        enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = iSlowDownRatio * 1.5f, damageSourceObject = gameObject });
                     }
                 }
 
@@ -84,7 +91,7 @@ public class CanonTower : AbstractTower
             }
 
             Vector3 direction = target.transform.position - cannonBallTransform.position;
-            float distance = ballSpeed * Time.deltaTime;
+            float distance = iBallSpeed * Time.deltaTime;
             cannonBallTransform.Translate(direction.normalized * distance, Space.World);
         }
     }
@@ -95,7 +102,7 @@ public class CanonTower : AbstractTower
         GameObject[] objects = GameObject.FindGameObjectsWithTag("Respawn");
         foreach (GameObject enemy in objects)
         {
-            if (Vector3.Distance(transform.position, enemy.transform.position) <= range)
+            if (Vector3.Distance(transform.position, enemy.transform.position) <= iRange)
             {
                 inRange.Add(enemy);
             }
@@ -123,7 +130,7 @@ public class CanonTower : AbstractTower
         Vector3 direction = target.transform.position - transform.GetChild(1).transform.position;
         Quaternion lookQuater = Quaternion.LookRotation(direction);
 
-        Vector3 newRotation = Quaternion.Lerp(transform.GetChild(1).rotation, lookQuater, Time.deltaTime * turnSpeed).eulerAngles;
+        Vector3 newRotation = Quaternion.Lerp(transform.GetChild(1).rotation, lookQuater, Time.deltaTime * iTurnSpeed).eulerAngles;
         transform.GetChild(1).rotation = Quaternion.Euler(0f, newRotation.y, 0f);
     }
 
@@ -140,6 +147,7 @@ public class CanonTower : AbstractTower
         inRange.Clear();
     }
 
+    
     public void StopAllAnimations()
     {
 
@@ -148,6 +156,48 @@ public class CanonTower : AbstractTower
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, iRange);
+    }
+
+    public override void UpgradeTower()
+    {
+        if (IsUpgradeAvailable && iGameResources.Credits >= iBaseUpgradeCost * (iCurrentUpgradeLevel))
+        {
+
+            CancelInvoke("AttackEnemy");
+            iCooldown *= 0.9f;
+            InvokeRepeating("AttackEnemy", 0f, iCooldown);
+
+            iSplashRange *= 1.30f;
+            iDamage = (int)(1.30f * iDamage);
+
+            iGameResources.ChangeCreditsCount(-iBaseUpgradeCost * iCurrentUpgradeLevel);
+            iCurrentUpgradeLevel++;
+            if (iCurrentUpgradeLevel == 2)
+                ColorUtility.TryParseHtmlString("#666600", out iUpgradeColor);
+            else if (iCurrentUpgradeLevel == 3)
+                ColorUtility.TryParseHtmlString("#660000", out iUpgradeColor);
+            ChangeColor();
+
+            Debug.Log("Upgraded");
+        }
+        else
+        {
+            Debug.Log("Not able to upgrade");
+        }
+
+    }
+
+    public override void ChangeColor()
+    {
+        transform.FindDeepChild("Tower_Base_Deco").GetComponent<MeshRenderer>().material.SetColor("_Color", iUpgradeColor);
+        transform.FindDeepChild("Tower_Base_Deco").GetComponent<MeshRenderer>().material.SetColor("_SpecColor", iUpgradeColor);
+        transform.FindDeepChild("Tower_Base_Deco").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
+        transform.FindDeepChild("Tower_Base_Deco").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
+
+        transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetColor("_Color", iUpgradeColor);
+        transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetColor("_SpecColor", iUpgradeColor);
+        transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
+        transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
     }
 }

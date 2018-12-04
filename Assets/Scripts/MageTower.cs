@@ -3,35 +3,40 @@ using UnityEngine;
 
 public class MageTower : AbstractTower
 {
-    private float cooldown = 0.05f;
-    private int maxTargets = 3;
-
+    private float iCooldown = 0.05f;
+    private int iMaxTargets = 3;
+    private float iSlowDownFactor = 0.7f;
 
     public GameObject objectToSpawn;
     public GameObject[] bolts;
 
     private AudioSource audioSource;
-
     private List<GameObject> inRange;
     
     // Use this for initialization
     private void Start()
     {
+        iBaseUpgradeCost = 10;
+        iDamage = 5;
+        iGameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
+
+        ColorUtility.TryParseHtmlString("#000066", out iUpgradeColor);
+        ChangeColor();
+
         audioSource = GetComponent<AudioSource>();
 
         inRange = new List<GameObject>();
-        bolts = new GameObject[maxTargets];
+        bolts = new GameObject[iMaxTargets];
         for (int i = 0; i < bolts.Length; i++)
         {
             bolts[i] = Instantiate(objectToSpawn, transform.position, transform.rotation);
             bolts[i].transform.GetChild(0).transform.position = transform.position;
             bolts[i].transform.GetChild(0).transform.position += new Vector3(0, 12, 0);
             bolts[i].SetActive(false);
-
         }
 
         InvokeRepeating("FindTarget", 0f, 0.01f);
-        InvokeRepeating("AttackEnemy", 0f, cooldown);
+        InvokeRepeating("AttackEnemy", 0f, iCooldown);
     }
 
     // Update is called once per frame
@@ -45,7 +50,7 @@ public class MageTower : AbstractTower
         GameObject[] objects = GameObject.FindGameObjectsWithTag("Respawn");
         foreach (GameObject enemy in objects)
         {
-            if (Vector3.Distance(transform.position, enemy.transform.position) <= range)
+            if (Vector3.Distance(transform.position, enemy.transform.position) <= iRange)
             {
                 inRange.Add(enemy);
             }
@@ -69,7 +74,7 @@ public class MageTower : AbstractTower
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f, damageSourceObject = gameObject });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject });
                     }
                 }
             }
@@ -81,7 +86,7 @@ public class MageTower : AbstractTower
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f, damageSourceObject = gameObject });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject });
                     }
                 }
                 for (int i = inRange.Count; i < bolts.Length; i++)
@@ -89,7 +94,7 @@ public class MageTower : AbstractTower
                     if (inRange[0] != null)
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
-                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.05f, slowDownFactor = 0.7f, damageSourceObject = gameObject });
+                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject });
                         bolts[i].SetActive(true);
                     }
                 }
@@ -108,30 +113,82 @@ public class MageTower : AbstractTower
 
     public void StopAllAnimations()
     {
-        foreach(GameObject bolt in bolts)
+        if (bolts != null)
         {
-            bolt.SetActive(false);
-            GameObject.Destroy(bolt);
+            foreach (GameObject bolt in bolts)
+            {
+                if (bolt != null)
+                {
+                    bolt.SetActive(false);
+                    GameObject.Destroy(bolt);
+                }
+            }
+            bolts = null;
         }
     }
 
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, iRange);
     }
 
     public float GetRange()
     {
-        return range;
+        return iRange;
     }
 
     private void OnDestroy()
     {
-        for(int i = 0; i < bolts.Length; i++)
+        StopAllAnimations();
+    }
+
+
+    public override void UpgradeTower()
+    {
+        if (IsUpgradeAvailable && iGameResources.Credits >= iBaseUpgradeCost * (iCurrentUpgradeLevel))
         {
-            GameObject.Destroy(bolts[i]);
+            iMaxTargets++;
+            StopAllAnimations();
+
+            bolts = new GameObject[iMaxTargets];
+            for (int i = 0; i < bolts.Length; i++)
+            {
+                bolts[i] = Instantiate(objectToSpawn, transform.position, transform.rotation);
+                bolts[i].transform.GetChild(0).transform.position = transform.position;
+                bolts[i].transform.GetChild(0).transform.position += new Vector3(0, 12, 0);
+                bolts[i].SetActive(false);
+            }
+
+            iDamage = (int)(iDamage * 1.5f);
+            iRange += 2;
+            iSlowDownFactor -= 0.1f;
+            iGameResources.ChangeCreditsCount(-iBaseUpgradeCost * iCurrentUpgradeLevel);
+            iCurrentUpgradeLevel++;
+
+            if (iCurrentUpgradeLevel == 2)
+                ColorUtility.TryParseHtmlString("#666600", out iUpgradeColor);
+            else if(iCurrentUpgradeLevel == 3)
+                ColorUtility.TryParseHtmlString("#660000", out iUpgradeColor);
+            ChangeColor();
+            Debug.Log("Upgraded");
+        }
+        else
+        {
+            Debug.Log("Not able to upgrade");
         }
     }
 
+    public override void ChangeColor()
+    {
+        transform.Find("Crystal").GetComponent<MeshRenderer>().material.SetColor("_Color", iUpgradeColor);
+        transform.Find("Crystal").GetComponent<MeshRenderer>().material.SetColor("_SpecColor", iUpgradeColor);
+        transform.Find("Crystal").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
+        transform.Find("Crystal").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
+
+        transform.Find("Banners").GetComponent<MeshRenderer>().material.SetColor("_Color", iUpgradeColor);
+        transform.Find("Banners").GetComponent<MeshRenderer>().material.SetColor("_SpecColor", iUpgradeColor);
+        transform.Find("Banners").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
+        transform.Find("Banners").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
+    }
 }
