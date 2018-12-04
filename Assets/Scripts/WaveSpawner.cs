@@ -10,6 +10,8 @@ public class WaveSpawner : MonoBehaviour
     public static int wave = 0;
     public static int numberOfWaves = 3;
     public static int aliveEnemies = 0;
+    public static int timeToNextWave;
+    public static float timeToNextWaveFloat;
     private float delay;
     private int spawnedEnemies;
     public GameObject enemy;
@@ -19,6 +21,7 @@ public class WaveSpawner : MonoBehaviour
 
     private bool waveSpawningInProgress = false;
     private bool nextWaveClicked = false;
+    private bool cameraChanged = false;
     System.Random rnd = new System.Random();
     public Button nextWaveButton;
     public Text winner;
@@ -30,11 +33,11 @@ public class WaveSpawner : MonoBehaviour
     public TextMeshProUGUI endWaveInfo;
 
     public BuildController buildController;
+    public Canvas timeToNextWaveText;
 
 
     void Start()
     {
-
         wave = 0;
         numberOfWaves = 3;
         aliveEnemies = 0;
@@ -45,6 +48,7 @@ public class WaveSpawner : MonoBehaviour
         mainMenu.onClick.AddListener(() => MainMenuClicked());
         b_continue = GameObject.Find("ContinueButton").GetComponent<Button>();
         b_continue.onClick.AddListener(() => ContinueClicked());
+        timeToNextWaveText = GameObject.Find("TimeToNextWave").GetComponent<Canvas>();
         winner.gameObject.SetActive(false);
     }
 
@@ -53,6 +57,7 @@ public class WaveSpawner : MonoBehaviour
         nextWaveClicked = true;        
         changingCamera.SetActiveThirdCam();
         changingCamera.canChangeCamera = false;
+        cameraChanged = false;
     }
 
     void MainMenuClicked()
@@ -71,6 +76,8 @@ public class WaveSpawner : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown("n") && nextWaveButton.gameObject.activeInHierarchy == true)
+            NextWaveClicked();
         if (nextWaveClicked && !waveSpawningInProgress && aliveEnemies == 0 && wave < numberOfWaves)
         {
             waveSpawningInProgress = true;
@@ -78,18 +85,34 @@ public class WaveSpawner : MonoBehaviour
             wave++;
             nextWaveClicked = false;
             nextWaveButton.gameObject.SetActive(false);
+            timeToNextWaveText.gameObject.SetActive(false);
         }
         else if (!nextWaveClicked && !waveSpawningInProgress && aliveEnemies == 0 && wave < numberOfWaves)
         {
-            nextWaveButton.gameObject.SetActive(true);
-            endWaveInfo.text = "Prepare to next wave!";
-
-            if(wave == 0)
+            if (!cameraChanged)
             {
-                endWaveInfo.text = "Prepare to first wave!";
+                changingCamera.SetActiveTacticalCam();
+                timeToNextWaveFloat = 30f;
+                cameraChanged = true;
+            }
+
+            timeToNextWaveText.gameObject.SetActive(true);
+            Time.timeScale = 1.0f;
+            timeToNextWaveFloat -= Time.deltaTime;
+            timeToNextWave = Convert.ToInt32(timeToNextWaveFloat % 60);
+
+            nextWaveButton.gameObject.SetActive(true);
+            endWaveInfo.text = "Prepare to the next wave!";
+
+            if (wave == 0)
+            {
+                endWaveInfo.text = "Prepare to the first wave!";
             }
 
             changingCamera.canChangeCamera = true;
+
+            if (timeToNextWave < 0)
+                NextWaveClicked();
         }
 
         if (aliveEnemies == 0 && wave == numberOfWaves)
@@ -109,7 +132,7 @@ public class WaveSpawner : MonoBehaviour
     {
         if (wave < numberOfWaves - 1)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 6; i++)
             {
                 if (spawnedEnemies < 5)
                 {
