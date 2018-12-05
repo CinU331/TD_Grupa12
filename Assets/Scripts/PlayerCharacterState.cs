@@ -15,7 +15,7 @@ public class PlayerCharacterState : MonoBehaviour {
 
 	public float MaxEnergyPoints = 100.0f;
 	private float currentEnergyPoints;
-	private bool isAlive = true;
+	private static bool isAlive = true;
 
 	private HealthBar mHealthBar;
     private HealthBar mEnergyBar;
@@ -75,6 +75,7 @@ public class PlayerCharacterState : MonoBehaviour {
 
 	public void DealDamage(DamageParameters damageParameters)
     {
+        if (animator.GetBool("Block")) damageParameters.damageAmount *= 0.1f;
         currentHealthPoints -= damageParameters.damageAmount;
 
 		timeSinceLastDamage = 0f;

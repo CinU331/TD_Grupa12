@@ -99,6 +99,7 @@ namespace Invector.CharacterController
             isGrounded,
             isStrafing,
             isSprinting,
+            //isDead,
             isSliding;
 
         // action bools
@@ -237,6 +238,7 @@ namespace Invector.CharacterController
             speed = Mathf.Clamp(speed, 0, 1f);
             // add 0.5f on sprint to change the animation on animator
             if (isSprinting) speed += 0.5f;
+            //if (isDead) speed = 0;
 
             if (input != Vector2.zero && targetDirection.magnitude > 0.1f)
             {

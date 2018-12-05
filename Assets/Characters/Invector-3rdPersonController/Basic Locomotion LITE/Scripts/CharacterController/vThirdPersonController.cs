@@ -53,6 +53,17 @@ namespace Invector.CharacterController
             else StartCoroutine(TakeWeapon());
         }
 
+        public virtual void BlockUp()
+        {
+            if (!isGrounded) return;
+            if (isArmed) animator.SetBool("Block", true);
+        }
+
+        public virtual void BlockDown()
+        {
+            animator.SetBool("Block", false);
+        }
+
         public virtual void Sprint(bool value)
         {
             isSprinting = value;
