@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Invector.CharacterController;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -106,6 +107,7 @@ public class PlayerCharacterState : MonoBehaviour {
     {
         animator.SetTrigger("Death");
         isAlive = false;
+        vThirdPersonMotor.lockMovement = true;
         yield return new WaitForSeconds(5f);
         Debug.Log("You died!");
         Cursor.visible = true;

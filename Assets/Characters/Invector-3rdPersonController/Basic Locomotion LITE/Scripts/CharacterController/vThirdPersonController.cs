@@ -48,8 +48,9 @@ namespace Invector.CharacterController
 
         public virtual void Attack()
         {
-            if (!isGrounded && isArmed) return;
-            animator.SetTrigger("Attack");
+            if (!isGrounded) return;
+            if (isArmed) animator.SetTrigger("Attack");
+            else StartCoroutine(TakeWeapon());
         }
 
         public virtual void Sprint(bool value)
