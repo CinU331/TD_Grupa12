@@ -75,7 +75,12 @@ public class PlayerCharacterState : MonoBehaviour {
 
 	public void DealDamage(DamageParameters damageParameters)
     {
-        if (animator.GetBool("Block")) damageParameters.damageAmount *= 0.1f;
+        if (animator.GetBool("Block"))
+        {
+            damageParameters.damageAmount *= 0.1f;
+            animator.SetTrigger("DealDamage");
+        }
+          
         currentHealthPoints -= damageParameters.damageAmount;
 
 		timeSinceLastDamage = 0f;

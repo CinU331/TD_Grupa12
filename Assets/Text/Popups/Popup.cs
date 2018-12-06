@@ -12,10 +12,17 @@ public class Popup : MonoBehaviour {
         PopupText = animator.GetComponent<Text>();
         Destroy(gameObject, clipInfo[0].clip.length);
     }
-	
-	public void SetText(string newText)
+
+    public void SetText(string newText)
     {
         PopupText = animator.GetComponent<Text>();
         PopupText.text = newText;
+    }
+
+    public void SetText(string newText, Color color)
+    {
+        PopupText = animator.GetComponent<Text>();
+        PopupText.text = newText;
+        PopupText.color = color;
     }
 }
