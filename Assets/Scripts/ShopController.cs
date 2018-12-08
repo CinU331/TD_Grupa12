@@ -26,7 +26,7 @@ public class ShopController : MonoBehaviour
 
         foreach (Transform child in transform)
         {
-            if (child.tag == "Shop")
+            if (child.CompareTag("Shop"))
             {
                 shopButtons.Add(child);
                 child.GetComponent<Button>().onClick.AddListener(() => ShopButtonClicked(child));
