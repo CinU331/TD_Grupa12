@@ -68,7 +68,7 @@ public class CanonTower : AbstractTower
                 directionalSmoke.transform.position = target.transform.position;
                 directionalSmoke.Play();
 
-                target.SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 2.000f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject });
+                target.SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 2.000f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true });
 
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Respawn");
 
@@ -77,7 +77,7 @@ public class CanonTower : AbstractTower
                 {
                     if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < iSplashRange && enemies[i] != target)
                     {
-                        enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = iSlowDownRatio * 1.5f, damageSourceObject = gameObject });
+                        enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = iSlowDownRatio * 1.5f, damageSourceObject = gameObject, showPopup = true });
                     }
                 }
 

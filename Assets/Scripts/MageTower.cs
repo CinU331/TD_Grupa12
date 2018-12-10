@@ -74,7 +74,7 @@ public class MageTower : AbstractTower
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class MageTower : AbstractTower
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
                     }
                 }
                 for (int i = inRange.Count; i < bolts.Length; i++)
@@ -94,7 +94,7 @@ public class MageTower : AbstractTower
                     if (inRange[0] != null)
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
-                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject });
+                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
                         bolts[i].SetActive(true);
                     }
                 }

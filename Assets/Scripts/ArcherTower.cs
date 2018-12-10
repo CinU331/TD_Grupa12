@@ -158,7 +158,7 @@ public class ArcherTower : AbstractTower
                 {
                     if (Vector3.Distance(inRange[indexOfTarget].transform.position, arrows[indexOfArrow].transform.position) < 0.5)
                     {
-                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject });//damage);
+                        inRange[indexOfTarget].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true });//damage);
                         arrows[indexOfArrow].transform.position = startPoint;
                         itemTargets.RemoveAt(i);
                     }

@@ -158,7 +158,13 @@ public class Enemies : MonoBehaviour
 
     public void DealDamage(DamageParameters damageParameters)
     {
-        if(damageParameters.showPopup) PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
+        if (damageParameters.showPopup)
+        {
+            if(damageParameters.damageSourceObject.tag == "Player")
+                PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
+            else
+                PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform, new Color(255,218,0));
+        }
         if (!isSlowed || damageParameters.slowDownFactor <= slowDownFactor)
         {
             duration = damageParameters.duration;
