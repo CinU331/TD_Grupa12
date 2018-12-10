@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PlayerCharacterState : MonoBehaviour {
 
 	public HUD Hud;
+	public LowHPEffect HpEffect;
 	public float HealthRestoreCooldown = 5f;
 	public float RegenRatePerSecond = 10f;
 	private float timeSinceLastDamage = 0;
@@ -33,6 +34,7 @@ public class PlayerCharacterState : MonoBehaviour {
 		animator = GetComponent<Animator>();
         SpikeTrap.transform.localScale = new Vector3(7, 5, 7);
 		InitHudBars();
+	    HpEffect.InitState(MaxHealthPoints);
 	}
 	
 	void Update () {
@@ -124,5 +126,6 @@ public class PlayerCharacterState : MonoBehaviour {
 	private void UpdatePlayerHealthBar()
 	{
 		mHealthBar.SetValue(currentHealthPoints);
+		HpEffect.SetCurrentHp(currentHealthPoints);
 	}
 }
