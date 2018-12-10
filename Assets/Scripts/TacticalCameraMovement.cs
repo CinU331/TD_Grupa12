@@ -87,7 +87,7 @@ public class TacticalCameraMovement : MonoBehaviour {
         float rotateDegrees = 0f;
 
         // detect Right mouse button is down
-        if(Input.GetMouseButton(2)) {
+        if(Input.GetMouseButton(0)) {
             rotateDegrees += Input.GetAxis("Mouse Y") * rotationSpeed;
             rotateDegrees += Input.GetAxis("Mouse X") * rotationSpeed;
             camera.transform.RotateAround(rotationPoint, Vector3.up, rotateDegrees);
@@ -102,19 +102,19 @@ public class TacticalCameraMovement : MonoBehaviour {
         }
         else
         {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= (Screen.height - panBorderThickness))
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= (Screen.height - panBorderThickness))
             {
                 cameraPosition.z += panSpeed;
             }
-            if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness)
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness)
             {
                 cameraPosition.z -= panSpeed;
             }
-            if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= (Screen.width - panBorderThickness))
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= (Screen.width - panBorderThickness))
             {
                 cameraPosition.x += panSpeed;
             }
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness)
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness)
             {
                 cameraPosition.x -= panSpeed;
             }
