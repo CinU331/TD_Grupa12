@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
-{
+public class EnergyBar : MonoBehaviour {
 
     public Image ImgHealthBar;
 
@@ -22,9 +21,7 @@ public class HealthBar : MonoBehaviour
         {
             mCurrentValue = health;
             mCurrentPercent = mCurrentValue / Max;
-            ImgHealthBar.color = mCurrentPercent > 0.7f ? Color.green :
-                mCurrentPercent > 0.5f ? new Color(214, 204, 0, 255) :
-                mCurrentPercent > 0.3f ? new Color(1, 0.5f, 0, 1) : Color.red;
+
             TxtHealth.text = string.Format("{0} %", Mathf.RoundToInt(mCurrentPercent * 100));
 
             ImgHealthBar.fillAmount = mCurrentPercent;
@@ -46,5 +43,4 @@ public class HealthBar : MonoBehaviour
     {
 
     }
-
 }

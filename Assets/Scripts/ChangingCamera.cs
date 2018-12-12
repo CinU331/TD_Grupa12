@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Invector.CharacterController;
 using UnityEngine;
 
-public class ChangingCamera : MonoBehaviour {
+public class ChangingCamera : MonoBehaviour
+{
 
     public GameObject TacticalCamera;
     public GameObject ThirdPersonCamera;
@@ -15,7 +16,6 @@ public class ChangingCamera : MonoBehaviour {
 
     public bool canChangeCamera = true;
 
-
     // Use this for initialization
     void Start()
     {
@@ -24,7 +24,7 @@ public class ChangingCamera : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         zmiana = false;
         if (Input.GetKeyDown("c") && (startCamera == 1) && !zmiana && canChangeCamera)
@@ -35,11 +35,11 @@ public class ChangingCamera : MonoBehaviour {
         {
             SetActiveTacticalCam();
         }
-      
-        if(startCamera == 1)
+
+        if (startCamera == 1)
         {
             buildController.BuildingTowers();
-        }        
+        }
     }
 
     public void SetActiveTacticalCam()
@@ -47,10 +47,11 @@ public class ChangingCamera : MonoBehaviour {
         startCamera = 1;
 
         TacticalCamera.GetComponent<Camera>().enabled = true;
-        TacticalCamera.GetComponent<AudioListener>().enabled = true;
+        TacticalCamera.GetComponent<AudioSource>().Play();
 
         ThirdPersonCamera.GetComponent<Camera>().enabled = false;
-        ThirdPersonCamera.GetComponent<AudioListener>().enabled = false;
+        ThirdPersonCamera.GetComponent<AudioSource>().Stop();
+
         this.zmiana = true;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -66,10 +67,11 @@ public class ChangingCamera : MonoBehaviour {
         startCamera = 2;
 
         TacticalCamera.GetComponent<Camera>().enabled = false;
-        TacticalCamera.GetComponent<AudioListener>().enabled = false;
-
+        TacticalCamera.GetComponent<AudioSource>().Stop();
         ThirdPersonCamera.GetComponent<Camera>().enabled = true;
-        ThirdPersonCamera.GetComponent<AudioListener>().enabled = true;
+        ThirdPersonCamera.GetComponents<AudioSource>()[1].Play();
+        StartCoroutine(FadeIn(ThirdPersonCamera.GetComponents<AudioSource>()[0], 0.001f, 0f, 0.2f));
+
         this.zmiana = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -78,5 +80,16 @@ public class ChangingCamera : MonoBehaviour {
 
         buildController.StopBuild();
         vThirdPersonMotor.lockMovement = false;
+    }
+
+    public IEnumerator FadeIn(AudioSource audioSource, float speed, float startVolume, float maxVolume)
+    {
+        audioSource.volume = startVolume;
+        audioSource.Play();
+        while (audioSource.volume < maxVolume)
+        {
+            audioSource.volume += speed;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }
