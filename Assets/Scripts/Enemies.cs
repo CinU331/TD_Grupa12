@@ -252,12 +252,6 @@ public class Enemies : MonoBehaviour
     
 	public void AttackAnimationFinished() 
     {
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null) 
-        {
-            player.SendMessage("DealDamage", new DamageParameters { damageAmount = damage, duration = 0.8f, slowDownFactor = 0.8f, damageSourceObject = gameObject });
-        }
-
         isDuringAttackAnimation = false;
         animator.SetBool("isAttacking", false);
     }

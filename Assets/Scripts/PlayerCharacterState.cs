@@ -25,6 +25,12 @@ public class PlayerCharacterState : MonoBehaviour {
 
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
+	
+	float slowDownFactor = 1;
+	bool isSlowed;
+	float duration;
+	float startTime;
+	float endTime;
 
     public System.Diagnostics.Stopwatch timer;
     void Start () {
@@ -35,6 +41,8 @@ public class PlayerCharacterState : MonoBehaviour {
         SpikeTrap.transform.localScale = new Vector3(7, 5, 7);
 		InitHudBars();
 	    HpEffect.InitState(MaxHealthPoints);
+	    
+	    PopupParent.Initialize(gameObject);
 	}
 	
 	void Update () {
@@ -51,6 +59,8 @@ public class PlayerCharacterState : MonoBehaviour {
 			UpdatePlayerHealthBar();
 		}
 
+		RecalculateSlowDownEffect();
+		
         if(Input.GetKeyDown(KeyCode.Space))
         {
             timer.Reset();
@@ -73,10 +83,56 @@ public class PlayerCharacterState : MonoBehaviour {
             Instantiate(SplashTrap, tmp.transform);
             ShopController.AvailableSplashTraps--;
         }
+		
+		HealthBarBillboarding();
     }
+	
+	private void RecalculateSlowDownEffect() {
+		if (isSlowed)
+		{
+			endTime = Time.time;
+			if ((endTime - startTime) >= duration)
+			{
+				isSlowed = false;
+				slowDownFactor = 1;
+			}
+		}
+	}
+	
+	private void HealthBarBillboarding() 
+	{
+		Transform healthBar = transform.Find("HealthBar");
+		Camera camera = Camera.main;
+		Vector3 vector = camera.transform.position - healthBar.transform.position;
+		vector.x = vector.z = 0;
+		healthBar.transform.LookAt(camera.transform.position - vector);
+	}
+	
+	public void DealCriticlaDamage(DamageParameters damageParameters)
+	{
+		int randomInt = Random.Range(0, 100);
+		Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
+		if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; Debug.Log("Krytyk!"); }
+		DealDamage(damageParameters);
+	}
 
 	public void DealDamage(DamageParameters damageParameters)
     {
+	    if (damageParameters.showPopup)
+	    {
+		    if(damageParameters.damageSourceObject.CompareTag("Player"))
+			    PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
+		    else
+			    PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform, new Color(255,100,100));
+	    }
+	    if (!isSlowed || damageParameters.slowDownFactor <= slowDownFactor)
+	    {
+		    duration = damageParameters.duration;
+		    slowDownFactor = damageParameters.slowDownFactor;
+		    isSlowed = true;
+		    startTime = Time.time;
+	    }
+	    
         if (animator.GetBool("Block"))
         {
             damageParameters.damageAmount *= 0.1f;
