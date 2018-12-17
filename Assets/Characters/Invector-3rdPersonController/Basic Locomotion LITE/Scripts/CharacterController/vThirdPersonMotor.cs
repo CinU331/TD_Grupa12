@@ -67,9 +67,9 @@ namespace Invector.CharacterController
         [Tooltip("Add extra speed for the strafe movement, keep this value at 0 if you want to use only root motion speed.")]
         public float strafeWalkSpeed = 2.5f;
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]
-        public float strafeRunningSpeed = 3f;
+        public float strafeRunningSpeed = 4f;
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]
-        public float strafeSprintSpeed = 4f;
+        public float strafeSprintSpeed = 6f;
 
         [Header("--- Grounded Setup ---")]
 

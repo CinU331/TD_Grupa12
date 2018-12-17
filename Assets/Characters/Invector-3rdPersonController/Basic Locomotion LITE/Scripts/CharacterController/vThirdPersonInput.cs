@@ -35,7 +35,9 @@ namespace Invector.CharacterController
         [HideInInspector]
         public bool keepDirection;                          // keep the current direction in case you change the cameraState
 
-        protected vThirdPersonController cc;                // access the ThirdPersonController component                
+        protected vThirdPersonController cc;                // access the ThirdPersonController component     
+        private float pom = 20;
+        private bool pom2 = false;
 
         #endregion
 
@@ -104,8 +106,9 @@ namespace Invector.CharacterController
 
         protected virtual void AttackInput()
         {
-            if (Input.GetKeyDown(attackInput))
-                cc.Attack();
+            if (Input.GetKeyDown(attackInput) && !pom2) { pom = Time.time; pom2 = true; }
+            if ((Time.time - pom) > 0.20 && (Time.time - pom) != Time.time && pom2) { cc.StrongAttack(); pom = 0; pom2 = false; }
+            if (Input.GetKeyUp(attackInput) && (Time.time - pom) <= 0.25 && pom2) { cc.LightAttack(); pom = 0; pom2 = false; }
         }
 
         protected virtual void BlockInput()
