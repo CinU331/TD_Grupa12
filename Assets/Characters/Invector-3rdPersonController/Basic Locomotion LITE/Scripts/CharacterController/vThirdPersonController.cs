@@ -9,6 +9,8 @@ namespace Invector.CharacterController
     public class vThirdPersonController : vThirdPersonAnimator
     {
         private GameObject closestOccupiedTower;
+        public static bool IsTired = false;
+
         public void Update()
         {
             List<GameObject> buildingSpots = new List<GameObject> (GameObject.FindGameObjectsWithTag("BuildingSpot"));
@@ -49,20 +51,26 @@ namespace Invector.CharacterController
         public virtual void StrongAttack()
         {
             if (!isGrounded || animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Block")) return;
-            if (isArmed) { animator.SetTrigger("Attack"); }
+            if (isArmed)
+            {
+                if (PlayerCharacterState.DecreaseEnergy(40)) animator.SetTrigger("Attack");
+            }
             else StartCoroutine(TakeWeapon());
         }
 
         public virtual void LightAttack()
         {
             if (!isGrounded || animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Block")) return;
-            if (isArmed) { animator.SetTrigger("LightAttack"); }
+            if (isArmed)
+            {
+                if (PlayerCharacterState.DecreaseEnergy(15)) animator.SetTrigger("LightAttack");
+            }
             else StartCoroutine(TakeWeapon());
         }
 
         public virtual void BlockUp()
         {
-            if (!isGrounded && !isArmed) return;
+            if (!isGrounded || !isArmed && IsTired) return;
             animator.SetBool("Block", true);
             isStrafing = true;
         }
@@ -76,8 +84,8 @@ namespace Invector.CharacterController
         public virtual void Sprint(bool value)
         {
             isSprinting = value;
-            if (isSprinting) jumpForward += 2f;
-            else jumpForward -= 2f;
+            if (isSprinting) jumpForward = 5f;
+            else jumpForward = 3f;
         }
 
         public IEnumerator TakeWeapon()
@@ -118,7 +126,7 @@ namespace Invector.CharacterController
         public virtual void Jump()
         {
             // conditions to do this action
-            bool jumpConditions = isGrounded && !isJumping;
+            bool jumpConditions = isGrounded && !isJumping && PlayerCharacterState.DecreaseEnergy(10);
             // return if jumpCondigions is false
             if (!jumpConditions) return;
             // trigger jump behaviour

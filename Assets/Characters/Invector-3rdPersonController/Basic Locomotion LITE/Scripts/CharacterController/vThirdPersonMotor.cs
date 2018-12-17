@@ -34,7 +34,7 @@ namespace Invector.CharacterController
         [Header("--- Locomotion Setup ---")]
 
         public LocomotionType locomotionType = LocomotionType.FreeWithStrafe;
-        [Tooltip("lock the player movement")]
+        [Tooltip("Lock the player movement")]
         public static bool lockMovement = false;
         [Tooltip("Speed of the rotation on free directional movement")]
         [SerializeField]
@@ -99,7 +99,6 @@ namespace Invector.CharacterController
             isGrounded,
             isStrafing,
             isSprinting,
-            //isDead,
             isSliding;
 
         // action bools

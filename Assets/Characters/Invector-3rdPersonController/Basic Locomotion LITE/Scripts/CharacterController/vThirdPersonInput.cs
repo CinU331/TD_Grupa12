@@ -127,10 +127,11 @@ namespace Invector.CharacterController
 
         protected virtual void SprintInput()
         {
-            if (Input.GetKeyDown(sprintInput))
+            if (Input.GetKeyDown(sprintInput) && !(PlayerCharacterState.CurrentEnergyPoints < 5))
                 cc.Sprint(true);
             else if (Input.GetKeyUp(sprintInput))
                 cc.Sprint(false);
+            if((PlayerCharacterState.CurrentEnergyPoints < 0)) cc.Sprint(false);
         }
 
         protected virtual void JumpInput()

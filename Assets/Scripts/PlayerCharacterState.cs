@@ -3,55 +3,58 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerCharacterState : MonoBehaviour {
+public class PlayerCharacterState : MonoBehaviour
+{
+    public HUD Hud;
+    public LowHPEffect HpEffect;
+    public float HealthRestoreCooldown = 5f;
+    public float EnergyRestoreCooldown = 2f;
+    public float RegenratePerSecond = 10f;
+    public static float SprintingEnergyCostPerSecond = 10f;
+    private float timeSinceLastDamage = 0;
+    private static float timeSinceLastEnergyaUsage = 0;
 
-	public HUD Hud;
-	public LowHPEffect HpEffect;
-	public float HealthRestoreCooldown = 5f;
-	public float RegenRatePerSecond = 10f;
-	private float timeSinceLastDamage = 0;
+    public float MaxHealthPoints = 100.0f;
+    private float currentHealthPoints;
 
-	public float MaxHealthPoints = 100.0f;
-	private float currentHealthPoints;
+    public float MaxEnergyPoints = 100.0f;
+    private static bool isAlive = true;
 
-	public float MaxEnergyPoints = 100.0f;
-	private float currentEnergyPoints;
-	private static bool isAlive = true;
+    private HealthBar mHealthBar;
+    private EnergyBar mEnergyBar;
 
-	private HealthBar mHealthBar;
-    private HealthBar mEnergyBar;
-
-	private Animator animator;
+    private Animator animator;
 
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
 
     public System.Diagnostics.Stopwatch timer;
-    void Start () {
+
+    public static float CurrentEnergyPoints { get; private set; }
+
+    void Start()
+    {
         timer = new System.Diagnostics.Stopwatch();
         timer.Start();
 
-		animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         SpikeTrap.transform.localScale = new Vector3(7, 5, 7);
-		InitHudBars();
-	    HpEffect.InitState(MaxHealthPoints);
-	}
-	
-	void Update () {
-		timeSinceLastDamage += Time.deltaTime;
+        InitHudBars();
+        HpEffect.InitState(MaxHealthPoints);
+    }
 
-		if (timeSinceLastDamage > HealthRestoreCooldown && currentHealthPoints < MaxHealthPoints)
-		{
-			currentHealthPoints += RegenRatePerSecond * Time.deltaTime;
-			if (currentHealthPoints > MaxHealthPoints)
-			{
-				currentHealthPoints = MaxHealthPoints;
-			}
+    void Update()
+    {
+        Traps();
+        HealthPointsRegenerating();
+        EnergyPointsRegenerating();
+        EnergyManager();
+        UpdatePlayerBar();
+    }
 
-			UpdatePlayerHealthBar();
-		}
-
-        if(Input.GetKeyDown(KeyCode.Space))
+    private void Traps()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             timer.Reset();
             timer.Start();
@@ -66,7 +69,7 @@ public class PlayerCharacterState : MonoBehaviour {
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && ShopController.AvailableSplashTraps != 0  && timer.ElapsedMilliseconds > 1000)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && ShopController.AvailableSplashTraps != 0 && timer.ElapsedMilliseconds > 1000)
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y + 0.02f, transform.position.z);
@@ -75,57 +78,101 @@ public class PlayerCharacterState : MonoBehaviour {
         }
     }
 
-	public void DealDamage(DamageParameters damageParameters)
+    public void HealthPointsRegenerating()
+    {
+        timeSinceLastDamage += Time.deltaTime;
+
+        if (timeSinceLastDamage > HealthRestoreCooldown && currentHealthPoints < MaxHealthPoints)
+        {
+            currentHealthPoints += RegenratePerSecond * Time.deltaTime;
+            if (currentHealthPoints > MaxHealthPoints)
+            {
+                currentHealthPoints = MaxHealthPoints;
+            }
+        }
+    }
+
+    public void EnergyPointsRegenerating()
+    {
+        timeSinceLastEnergyaUsage += Time.deltaTime;
+
+        if (timeSinceLastEnergyaUsage > EnergyRestoreCooldown && CurrentEnergyPoints < MaxEnergyPoints)
+        {
+            CurrentEnergyPoints += RegenratePerSecond * Time.deltaTime;
+            if (CurrentEnergyPoints > MaxEnergyPoints) CurrentEnergyPoints = MaxEnergyPoints;
+        }
+    }
+
+    public void EnergyManager()
+    {
+        if (animator.GetFloat("InputVertical") > 1.4f && CurrentEnergyPoints > 0)
+        {
+            timeSinceLastEnergyaUsage = 0f;
+            CurrentEnergyPoints -= SprintingEnergyCostPerSecond * Time.deltaTime;
+        }
+        if (currentHealthPoints <= 0 && !vThirdPersonController.IsTired)
+        {
+            vThirdPersonController.IsTired = true;
+        }
+        if (currentHealthPoints < 0) currentHealthPoints = 0;
+    }
+
+    public static bool DecreaseEnergy(float input)
+    {
+        if (CurrentEnergyPoints >= input)
+        {
+            CurrentEnergyPoints -= input;
+            timeSinceLastEnergyaUsage = 0f;
+            return true;
+        }
+        else return false;
+    }
+
+    public void DealDamage(DamageParameters damageParameters)
     {
         if (animator.GetCurrentAnimatorStateInfo(1).IsTag("Block"))
         {
-            damageParameters.damageAmount *= 0.1f;
-            animator.SetTrigger("DealDamage");
+            if(DecreaseEnergy(damageParameters.damageAmount))
+            {
+                animator.SetTrigger("DealDamage");
+                damageParameters.damageAmount *= 0.1f;
+            }
         }
-          
         currentHealthPoints -= damageParameters.damageAmount;
-
 		timeSinceLastDamage = 0f;
         
-        if (currentHealthPoints <= 0 && isAlive)
-        {
-            StartCoroutine(youDied());
-        }
-
-		if (currentHealthPoints < 0) 
-		{
-			currentHealthPoints = 0;
-		}
-		UpdatePlayerHealthBar();
+        if (currentHealthPoints <= 0 && isAlive) StartCoroutine(Death()); //You died
+		if (currentHealthPoints < 0)  currentHealthPoints = 0;
     }
 
-	private void InitHudBars() {
-		mHealthBar = Hud.transform.Find("Bars_Panel/HealthBar").GetComponent<HealthBar>();
-        mHealthBar.Max = MaxHealthPoints;
-        currentHealthPoints = MaxHealthPoints;
-        mHealthBar.SetValue(MaxHealthPoints);
-
-        mEnergyBar = Hud.transform.Find("Bars_Panel/EnergyBar").GetComponent<HealthBar>();
-        mEnergyBar.Max = MaxEnergyPoints;
-        currentEnergyPoints = MaxEnergyPoints;
-        mEnergyBar.SetValue(MaxEnergyPoints);
-	}
-
-	public IEnumerator youDied()
+    public IEnumerator Death()
     {
         animator.SetTrigger("Death");
         isAlive = false;
         vThirdPersonMotor.lockMovement = true;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         Debug.Log("You died!");
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
     }
 
-	private void UpdatePlayerHealthBar()
+    private void InitHudBars() {
+		mHealthBar = Hud.transform.Find("Bars_Panel/HealthBar").GetComponent<HealthBar>();
+        mHealthBar.Max = MaxHealthPoints;
+        currentHealthPoints = MaxHealthPoints;
+        mHealthBar.SetValue(MaxHealthPoints);
+
+        mEnergyBar = Hud.transform.Find("Bars_Panel/EnergyBar").GetComponent<EnergyBar>();
+        mEnergyBar.Max = MaxEnergyPoints;
+        CurrentEnergyPoints = MaxEnergyPoints;
+        mEnergyBar.SetValue(MaxEnergyPoints);
+	}
+
+	private void UpdatePlayerBar()
 	{
 		mHealthBar.SetValue(currentHealthPoints);
 		HpEffect.SetCurrentHp(currentHealthPoints);
+        mEnergyBar.SetValue(CurrentEnergyPoints);
 	}
 }
