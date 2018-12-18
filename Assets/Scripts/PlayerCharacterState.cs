@@ -19,7 +19,7 @@ public class PlayerCharacterState : MonoBehaviour {
 	private static bool isAlive = true;
 
 	private HealthBar mHealthBar;
-    private HealthBar mEnergyBar;
+    private EnergyBar mEnergyBar;
 
 	private Animator animator;
 
@@ -161,7 +161,7 @@ public class PlayerCharacterState : MonoBehaviour {
         currentHealthPoints = MaxHealthPoints;
         mHealthBar.SetValue(MaxHealthPoints);
 
-        mEnergyBar = Hud.transform.Find("Bars_Panel/EnergyBar").GetComponent<HealthBar>();
+        mEnergyBar = Hud.transform.Find("Bars_Panel/EnergyBar").GetComponent<EnergyBar>();
         mEnergyBar.Max = MaxEnergyPoints;
         currentEnergyPoints = MaxEnergyPoints;
         mEnergyBar.SetValue(MaxEnergyPoints);

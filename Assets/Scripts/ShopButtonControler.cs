@@ -41,7 +41,7 @@ public class ShopButtonControler : MonoBehaviour, IPointerEnterHandler, IPointer
         if (isTooltipVisible)
         {
             backgroundTransform.position = new Vector3(backgroundTransform.rect.size.x / 4, backgroundTransform.rect.size.y / 4) +
-                                           Input.mousePosition +  new Vector3(20, 20);
+                                           Input.mousePosition +  new Vector3(-90, 20);
         }
     }
 
