@@ -55,7 +55,7 @@ public class WaveSpawner : MonoBehaviour
     void NextWaveClicked()
     {
         nextWaveClicked = true;        
-        changingCamera.SetActiveThirdCam();
+        changingCamera.SetActiveThirdCam(playMusic: true);
         changingCamera.canChangeCamera = false;
         cameraChanged = false;
     }
@@ -71,7 +71,7 @@ public class WaveSpawner : MonoBehaviour
         b_continue.gameObject.SetActive(false);
         winner.gameObject.SetActive(false);
         winner.enabled = false;
-        changingCamera.SetActiveThirdCam();
+        changingCamera.SetActiveThirdCam(playMusic: true);
     }
 
     void Update()
@@ -91,7 +91,7 @@ public class WaveSpawner : MonoBehaviour
         {
             if (!cameraChanged)
             {
-                changingCamera.SetActiveTacticalCam();
+                changingCamera.SetActiveTacticalCam(playMusic: true);
                 timeToNextWaveFloat = 30f;
                 cameraChanged = true;
             }
@@ -119,7 +119,7 @@ public class WaveSpawner : MonoBehaviour
         {
             winner.gameObject.SetActive(true);
             winner.gameObject.GetComponent<Text>().text = "You are the winner!";
-            changingCamera.SetActiveTacticalCam();
+            changingCamera.SetActiveTacticalCam(playMusic: true);
         }
 
         if(aliveEnemies > 0)

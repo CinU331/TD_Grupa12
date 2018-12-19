@@ -14,6 +14,7 @@ public class AxeAttack : MonoBehaviour
         if (other.CompareTag(EnemyTag) && animator != null &&
             animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
         {
+            GetComponent<AudioSource>().Play();
             other.gameObject.SendMessage("DealCriticlaDamage",
                 new DamageParameters
                 {

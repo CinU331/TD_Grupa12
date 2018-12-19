@@ -20,7 +20,7 @@ public class ChangingCamera : MonoBehaviour
     void Start()
     {
         buildController.Start();
-        SetActiveTacticalCam();
+        SetActiveTacticalCam(playMusic: true);
     }
 
     // Update is called once per frame
@@ -29,11 +29,11 @@ public class ChangingCamera : MonoBehaviour
         zmiana = false;
         if (Input.GetKeyDown("c") && (startCamera == 1) && !zmiana && canChangeCamera)
         {
-            SetActiveThirdCam();
+            SetActiveThirdCam(playMusic: false);
         }
         if (Input.GetKeyDown("c") && (startCamera == 2) && !zmiana && canChangeCamera)
         {
-            SetActiveTacticalCam();
+            SetActiveTacticalCam(playMusic: false);
         }
 
         if (startCamera == 1)
@@ -42,15 +42,20 @@ public class ChangingCamera : MonoBehaviour
         }
     }
 
-    public void SetActiveTacticalCam()
+    public void SetActiveTacticalCam(bool playMusic)
     {
         startCamera = 1;
 
         TacticalCamera.GetComponent<Camera>().enabled = true;
-        TacticalCamera.GetComponent<AudioSource>().Play();
 
         ThirdPersonCamera.GetComponent<Camera>().enabled = false;
-        ThirdPersonCamera.GetComponent<AudioSource>().Stop();
+        if (playMusic)
+        {
+            ThirdPersonCamera.GetComponent<AudioSource>().Stop();
+            ThirdPersonCamera.GetComponent<AudioListener>().enabled = false;
+            TacticalCamera.GetComponent<AudioListener>().enabled = true;
+            TacticalCamera.GetComponent<AudioSource>().Play();
+        }
 
         this.zmiana = true;
         Cursor.visible = true;
@@ -62,15 +67,21 @@ public class ChangingCamera : MonoBehaviour
         vThirdPersonMotor.lockMovement = true;
     }
 
-    public void SetActiveThirdCam()
+    public void SetActiveThirdCam(bool playMusic)
     {
         startCamera = 2;
 
         TacticalCamera.GetComponent<Camera>().enabled = false;
-        TacticalCamera.GetComponent<AudioSource>().Stop();
         ThirdPersonCamera.GetComponent<Camera>().enabled = true;
-        ThirdPersonCamera.GetComponents<AudioSource>()[1].Play();
-        StartCoroutine(FadeIn(ThirdPersonCamera.GetComponents<AudioSource>()[0], 0.001f, 0f, 0.2f));
+        if (playMusic)
+        {
+            TacticalCamera.GetComponent<AudioSource>().Stop();
+            TacticalCamera.GetComponent<AudioListener>().enabled = false;
+
+            ThirdPersonCamera.GetComponent<AudioListener>().enabled = true;
+            ThirdPersonCamera.GetComponents<AudioSource>()[1].Play();
+            StartCoroutine(FadeIn(ThirdPersonCamera.GetComponents<AudioSource>()[0], 0.001f, 0f, 0.2f));
+        }
 
         this.zmiana = true;
         Cursor.visible = false;
