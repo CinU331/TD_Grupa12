@@ -1,12 +1,21 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 
-public class TarSplash : MonoBehaviour
+public class TarSplash : AbstractTrap
 {
     private List<GameObject> monsters;
     private int numberOfTargets = 5;
 
     AudioSource audioSource;
+
+    private TarSplash()
+    {
+        TrapId = 0;
+        Name = "Tar splash trap";
+        Cost = 5;
+    }
+    
     // Use this for initialization
     private void Start()
     {
@@ -69,4 +78,8 @@ public class TarSplash : MonoBehaviour
             }
         }
     }
+
+    public override int TrapId { get; set; }
+    public override string Name { get; set; }
+    public override int Cost { get; set; }
 }

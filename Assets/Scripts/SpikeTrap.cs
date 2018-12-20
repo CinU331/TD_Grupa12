@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 
-public class SpikeTrap : MonoBehaviour {
+public class SpikeTrap : AbstractTrap {
 
     int durubality = 3;
     float cooldown = 5;
@@ -15,8 +16,17 @@ public class SpikeTrap : MonoBehaviour {
     AudioSource audioSource;
     Animation animation;
     Collider collider;
-	// Use this for initialization
+
+    private SpikeTrap()
+    {
+        TrapId = 1;
+        Name = "Spike trap";
+        Cost = 5;
+    }
+
+    // Use this for initialization
 	void Start () {
+	    
         collider = GetComponent<Collider>();
         animation = GetComponent<Animation>();
         audioSource = GetComponent<AudioSource>();
@@ -70,4 +80,7 @@ public class SpikeTrap : MonoBehaviour {
         }
     }
 
+    public override int TrapId { get; set; }
+    public override string Name { get; set; }
+    public override int Cost { get; set; }
 }

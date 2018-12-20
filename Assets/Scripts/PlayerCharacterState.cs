@@ -9,7 +9,7 @@ public class PlayerCharacterState : MonoBehaviour
     public LowHPEffect HpEffect;
     public float HealthRestoreCooldown = 5f;
     public float EnergyRestoreCooldown = 2f;
-    public float RegenratePerSecond = 10f;
+    public float RegenratePerSecond = 1f;
     public static float SprintingEnergyCostPerSecond = 10f;
     private float timeSinceLastDamage = 0;
     private static float timeSinceLastEnergyaUsage = 0;
@@ -27,6 +27,8 @@ public class PlayerCharacterState : MonoBehaviour
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
 	
+	private GameResources gameResources;
+	
 	float slowDownFactor = 1;
 	bool isSlowed;
 	float duration;
@@ -39,6 +41,8 @@ public class PlayerCharacterState : MonoBehaviour
 
     void Start()
     {
+	    gameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
+	    
         timer = new System.Diagnostics.Stopwatch();
         timer.Start();
 
@@ -68,21 +72,21 @@ public class PlayerCharacterState : MonoBehaviour
             timer.Start();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && ShopController.AvailableSpikeTraps != 0 && timer.ElapsedMilliseconds > 1000)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && gameResources.SpikeTraps != 0 && timer.ElapsedMilliseconds > 1000)
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y - 3.4f, transform.position.z);
             Instantiate(SpikeTrap, tmp.transform);
-            ShopController.AvailableSpikeTraps--;
+	        gameResources.SpikeTraps--;
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && ShopController.AvailableSplashTraps != 0 && timer.ElapsedMilliseconds > 1000)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && gameResources.SplashTraps != 0  && timer.ElapsedMilliseconds > 1000)
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y + 0.02f, transform.position.z);
             Instantiate(SplashTrap, tmp.transform);
-            ShopController.AvailableSplashTraps--;
+	        gameResources.SplashTraps--;
         }
 		
 		HealthBarBillboarding();
@@ -119,14 +123,11 @@ public class PlayerCharacterState : MonoBehaviour
 
     public void HealthPointsRegenerating()
     {
-	    
-	    
-        if (animator.GetBool("Block"))
-        timeSinceLastDamage += Time.deltaTime;
+	    timeSinceLastDamage += Time.deltaTime;
 
         if (timeSinceLastDamage > HealthRestoreCooldown && currentHealthPoints < MaxHealthPoints)
         {
-            currentHealthPoints += RegenratePerSecond * Time.deltaTime;
+            currentHealthPoints += RegenratePerSecond * MaxHealthPoints / 100 * Time.deltaTime;
             if (currentHealthPoints > MaxHealthPoints)
             {
                 currentHealthPoints = MaxHealthPoints;
@@ -140,7 +141,7 @@ public class PlayerCharacterState : MonoBehaviour
 
         if (timeSinceLastEnergyaUsage > EnergyRestoreCooldown && CurrentEnergyPoints < MaxEnergyPoints)
         {
-            CurrentEnergyPoints += RegenratePerSecond * Time.deltaTime;
+            CurrentEnergyPoints += RegenratePerSecond * MaxEnergyPoints / 100 * Time.deltaTime;
             if (CurrentEnergyPoints > MaxEnergyPoints) CurrentEnergyPoints = MaxEnergyPoints;
         }
     }
