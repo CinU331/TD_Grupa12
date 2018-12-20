@@ -2,18 +2,39 @@
 
 public class AxeAttack : MonoBehaviour
 {
+<<<<<<< HEAD
     public GameObject DamageSourceObject; 
     public float BaseDamage = 200f;
     public float RandomRange = 50f;
     public int CritChance = 15;
     public string EnemyTag = "Respawn";
+=======
+    void Update()
+    {
+        
+    }
+>>>>>>> origin/WarriorImprovmentsV3
 
     private void OnTriggerEnter(Collider collider)
     {
+<<<<<<< HEAD
         Animator animator = DamageSourceObject.GetComponentInParent<Animator>();
-        if (collider.CompareTag(EnemyTag) && (animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")))        {
+        if (other.CompareTag(EnemyTag) && animator != null &&
+            animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+        {
             GetComponent<AudioSource>().Play();
-            if (animator.GetCurrentAnimatorStateInfo(1).IsName("Light Attack"))
+            other.gameObject.SendMessage("DealCriticlaDamage",
+                new DamageParameters
+                {
+                    damageAmount = BaseDamage + Random.Range(-RandomRange, RandomRange), duration = 1f,
+                    slowDownFactor = 0.6f, criticProbability = CritChance, showPopup = true,
+                    damageSourceObject = DamageSourceObject
+                });
+=======
+        if (collider.tag == "Respawn" && (GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(1).IsTag("Attack") || GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsTag("Attack")))
+        {
+            GetComponent<AudioSource>().Play();
+            if (GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Light Attack"))
                 collider.gameObject.SendMessage("DealCriticlaDamage", new DamageParameters
                 {
                     damageAmount = 150f + Random.Range(-10, 10),
@@ -23,7 +44,7 @@ public class AxeAttack : MonoBehaviour
                     showPopup = true,
                     damageSourceObject = GameObject.FindGameObjectWithTag("Player")
                 });
-            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("StrongAttack - Running"))
+            else if (GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("StrongAttack - Running"))
                 collider.gameObject.SendMessage("DealCriticlaDamage", new DamageParameters
                 {
                     damageAmount = 400f,
@@ -45,6 +66,7 @@ public class AxeAttack : MonoBehaviour
                 });
 
             collider.gameObject.GetComponent<Rigidbody>().AddForce((collider.gameObject.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position) * 25, ForceMode.Impulse);
+>>>>>>> origin/WarriorImprovmentsV3
         }
     }
 }

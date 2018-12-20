@@ -9,6 +9,8 @@ namespace Invector.CharacterController
     public class vThirdPersonController : vThirdPersonAnimator
     {
         private GameObject closestOccupiedTower;
+        public static bool IsTired = false;
+
         public void Update()
         {
             List<GameObject> buildingSpots = new List<GameObject> (GameObject.FindGameObjectsWithTag("BuildingSpot"));
@@ -46,42 +48,60 @@ namespace Invector.CharacterController
 
         }
 
-        public virtual void Attack()
+        public virtual void StrongAttack()
         {
-            if (!isGrounded) return;
-            if (isArmed) animator.SetTrigger("Attack");
+            if (!isGrounded || animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Block")) return;
+            if (isArmed)
+            {
+                if (PlayerCharacterState.DecreaseEnergy(40)) animator.SetTrigger("Attack");
+            }
+            else StartCoroutine(TakeWeapon());
+        }
+
+        public virtual void LightAttack()
+        {
+            if (!isGrounded || animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Block")) return;
+            if (isArmed)
+            {
+                if (PlayerCharacterState.DecreaseEnergy(15)) animator.SetTrigger("LightAttack");
+            }
             else StartCoroutine(TakeWeapon());
         }
 
         public virtual void BlockUp()
         {
-            if (!isGrounded) return;
-            if (isArmed) animator.SetBool("Block", true);
+            if (!isGrounded || !isArmed && IsTired) return;
+            animator.SetBool("Block", true);
+            isStrafing = true;
         }
 
         public virtual void BlockDown()
         {
             animator.SetBool("Block", false);
+            isStrafing = false;
         }
 
         public virtual void Sprint(bool value)
         {
             isSprinting = value;
-            if (isSprinting) jumpForward += 2f;
-            else jumpForward -= 2f;
+            if (isSprinting) jumpForward = 5f;
+            else jumpForward = 3f;
         }
 
         public IEnumerator TakeWeapon()
         {
-            isArmed = !isArmed;
+            animator.SetTrigger("Axe");
             yield return new WaitForSeconds(0.83f);
+            isArmed = !isArmed;
             if (isArmed)
             {
                 Weapon.transform.SetParent(Hand.transform);
                 Weapon.transform.localPosition = new Vector3(0.00016f, 0.00063f, -0.00089f);
                 Weapon.transform.localEulerAngles = new Vector3(13.931f, -134.905f, -94.051f);
-                freeRunningSpeed = 3;
-                freeSprintSpeed = 4;
+                freeRunningSpeed = 3.5f;
+                freeSprintSpeed = 5.5f;
+                strafeRunningSpeed = 3.5f;
+                strafeSprintSpeed = 5.5f;
                 //Debug.Log("Do ręki");
             }
             else
@@ -91,6 +111,8 @@ namespace Invector.CharacterController
                 Weapon.transform.localEulerAngles = new Vector3(-3.305f, 0, 0);
                 freeRunningSpeed = 4;
                 freeSprintSpeed = 6;
+                strafeRunningSpeed = 4;
+                strafeSprintSpeed = 6;
                 //Debug.Log("Do pleców");
             }
         }
@@ -104,7 +126,7 @@ namespace Invector.CharacterController
         public virtual void Jump()
         {
             // conditions to do this action
-            bool jumpConditions = isGrounded && !isJumping;
+            bool jumpConditions = isGrounded && !isJumping && PlayerCharacterState.DecreaseEnergy(10);
             // return if jumpCondigions is false
             if (!jumpConditions) return;
             // trigger jump behaviour

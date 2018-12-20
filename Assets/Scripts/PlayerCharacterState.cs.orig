@@ -17,13 +17,21 @@ public class PlayerCharacterState : MonoBehaviour
     public float MaxHealthPoints = 100.0f;
     private float currentHealthPoints;
 
-    public float MaxEnergyPoints = 500.0f;
+    public float MaxEnergyPoints = 100.0f;
     private static bool isAlive = true;
 
     private HealthBar mHealthBar;
     private EnergyBar mEnergyBar;
 
+<<<<<<< HEAD
+	private HealthBar mHealthBar;
+    private EnergyBar mEnergyBar;
+
+	private Animator animator;
+=======
     private Animator animator;
+>>>>>>> origin/WarriorImprovmentsV3
+
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
 	
@@ -44,12 +52,35 @@ public class PlayerCharacterState : MonoBehaviour
 
         animator = GetComponent<Animator>();
         SpikeTrap.transform.localScale = new Vector3(7, 5, 7);
+<<<<<<< HEAD
+		InitHudBars();
 	    HpEffect.InitState(MaxHealthPoints);
-        InitHudBars();
-
-        PopupParent.Initialize(gameObject);
+	    
+	    PopupParent.Initialize(gameObject);
 	}
 	
+	void Update () {
+		timeSinceLastDamage += Time.deltaTime;
+
+		if (timeSinceLastDamage > HealthRestoreCooldown && currentHealthPoints < MaxHealthPoints)
+		{
+			currentHealthPoints += RegenRatePerSecond * Time.deltaTime;
+			if (currentHealthPoints > MaxHealthPoints)
+			{
+				currentHealthPoints = MaxHealthPoints;
+			}
+
+			UpdatePlayerHealthBar();
+		}
+
+		RecalculateSlowDownEffect();
+		
+        if(Input.GetKeyDown(KeyCode.Space))
+=======
+        InitHudBars();
+        HpEffect.InitState(MaxHealthPoints);
+    }
+
     void Update()
     {
         Traps();
@@ -57,12 +88,12 @@ public class PlayerCharacterState : MonoBehaviour
         EnergyPointsRegenerating();
         EnergyManager();
         UpdatePlayerBar();
-        RecalculateSlowDownEffect();
     }
- 
+
     private void Traps()
     {
         if (Input.GetKeyDown(KeyCode.Space))
+>>>>>>> origin/WarriorImprovmentsV3
         {
             timer.Reset();
             timer.Start();
@@ -119,12 +150,28 @@ public class PlayerCharacterState : MonoBehaviour
 
     public void HealthPointsRegenerating()
     {
-	    
+<<<<<<< HEAD
+	    if (damageParameters.showPopup)
+	    {
+		    if(damageParameters.damageSourceObject.CompareTag("Player"))
+			    PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
+		    else
+			    PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform, new Color(255,100,100));
+	    }
+	    if (!isSlowed || damageParameters.slowDownFactor <= slowDownFactor)
+	    {
+		    duration = damageParameters.duration;
+		    slowDownFactor = damageParameters.slowDownFactor;
+		    isSlowed = true;
+		    startTime = Time.time;
+	    }
 	    
         if (animator.GetBool("Block"))
+=======
         timeSinceLastDamage += Time.deltaTime;
 
         if (timeSinceLastDamage > HealthRestoreCooldown && currentHealthPoints < MaxHealthPoints)
+>>>>>>> origin/WarriorImprovmentsV3
         {
             currentHealthPoints += RegenratePerSecond * Time.deltaTime;
             if (currentHealthPoints > MaxHealthPoints)
@@ -170,6 +217,13 @@ public class PlayerCharacterState : MonoBehaviour
         else return false;
     }
 
+<<<<<<< HEAD
+        mEnergyBar = Hud.transform.Find("Bars_Panel/EnergyBar").GetComponent<EnergyBar>();
+        mEnergyBar.Max = MaxEnergyPoints;
+        currentEnergyPoints = MaxEnergyPoints;
+        mEnergyBar.SetValue(MaxEnergyPoints);
+	}
+=======
     public void DealDamage(DamageParameters damageParameters)
     {
         if (animator.GetCurrentAnimatorStateInfo(1).IsTag("Block"))
@@ -185,22 +239,8 @@ public class PlayerCharacterState : MonoBehaviour
         
         if (currentHealthPoints <= 0 && isAlive) StartCoroutine(Death()); //You died
 		if (currentHealthPoints < 0)  currentHealthPoints = 0;
-
-        if (damageParameters.showPopup)
-        {
-            if (damageParameters.damageSourceObject.CompareTag("Player"))
-                PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
-            else
-                PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform, new Color(255, 100, 100));
-        }
-        if (!isSlowed || damageParameters.slowDownFactor <= slowDownFactor)
-        {
-            duration = damageParameters.duration;
-            slowDownFactor = damageParameters.slowDownFactor;
-            isSlowed = true;
-            startTime = Time.time;
-        }
     }
+>>>>>>> origin/WarriorImprovmentsV3
 
     public IEnumerator Death()
     {
@@ -214,8 +254,7 @@ public class PlayerCharacterState : MonoBehaviour
         SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
     }
 
-    private void InitHudBars()
-    {
+    private void InitHudBars() {
 		mHealthBar = Hud.transform.Find("Bars_Panel/HealthBar").GetComponent<HealthBar>();
         mHealthBar.Max = MaxHealthPoints;
         currentHealthPoints = MaxHealthPoints;
@@ -225,7 +264,7 @@ public class PlayerCharacterState : MonoBehaviour
         mEnergyBar.Max = MaxEnergyPoints;
         CurrentEnergyPoints = MaxEnergyPoints;
         mEnergyBar.SetValue(MaxEnergyPoints);
-    }
+	}
 
 	private void UpdatePlayerBar()
 	{
