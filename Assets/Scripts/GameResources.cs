@@ -8,17 +8,35 @@ public class GameResources : MonoBehaviour {
 	public delegate void CountChangedEvent();
 	public event CountChangedEvent CreditsChanged;
 	public event CountChangedEvent ResourcesChanged;
+	
+	
+	public event CountChangedEvent TrapsChanged;
 
     private int mResources = 5;
     private int mCredits = 100;
-	// Use this for initialization
-	void Start () {
+	private int mSpikeTraps = 1;
+	private int mSplashTraps = 1;
+
+	public int SpikeTraps
+	{
+		get { return mSpikeTraps; }
+		set
+		{
+			mSpikeTraps = value;
+			TrapsChanged();
+		}
+	}
+
+	public int SplashTraps
+	{
+		get { return mSplashTraps; }
+		set
+		{
+			mSplashTraps = value;
+			TrapsChanged();
+		}
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	public int Resources 
 	{

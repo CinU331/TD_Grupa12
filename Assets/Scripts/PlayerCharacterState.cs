@@ -26,6 +26,8 @@ public class PlayerCharacterState : MonoBehaviour {
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
 	
+	private GameResources gameResources;
+	
 	float slowDownFactor = 1;
 	bool isSlowed;
 	float duration;
@@ -34,6 +36,8 @@ public class PlayerCharacterState : MonoBehaviour {
 
     public System.Diagnostics.Stopwatch timer;
     void Start () {
+	    gameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
+	    
         timer = new System.Diagnostics.Stopwatch();
         timer.Start();
 
@@ -67,21 +71,21 @@ public class PlayerCharacterState : MonoBehaviour {
             timer.Start();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && ShopController.AvailableSpikeTraps != 0 && timer.ElapsedMilliseconds > 1000)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && gameResources.SpikeTraps != 0 && timer.ElapsedMilliseconds > 1000)
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y - 3.4f, transform.position.z);
             Instantiate(SpikeTrap, tmp.transform);
-            ShopController.AvailableSpikeTraps--;
+	        gameResources.SpikeTraps--;
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && ShopController.AvailableSplashTraps != 0  && timer.ElapsedMilliseconds > 1000)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && gameResources.SplashTraps != 0  && timer.ElapsedMilliseconds > 1000)
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y + 0.02f, transform.position.z);
             Instantiate(SplashTrap, tmp.transform);
-            ShopController.AvailableSplashTraps--;
+	        gameResources.SplashTraps--;
         }
 		
 		HealthBarBillboarding();

@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class ShopController : MonoBehaviour
 {
-    public static int AvailableSpikeTraps = 3;
-    public static int AvailableSplashTraps = 3;
-
     public TextMeshProUGUI ArcherTowerCostText;
     public TextMeshProUGUI MagicalTowerCostText;
     public TextMeshProUGUI CannonTowerCostText;
@@ -41,12 +38,6 @@ public class ShopController : MonoBehaviour
         gameResources.CreditsChanged += UpdateTowerAvailability;
 
         UpdateTowerAvailability();
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-
     }
 
     private void UpdateTowerAvailability()
