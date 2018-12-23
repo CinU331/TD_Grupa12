@@ -3,16 +3,18 @@ using UnityEngine;
 
 public class MageTower : AbstractTower
 {
-    private float iCooldown = 0.05f;
+    private float iCooldown = 0.15f;
     private int iMaxTargets = 3;
     private float iSlowDownFactor = 0.7f;
 
     public GameObject objectToSpawn;
     public GameObject[] bolts;
-
+    public GameObject specialEffectToSpawn;
+    private GameObject spawnedEffect;
     private AudioSource audioSource;
     private List<GameObject> inRange;
-    
+    private float damageCounter = 0f;
+
     // Use this for initialization
     private void Start()
     {
@@ -75,6 +77,7 @@ public class MageTower : AbstractTower
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
                         inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
+                        UpdateDamageCounter(inRange[i]);
                     }
                 }
             }
@@ -87,6 +90,7 @@ public class MageTower : AbstractTower
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
                         inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
+                        UpdateDamageCounter(inRange[i]);
                     }
                 }
                 for (int i = inRange.Count; i < bolts.Length; i++)
@@ -96,6 +100,7 @@ public class MageTower : AbstractTower
                         bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
                         inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
                         bolts[i].SetActive(true);
+                        UpdateDamageCounter(inRange[0]);
                     }
                 }
             }
@@ -186,4 +191,26 @@ public class MageTower : AbstractTower
         transform.Find("Banners").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
         transform.Find("Banners").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
     }
+
+    public void UpdateDamageCounter(GameObject effectTarget)
+    {
+        damageCounter += iDamage;
+        if (damageCounter >= 6000 && iCurrentUpgradeLevel == 3)
+        {
+            spawnedEffect = Instantiate(specialEffectToSpawn, effectTarget.transform);
+            spawnedEffect.GetComponent<AudioSource>().Play();
+            spawnedEffect.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+            spawnedEffect.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
+
+            foreach(GameObject gameObject in inRange)
+            {
+                if(Vector3.Distance(spawnedEffect.transform.position, gameObject.transform.position) <= spawnedEffect.transform.GetChild(0).transform.localScale.x)
+                {
+                    gameObject.SendMessage("DealDamage", new DamageParameters { damageAmount = 150f, duration = 2f, slowDownFactor = 0.1f, damageSourceObject = gameObject, showPopup = true });
+                }
+            }
+            damageCounter = 0;
+        }
+    }
+
 }
