@@ -9,11 +9,14 @@ public class MageTower : AbstractTower
 
     public GameObject objectToSpawn;
     public GameObject[] bolts;
-    public GameObject specialEffectToSpawn;
-    private GameObject spawnedEffect;
     private AudioSource audioSource;
     private List<GameObject> inRange;
+
+    public GameObject specialEffectToSpawn;
+    private GameObject spawnedEffect;
     private float damageCounter = 0f;
+    private float damageLimit = 0;
+    private System.Random random;
 
     // Use this for initialization
     private void Start()
@@ -24,7 +27,8 @@ public class MageTower : AbstractTower
 
         ColorUtility.TryParseHtmlString("#000066", out iUpgradeColor);
         ChangeColor();
-
+        random = new System.Random();
+        damageLimit = random.Next(2500, 7500);
         audioSource = GetComponent<AudioSource>();
 
         inRange = new List<GameObject>();
@@ -195,14 +199,14 @@ public class MageTower : AbstractTower
     public void UpdateDamageCounter(GameObject effectTarget)
     {
         damageCounter += iDamage;
-        if (damageCounter >= 6000 && iCurrentUpgradeLevel == 3)
+        if (damageCounter >= damageLimit && iCurrentUpgradeLevel == 3)
         {
             spawnedEffect = Instantiate(specialEffectToSpawn, effectTarget.transform);
             spawnedEffect.GetComponent<AudioSource>().Play();
             spawnedEffect.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
             spawnedEffect.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
 
-            foreach(GameObject gameObject in inRange)
+            foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Respawn"))
             {
                 if(Vector3.Distance(spawnedEffect.transform.position, gameObject.transform.position) <= spawnedEffect.transform.GetChild(0).transform.localScale.x)
                 {
@@ -210,6 +214,7 @@ public class MageTower : AbstractTower
                 }
             }
             damageCounter = 0;
+            damageLimit = random.Next(2500, 7500);
         }
     }
 

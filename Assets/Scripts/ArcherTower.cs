@@ -4,18 +4,23 @@ using UnityEngine;
 public class ArcherTower : AbstractTower
 {
     private float iShootForce = 40f;
-    private int iMaxTargets = 3;
+    public int iMaxTargets = 3;
     private float iCooldown = 2f;
     private float iSlowDownRatio = 0.8f;
     private DamageParameters damageParameters;
 
     public GameObject arrowToSpawn;
     public AudioSource audioSource;
-    private List<GameObject> inRange;
-    private System.Random random;
+    public List<GameObject> inRange;
     private Vector3 startPoint;
     private List<KeyValuePair<GameObject, Vector3>> arrowsAndTargets;
     private float seconds;
+
+    public ParticleSystem explosionEffect;
+    public float damageCounter = 0f;
+    public float damageLimit = 0;
+    public System.Random random;
+    
     // Use this for initialization
     private void Start()
     {
@@ -27,7 +32,7 @@ public class ArcherTower : AbstractTower
 
         seconds = Time.time;
         random = new System.Random();
-
+        explosionEffect = transform.GetChild(6).GetComponent<ParticleSystem>();
 
         iDamage = 150;
         damageParameters = new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true };
@@ -35,6 +40,7 @@ public class ArcherTower : AbstractTower
         ColorUtility.TryParseHtmlString("#0000CC", out iUpgradeColor);
         ChangeColor();
         iRange = 20f;
+        damageLimit = random.Next(2500, 7500);
     }
 
     // Update is called once per frame
