@@ -94,7 +94,7 @@ public class CanonTower : AbstractTower
                         if (iCurrentUpgradeLevel == 3)
                         {
                             Vector3 dir = enemies[i].transform.position - cannonBall.transform.position;
-                            StartCoroutine(MoveOverSeconds(enemies[i], new Vector3(enemies[i].transform.position.x + dir.x / dst, enemies[i].transform.position.y, enemies[i].transform.position.z + dir.z / dst), 0.3f));
+                            StartCoroutine(MoveOverSeconds(enemies[i], new Vector3(enemies[i].transform.position.x + 2 * dir.x / dst, enemies[i].transform.position.y, enemies[i].transform.position.z + 2 * dir.z / dst), 0.3f));
 
                         }
                     }

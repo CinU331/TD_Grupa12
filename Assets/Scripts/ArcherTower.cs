@@ -20,7 +20,7 @@ public class ArcherTower : AbstractTower
     public float damageCounter = 0f;
     public float damageLimit = 0;
     public System.Random random;
-    
+    public float lastIgnition = 5;
     // Use this for initialization
     private void Start()
     {

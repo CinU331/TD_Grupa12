@@ -21,7 +21,11 @@ public class Arrow : MonoBehaviour {
         {
             if (creator.GetComponent<ArcherTower>().iCurrentUpgradeLevel == 3 && creator.GetComponent<ArcherTower>().damageLimit - creator.GetComponent<ArcherTower>().damageCounter <= creator.GetComponent<ArcherTower>().iDamage * 0.5f * creator.GetComponent<ArcherTower>().iMaxTargets)
             {
-                creator.transform.GetChild(1).GetComponent<AudioSource>().Play();
+                if (Time.time - creator.GetComponent<ArcherTower>().lastIgnition >= 4)
+                {
+                    creator.transform.GetChild(1).GetComponent<AudioSource>().Play();
+                    creator.GetComponent<ArcherTower>().lastIgnition = Time.time;
+                }
             }
             other.GetComponent<Enemies>().DealDamage(DamageParameters);
             creator.GetComponent<ArcherTower>().damageCounter += DamageParameters.damageAmount;
@@ -29,8 +33,7 @@ public class Arrow : MonoBehaviour {
             {
                 creator.GetComponent<ArcherTower>().explosionEffect.transform.position = other.transform.position;
                 creator.GetComponent<ArcherTower>().explosionEffect.Play();
-                if(!creator.transform.GetChild(6).GetComponent<AudioSource>().isPlaying)
-                  creator.transform.GetChild(6).GetComponent<AudioSource>().Play();
+                creator.transform.GetChild(6).GetComponent<AudioSource>().Play();
                 creator.GetComponent<ArcherTower>().damageCounter = 0f;
                 creator.GetComponent<ArcherTower>().damageLimit = creator.GetComponent<ArcherTower>().random.Next(2500, 7500);
 
