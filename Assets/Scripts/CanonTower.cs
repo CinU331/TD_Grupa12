@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CanonTower : AbstractTower
@@ -7,7 +8,7 @@ public class CanonTower : AbstractTower
     private float iSplashRange = 5;
     private float iTurnSpeed = 10;
     private float iBallSpeed = 25;
-    private float iCooldown = 4f;
+    private float iCooldown = 6f;
     private float iSlowDownRatio = 0.3f;
     private ParticleSystem directionalSmoke;
     private ParticleSystem smallExplosion;
@@ -17,6 +18,7 @@ public class CanonTower : AbstractTower
 
     private GameObject mockBall;
     public GameObject cannonBall;
+    public GameObject shockWave;
     private GameObject target;
 
     // Use this for initialization
@@ -68,16 +70,33 @@ public class CanonTower : AbstractTower
                 directionalSmoke.transform.position = target.transform.position;
                 directionalSmoke.Play();
 
-                target.SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 2.000f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true });
+                if (iCurrentUpgradeLevel == 3)
+                {
+                    shockWave.transform.position = target.transform.position;
+                    shockWave.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+                }
 
+                target.SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 2.000f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true });
+                if(iCurrentUpgradeLevel == 3)
+                {
+                    Vector3 dir = target.transform.position - cannonBall.transform.position;
+                    StartCoroutine(MoveOverSeconds(target, new Vector3(target.transform.position.x + dir.x * 5, target.transform.position.y, target.transform.position.z + dir.z * 5), 0.3f));
+                }
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Respawn");
 
                 float splashDamage = iDamage * 0.33f;
                 for (int i = 0; i < enemies.Length; i++)
                 {
-                    if (Vector3.Distance(enemies[i].transform.position, target.transform.position) < iSplashRange && enemies[i] != target)
+                    float dst = Vector3.Distance(enemies[i].transform.position, target.transform.position);
+                    if (dst < iSplashRange && enemies[i] != target)
                     {
                         enemies[i].SendMessage("DealDamage", new DamageParameters { damageAmount = splashDamage, duration = 1.200f, slowDownFactor = iSlowDownRatio * 1.5f, damageSourceObject = gameObject, showPopup = true });
+                        if (iCurrentUpgradeLevel == 3)
+                        {
+                            Vector3 dir = enemies[i].transform.position - cannonBall.transform.position;
+                            StartCoroutine(MoveOverSeconds(enemies[i], new Vector3(enemies[i].transform.position.x + dir.x / dst, enemies[i].transform.position.y, enemies[i].transform.position.z + dir.z / dst), 0.3f));
+
+                        }
                     }
                 }
 
@@ -200,5 +219,28 @@ public class CanonTower : AbstractTower
         transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetColor("_SpecColor", iUpgradeColor);
         transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", iUpgradeColor);
         transform.FindDeepChild("Tower_Top_Deco").GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.01f);
+    }
+
+
+    public IEnumerator MoveOverSpeed(GameObject objectToMove, Vector3 end, float speed)
+    {
+        // speed should be 1 unit per second
+        while (objectToMove.transform.position != end)
+        {
+            objectToMove.transform.position = Vector3.MoveTowards(objectToMove.transform.position, end, speed * Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+    public IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
+    {
+        float elapsedTime = 0;
+        Vector3 startingPos = objectToMove.transform.position;
+        while (elapsedTime < seconds)
+        {
+            objectToMove.transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        objectToMove.transform.position = end;
     }
 }
