@@ -26,9 +26,12 @@ public class PlayerCharacterState : MonoBehaviour
     private Animator animator;
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
+    public GameObject Molotov;
 	
 	private GameResources gameResources;
-	
+    private Quaternion endRotation;
+    public bool isRotating = false;
+
 	float slowDownFactor = 1;
 	bool isSlowed;
 	float duration;
@@ -62,6 +65,14 @@ public class PlayerCharacterState : MonoBehaviour
         EnergyManager();
         UpdatePlayerBar();
         RecalculateSlowDownEffect();
+        if(isRotating)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, endRotation, Time.deltaTime * 30);
+            if(Mathf.Abs(transform.rotation.y - endRotation.y) < 0.01f)
+            {
+                isRotating = false;
+            }
+        }
     }
  
     private void Traps()
@@ -76,23 +87,61 @@ public class PlayerCharacterState : MonoBehaviour
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y - 3.4f, transform.position.z);
-            Instantiate(SpikeTrap, tmp.transform);
+            Vector3 newPosition = new Vector3(tmp.transform.position.x, tmp.transform.position.y, tmp.transform.position.z);
+            Instantiate(SpikeTrap, newPosition, transform.rotation);
 	        gameResources.SpikeTraps--;
-
+            Destroy(tmp);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2) && gameResources.SplashTraps != 0  && timer.ElapsedMilliseconds > 1000)
         {
             GameObject tmp = new GameObject();
             tmp.transform.position = new Vector3(transform.position.x, transform.position.y + 0.02f, transform.position.z);
-            Instantiate(SplashTrap, tmp.transform);
-	        gameResources.SplashTraps--;
+            Vector3 newPosition = new Vector3(tmp.transform.position.x, tmp.transform.position.y, tmp.transform.position.z);
+            Instantiate(SplashTrap, newPosition, transform.rotation);
+            gameResources.SplashTraps--;
+            Destroy(tmp);
+
         }
-		
-		HealthBarBillboarding();
+
+        if (Input.GetKeyDown(KeyCode.Alpha3) && gameResources.Molotovs != 0)
+        {
+            GameObject tmp = new GameObject();
+            tmp.transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+            Vector3 newPosition = new Vector3(tmp.transform.position.x, tmp.transform.position.y, tmp.transform.position.z);
+            GameObject bottle = Instantiate(Molotov, newPosition, transform.rotation);
+            Camera cam = Camera.main;
+            Vector3 dir = (transform.position - cam.transform.position);
+            Quaternion newRotation = new Quaternion(0f, cam.transform.rotation.y, 0f, cam.transform.rotation.w);
+
+            endRotation = newRotation;
+            isRotating = true;
+
+            bottle.transform.position += dir * 0.1f;
+            dir *= 10;
+            bottle.GetComponent<Rigidbody>().velocity = new Vector3( dir.x / 1.5f , 3f, dir.z / 1.5f);
+            bottle.GetComponent<Rigidbody>().rotation = Quaternion.Euler(new Vector3( dir.x, 0f, dir.z));
+            gameResources.Molotovs--;
+            Destroy(tmp);
+        }
+        HealthBarBillboarding();
     }
-	
-	private void RecalculateSlowDownEffect() {
+    void DoT(GameObject target)
+    {
+        StartCoroutine("DmG", target);
+    }
+    IEnumerator DmG(GameObject target)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (target == null)
+                break;
+            target.SendMessage("DealDamage", new DamageParameters { damageAmount = 50f, duration = 0.5f, slowDownFactor = 0.7f, damageSourceObject = gameObject, showPopup = true });
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    private void RecalculateSlowDownEffect() {
 		if (isSlowed)
 		{
 			endTime = Time.time;
@@ -111,7 +160,7 @@ public class PlayerCharacterState : MonoBehaviour
 		Vector3 vector = camera.transform.position - healthBar.transform.position;
 		vector.x = vector.z = 0;
 		healthBar.transform.LookAt(camera.transform.position - vector);
-	}
+	} 
 	
 	public void DealCriticlaDamage(DamageParameters damageParameters)
 	{

@@ -16,6 +16,7 @@ public class GameResources : MonoBehaviour {
     private int mCredits = 100;
 	private int mSpikeTraps = 1;
 	private int mSplashTraps = 1;
+	private int mMolotovs = 2;
 
 	public int SpikeTraps
 	{
@@ -36,9 +37,19 @@ public class GameResources : MonoBehaviour {
 			TrapsChanged();
 		}
 	}
-	
 
-	public int Resources 
+    public int Molotovs
+    {
+        get { return mMolotovs; }
+        set
+        {
+            mMolotovs = value;
+            TrapsChanged();
+        }
+    }
+
+
+    public int Resources 
 	{
 		get
 		{

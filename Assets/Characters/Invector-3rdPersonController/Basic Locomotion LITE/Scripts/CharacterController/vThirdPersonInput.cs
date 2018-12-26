@@ -87,6 +87,7 @@ namespace Invector.CharacterController
                 BlockInput();
                 JumpInput();
                 CameraInput();
+                GetComponent<PlayerCharacterState>().isRotating = false;
             }
         }
 
