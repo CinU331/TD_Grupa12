@@ -26,7 +26,7 @@ public class FxSplash : MonoBehaviour {
             {
                 if(Vector3.Distance(enemy.transform.position, transform.position) < 6)
                 {
-                    enemy.SendMessage("DealDamage", new DamageParameters { damageAmount = 100f, duration = 2f, slowDownFactor = 0.7f, damageSourceObject = gameObject, showPopup = true });
+                    enemy.SendMessage("DealDamage", new DamageParameters { damageAmount = 100f, duration = 2f, slowDownFactor = 0.7f, damageSourceObject = GameObject.Find("vThirdPersonController"), showPopup = true });
                     GameObject spawnedFire = Instantiate(coveringFire, enemy.transform);
                     spawnedFire.SendMessage("StartDestruction", 6f);
                     spawnedFire.transform.GetChild(0).GetComponent<ParticleSystem>().Play();

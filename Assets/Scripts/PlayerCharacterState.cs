@@ -136,7 +136,7 @@ public class PlayerCharacterState : MonoBehaviour
         {
             if (target == null)
                 break;
-            target.SendMessage("DealDamage", new DamageParameters { damageAmount = 50f, duration = 0.5f, slowDownFactor = 0.7f, damageSourceObject = gameObject, showPopup = true });
+            target.SendMessage("DealDamage", new DamageParameters { damageAmount = 50f, duration = 0.5f, slowDownFactor = 0.7f, damageSourceObject = Molotov, showPopup = true });
             yield return new WaitForSeconds(1f);
         }
     }
