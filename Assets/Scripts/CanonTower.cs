@@ -222,7 +222,7 @@ public class CanonTower : AbstractTower
     }
 
 
-    public IEnumerator MoveOverSpeed(GameObject objectToMove, Vector3 end, float speed)
+    public static IEnumerator MoveOverSpeed(GameObject objectToMove, Vector3 end, float speed)
     {
         // speed should be 1 unit per second
         while (objectToMove.transform.position != end)
@@ -231,7 +231,7 @@ public class CanonTower : AbstractTower
             yield return new WaitForEndOfFrame();
         }
     }
-    public IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
+    public static IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
     {
         float elapsedTime = 0;
         Vector3 startingPos = objectToMove.transform.position;

@@ -1,20 +1,25 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Arrow : MonoBehaviour {
+public class Arrow : MonoBehaviour
+{
     public DamageParameters DamageParameters;
     public GameObject creator;
     public int destinyIndex;
-	// Use this for initialization
-	void Start () {
-	  	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public GameObject coveringFire;
+    private GameObject spawnedFire;
+
+    // Use this for initialization
+    private void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag.Equals("Respawn"))
@@ -29,6 +34,7 @@ public class Arrow : MonoBehaviour {
             }
             other.GetComponent<Enemies>().DealDamage(DamageParameters);
             creator.GetComponent<ArcherTower>().damageCounter += DamageParameters.damageAmount;
+
             if (creator.GetComponent<ArcherTower>().damageCounter >= creator.GetComponent<ArcherTower>().damageLimit)
             {
                 creator.GetComponent<ArcherTower>().explosionEffect.transform.position = other.transform.position;
@@ -37,14 +43,28 @@ public class Arrow : MonoBehaviour {
                 creator.GetComponent<ArcherTower>().damageCounter = 0f;
                 creator.GetComponent<ArcherTower>().damageLimit = creator.GetComponent<ArcherTower>().random.Next(2500, 7500);
 
-                foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Respawn"))
+                foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Respawn"))
                 {
-                    if (Vector3.Distance(transform.position, gameObject.transform.position) <= creator.GetComponent<ArcherTower>().explosionEffect.transform.localScale.x)
+                    float dst = Vector3.Distance(transform.position, enemy.transform.position);
+                    if ( dst <= creator.GetComponent<ArcherTower>().explosionEffect.transform.localScale.x)
                     {
-                        gameObject.SendMessage("DealDamage", new DamageParameters { damageAmount = 700f, duration = 2f, slowDownFactor = 0.1f, damageSourceObject = gameObject, showPopup = true });
+                        enemy.SendMessage("DealDamage", new DamageParameters { damageAmount = 200f, duration = 2f, slowDownFactor = 0.4f, damageSourceObject = enemy, showPopup = true });
+
+                        Vector3 dir = enemy.transform.position - transform.position;
+                        StartCoroutine(CanonTower.MoveOverSeconds(enemy, new Vector3(enemy.transform.position.x + 2 * dir.x / dst, enemy.transform.position.y, enemy
+                            .transform.position.z + 2 * dir.z / dst), 0.3f));
+
+                        GameObject spawnedFire = Instantiate(coveringFire, enemy.transform);
+                        spawnedFire.SendMessage("StartDestruction", 6f);
+                        spawnedFire.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+                        spawnedFire.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
+                        spawnedFire.transform.GetChild(2).GetComponent<ParticleSystem>().Play();
+                        GameObject.Find("vThirdPersonController").SendMessage("DoT", enemy);
+
                     }
                 }
             }
+
             creator.GetComponent<ArcherTower>().RemovePair(gameObject);
         }
         else if (other.gameObject.name.Equals("Terrain"))
@@ -52,5 +72,4 @@ public class Arrow : MonoBehaviour {
             creator.SendMessage("RemovePair", gameObject);
         }
     }
-
 }

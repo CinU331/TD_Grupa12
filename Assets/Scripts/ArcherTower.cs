@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ArcherTower : AbstractTower
@@ -34,7 +35,7 @@ public class ArcherTower : AbstractTower
         random = new System.Random();
         explosionEffect = transform.GetChild(6).GetComponent<ParticleSystem>();
 
-        iDamage = 150;
+        iDamage = 100;
         damageParameters = new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true };
         iBaseUpgradeCost = 10;
         ColorUtility.TryParseHtmlString("#0000CC", out iUpgradeColor);
@@ -110,7 +111,13 @@ public class ArcherTower : AbstractTower
     {
         GameObject tmp = gameObject;
         arrowsAndTargets.RemoveAll(p => p.Key == gameObject);
-        Destroy(tmp);
+        StartCoroutine("DelayedDestruction", tmp);
+    }
+
+    public IEnumerator DelayedDestruction(GameObject objectToDestroy)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(objectToDestroy);
     }
     public void StopAllAnimations()
     {

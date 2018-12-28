@@ -210,7 +210,7 @@ public class MageTower : AbstractTower
             {
                 if(Vector3.Distance(spawnedEffect.transform.position, gameObject.transform.position) <= spawnedEffect.transform.GetChild(0).transform.localScale.x)
                 {
-                    gameObject.SendMessage("DealDamage", new DamageParameters { damageAmount = 150f, duration = 2f, slowDownFactor = 0.1f, damageSourceObject = gameObject, showPopup = true });
+                    gameObject.SendMessage("DealDamage", new DamageParameters { damageAmount = 700f, duration = 2f, slowDownFactor = 0.1f, damageSourceObject = gameObject, showPopup = true });
                 }
             }
             damageCounter = 0;
