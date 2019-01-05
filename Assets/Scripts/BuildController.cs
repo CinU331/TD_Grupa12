@@ -267,7 +267,7 @@ public class BuildController : MonoBehaviour
                 archerUi.SlowDownFactorAfter = ((ArcherTower)selectedTower).iSlowDownRatio - 0.1f;
 
                 archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown;
-                archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown - 0.5f;
+                archerUi.CooldownAfter = ((ArcherTower)selectedTower).iCooldown - 0.5f;
                 archerUi.SetValues();
                 break;
         }
