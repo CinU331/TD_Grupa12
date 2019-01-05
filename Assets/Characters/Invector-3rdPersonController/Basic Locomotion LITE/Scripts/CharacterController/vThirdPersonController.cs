@@ -42,6 +42,7 @@ namespace Invector.CharacterController
         public GameObject Weapon;
         public GameObject Hand;
         public GameObject Back;
+        public GameObject shockWave;
 
         protected virtual void Start()
         {
@@ -50,12 +51,47 @@ namespace Invector.CharacterController
 
         public virtual void StrongAttack()
         {
-            if (!isGrounded || animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Block")) return;
+            if (/*!isGrounded || */animator.GetCurrentAnimatorStateInfo(1).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Block")) return;
             if (isArmed)
             {
-                if (PlayerCharacterState.DecreaseEnergy(40)) animator.SetTrigger("Attack");
+                if (PlayerCharacterState.DecreaseEnergy(30)) animator.SetTrigger("Attack");
+                if (isSprinting) StartCoroutine(JumpAttack());
             }
             else StartCoroutine(TakeWeapon());
+        }
+
+        public IEnumerator JumpAttack()
+        {
+            float range = 6;
+            float pushFactor = 7f;
+            List<GameObject> Enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("Respawn"));
+
+            lockMovement = true;
+            Sprint(true);
+            yield return new WaitForSeconds(1.7f);
+            Sprint(false);
+            input = Vector2.zero;
+            shockWave.GetComponentInChildren<ParticleSystem>().Play();
+            foreach (GameObject e in Enemies)
+                if (Vector3.Distance(Weapon.transform.position, e.transform.position) <= range)
+                {
+                    float dst = Vector3.Distance(e.transform.position, Weapon.transform.position);
+                    Vector3 dir = e.transform.position - Weapon.transform.position;
+                    StartCoroutine(CanonTower.MoveOverSeconds(e, new Vector3(e.transform.position.x + pushFactor * dir.x / dst, e.transform.position.y, e.transform.position.z + pushFactor * dir.z / dst), 0.5f));
+                    e.gameObject.GetComponent<Animator>().SetBool("isStunned", true);
+                    e.gameObject.SendMessage("DealCriticlaDamage", new DamageParameters
+                    {
+                        damageAmount = 500f,
+                        duration = 4f,
+                        slowDownFactor = 0f,
+                        criticProbability = 10,
+                        showPopup = true,
+                        damageSourceObject = GameObject.FindGameObjectWithTag("Player")
+                    });
+                }
+
+            yield return new WaitForSeconds(1f);
+            lockMovement = false;
         }
 
         public virtual void LightAttack()
@@ -83,6 +119,7 @@ namespace Invector.CharacterController
 
         public virtual void Sprint(bool value)
         {
+            if (input == Vector2.zero ) return;
             isSprinting = value;
             if (isSprinting) jumpForward = 5f;
             else jumpForward = 3f;
@@ -98,10 +135,10 @@ namespace Invector.CharacterController
                 Weapon.transform.SetParent(Hand.transform);
                 Weapon.transform.localPosition = new Vector3(0.00016f, 0.00063f, -0.00089f);
                 Weapon.transform.localEulerAngles = new Vector3(13.931f, -134.905f, -94.051f);
-                freeRunningSpeed = 3.5f;
-                freeSprintSpeed = 5.5f;
-                strafeRunningSpeed = 3.5f;
-                strafeSprintSpeed = 5.5f;
+                freeRunningSpeed *= armedSlowerFactor;
+                freeSprintSpeed *= armedSlowerFactor;
+                strafeRunningSpeed *= armedSlowerFactor;
+                strafeSprintSpeed *= armedSlowerFactor;
                 //Debug.Log("Do ręki");
             }
             else
@@ -109,10 +146,10 @@ namespace Invector.CharacterController
                 Weapon.transform.SetParent(Back.transform);
                 Weapon.transform.localPosition = new Vector3(0.00117f, 0.00024f, -0.00195f);
                 Weapon.transform.localEulerAngles = new Vector3(-3.305f, 0, 0);
-                freeRunningSpeed = 4;
-                freeSprintSpeed = 6;
-                strafeRunningSpeed = 4;
-                strafeSprintSpeed = 6;
+                freeRunningSpeed *= (1f / armedSlowerFactor);
+                freeSprintSpeed *= (1f / armedSlowerFactor);
+                strafeRunningSpeed *= (1f / armedSlowerFactor);
+                strafeSprintSpeed *= (1f / armedSlowerFactor);
                 //Debug.Log("Do pleców");
             }
         }

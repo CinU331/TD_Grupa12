@@ -23,28 +23,17 @@ public class AxeAttack : MonoBehaviour
                     showPopup = true,
                     damageSourceObject = GameObject.FindGameObjectWithTag("Player")
                 });
-            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("StrongAttack - Running"))
-                collider.gameObject.SendMessage("DealCriticlaDamage", new DamageParameters
-                {
-                    damageAmount = 400f,
-                    duration = 5f,
-                    slowDownFactor = 1f,
-                    criticProbability = 10,
-                    showPopup = true,
-                    damageSourceObject = GameObject.FindGameObjectWithTag("Player")
-                });
+            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("StrongAttack - Running")) Debug.Log("Special Attack");
             else
                 collider.gameObject.SendMessage("DealCriticlaDamage", new DamageParameters
                 {
                     damageAmount = 300f + Random.Range(-20, 20),
-                    duration = 1.5f,
-                    slowDownFactor = 1f,
+                    duration = 2f,
+                    slowDownFactor = 0.4f,
                     criticProbability = 10,
                     showPopup = true,
                     damageSourceObject = GameObject.FindGameObjectWithTag("Player")
                 });
-
-            collider.gameObject.GetComponent<Rigidbody>().AddForce((collider.gameObject.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position) * 25, ForceMode.Impulse);
         }
     }
 }

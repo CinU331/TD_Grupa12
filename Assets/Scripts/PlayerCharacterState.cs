@@ -23,6 +23,7 @@ public class PlayerCharacterState : MonoBehaviour
     private HealthBar mHealthBar;
     private EnergyBar mEnergyBar;
 
+    private vThirdPersonController cc;
     private Animator animator;
     public GameObject SpikeTrap;
     public GameObject SplashTrap;
@@ -48,7 +49,7 @@ public class PlayerCharacterState : MonoBehaviour
 	    
         timer = new System.Diagnostics.Stopwatch();
         timer.Start();
-
+        isAlive = true;
         animator = GetComponent<Animator>();
         SpikeTrap.transform.localScale = new Vector3(7, 5, 7);
 	    HpEffect.InitState(MaxHealthPoints);
@@ -165,8 +166,8 @@ public class PlayerCharacterState : MonoBehaviour
 	public void DealCriticlaDamage(DamageParameters damageParameters)
 	{
 		int randomInt = Random.Range(0, 100);
-		Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
-		if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; Debug.Log("Krytyk!"); }
+        //Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
+        if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; }//Debug.Log("Krytyk!"); }
 		DealDamage(damageParameters);
 	}
 
@@ -232,7 +233,7 @@ public class PlayerCharacterState : MonoBehaviour
         }
         currentHealthPoints -= damageParameters.damageAmount;
 		timeSinceLastDamage = 0f;
-        
+
         if (currentHealthPoints <= 0 && isAlive) StartCoroutine(Death()); //You died
 		if (currentHealthPoints < 0)  currentHealthPoints = 0;
 
@@ -257,6 +258,7 @@ public class PlayerCharacterState : MonoBehaviour
         animator.SetTrigger("Death");
         isAlive = false;
         vThirdPersonMotor.lockMovement = true;
+        vThirdPersonMotor.input = Vector2.zero;
         yield return new WaitForSeconds(3f);
         Debug.Log("You died!");
         Cursor.visible = true;

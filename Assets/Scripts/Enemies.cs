@@ -82,8 +82,10 @@ public class Enemies : MonoBehaviour
             endTime = Time.time;
             if ((endTime - startTime) >= duration)
             {
+                animator.SetBool("isStunned", false);
                 isSlowed = false;
                 slowDownFactor = 1;
+                
             }
         }
     }
@@ -135,6 +137,8 @@ public class Enemies : MonoBehaviour
     private void Move(Vector3 movePoint) 
     {
         RotateTowardsMovementDirection(movePoint);
+        if (movePoint.normalized * speed * slowDownFactor * Time.deltaTime != Vector3.zero) animator.SetBool("isMoving", true);
+        else animator.SetBool("isMoving", false);
         transform.Translate(movePoint.normalized * speed * slowDownFactor * Time.deltaTime, Space.World);
     }
 
@@ -192,7 +196,7 @@ public class Enemies : MonoBehaviour
     {
         int randomInt = Random.Range(0, 100);
         //Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
-        if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; Debug.Log("Krytyk!"); }
+        if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; } //Debug.Log("Krytyk!"); }
         DealDamage(damageParameters);
     }
 

@@ -36,6 +36,8 @@ namespace Invector.CharacterController
         public LocomotionType locomotionType = LocomotionType.FreeWithStrafe;
         [Tooltip("Lock the player movement")]
         public static bool lockMovement = false;
+        [Tooltip("Lock the camera")]
+        public static bool lockCamera = false;
         [Tooltip("Speed of the rotation on free directional movement")]
         [SerializeField]
         public float freeRotationSpeed = 10f;
@@ -70,6 +72,8 @@ namespace Invector.CharacterController
         public float strafeRunningSpeed = 4f;
         [Tooltip("Add extra speed for the locomotion movement, keep this value at 0 if you want to use only root motion speed.")]
         public float strafeSprintSpeed = 6f;
+        [Tooltip("Factor changing speed when armed.")]
+        public float armedSlowerFactor = 0.8f;
 
         [Header("--- Grounded Setup ---")]
 
@@ -149,7 +153,7 @@ namespace Invector.CharacterController
         [HideInInspector]
         public float colliderHeight;                        // storage capsule collider extra information                
         [HideInInspector]
-        public Vector2 input;                               // generate input for the controller        
+        public static Vector2 input;                               // generate input for the controller        
         [HideInInspector]
         public float speed, direction, verticalVelocity;    // general variables to the locomotion
         [HideInInspector]

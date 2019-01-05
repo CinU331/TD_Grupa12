@@ -86,17 +86,21 @@ namespace Invector.CharacterController
                 AttackInput();
                 BlockInput();
                 JumpInput();
-                CameraInput();
                 GetComponent<PlayerCharacterState>().isRotating = false;
             }
+            if (!vThirdPersonMotor.lockCamera)
+            {
+                CameraInput();
+            }
+            
         }
 
         #region Basic Locomotion Inputs      
 
         protected virtual void MoveCharacter()
         {
-            cc.input.x = Input.GetAxis(horizontalInput);
-            cc.input.y = Input.GetAxis(verticallInput);
+            vThirdPersonMotor.input.x = Input.GetAxis(horizontalInput);
+            vThirdPersonMotor.input.y = Input.GetAxis(verticallInput);
         }
 
         protected virtual void ArmedInput()
@@ -128,7 +132,7 @@ namespace Invector.CharacterController
 
         protected virtual void SprintInput()
         {
-            if (Input.GetKeyDown(sprintInput) && !(PlayerCharacterState.CurrentEnergyPoints < 5))
+            if (Input.GetKeyDown(sprintInput) && !(PlayerCharacterState.CurrentEnergyPoints < 5) )
                 cc.Sprint(true);
             else if (Input.GetKeyUp(sprintInput))
                 cc.Sprint(false);

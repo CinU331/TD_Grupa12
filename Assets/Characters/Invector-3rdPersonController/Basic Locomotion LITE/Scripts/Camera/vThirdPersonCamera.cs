@@ -104,7 +104,7 @@ public class vThirdPersonCamera : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (target == null || targetLookAt == null || Invector.CharacterController.vThirdPersonMotor.lockMovement) return;
+        if (target == null || targetLookAt == null || Invector.CharacterController.vThirdPersonMotor.lockCamera) return;
 
         CameraMovement();
     }
