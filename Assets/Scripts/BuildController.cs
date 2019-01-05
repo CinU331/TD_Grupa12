@@ -121,7 +121,7 @@ public class BuildController : MonoBehaviour
                         buildingSpot.SpawnRocksMock(tmpTower);
                     }
 
-                    GameObject.Destroy(tmpTower);
+                    Destroy(tmpTower);
                 }
 
                 if (Input.GetMouseButtonUp(0) && !buildingSpot.IsOccupied() && !String.IsNullOrEmpty(chosenTower))
@@ -166,6 +166,11 @@ public class BuildController : MonoBehaviour
                 bs.SendMessage("DestroyMockRocks");
             }
 
+            if (Input.GetMouseButtonUp(1))
+            {
+                DisableConstructionHighlight();
+                shopController.DeselectTower();
+            }
         }
 
         if (!isSnapped)
@@ -200,6 +205,11 @@ public class BuildController : MonoBehaviour
 
     private void DisableConstructionHighlight()
     {
+        foreach (GameObject bs in buildingSpotsObjects)
+        {
+            bs.SendMessage("DestroyMockRocks");
+        }
+        
         foreach (Transform child in constructionHighlight.transform)
         {
             Destroy(child.gameObject);
