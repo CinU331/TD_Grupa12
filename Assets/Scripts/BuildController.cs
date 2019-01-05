@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BuildController : MonoBehaviour
 {
@@ -15,6 +16,13 @@ public class BuildController : MonoBehaviour
     public GameObject magicalTower;
     public GameObject cannonTower;
     public GameObject archerTower;
+
+    public GameObject magicalTowerUpgradeUI;
+    public GameObject cannonTowerUpgradeUI;
+    public GameObject archerTowerUpgradeUI;
+
+    public GameObject currentUpgradeUI;
+    public AbstractTower currentUpgradingTurret;
 
     private ShopController shopController;
     private GameResources gameResources;
@@ -83,6 +91,11 @@ public class BuildController : MonoBehaviour
 
     public void BuildingTowers()
     {
+        if (currentUpgradeUI != null)
+        {
+            UpdateInfoAboutUpgrade(currentUpgradeUI, currentUpgradingTurret);
+        }
+
         if (EventSystem.current.IsPointerOverGameObject()) // if blocked by ui
         {
             DisableConstructionHighlight();
@@ -128,6 +141,7 @@ public class BuildController : MonoBehaviour
                 {
                     GameObject newTower = GetTowerInstance(chosenTower);
                     buildingSpot.CreateTower(newTower);
+                    newTower.GetComponent<AbstractTower>().BuildingSpot = buildingSpot;
                     buildingSpot.SpawnRocks();
 
                     gameResources.ChangeCreditsCount(-GetTowerCost(chosenTower));
@@ -141,11 +155,6 @@ public class BuildController : MonoBehaviour
                     {
                         gameResources.ChangeCreditsCount(GetTowerCost(soldTowerName) + buildingSpot.GetUpgradesCost());
                     }
-                }
-                else if(Input.GetKeyDown(KeyCode.U) && buildingSpot.currentTower != null)
-                {
-                    buildingSpot.currentTower.SendMessage("UpgradeTower");
-                    buildingSpot.SpawnRocks();
                 }
             }
 
@@ -173,10 +182,111 @@ public class BuildController : MonoBehaviour
             }
         }
 
+        int towersLayerMask = LayerMask.GetMask("Towers");
+        if (Physics.Raycast(ray, out hit, float.MaxValue, towersLayerMask))
+        {
+            if (hit.transform.gameObject.CompareTag("Tower"))
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Destroy(currentUpgradeUI);
+                    currentUpgradingTurret = hit.transform.gameObject.GetComponent<AbstractTower>();
+
+                    currentUpgradeUI = DisplayUpgradeUi(currentUpgradingTurret);
+                    Transform upgradeButton = currentUpgradeUI.transform.FindDeepChild("UpgradeButton");
+                    upgradeButton.gameObject.GetComponent<Button>().onClick.AddListener(Upgrade);
+                    Transform sellButton = currentUpgradeUI.transform.FindDeepChild("SellButton");
+                    sellButton.gameObject.GetComponent<Button>().onClick.AddListener(() => SellTower(currentUpgradingTurret.BuildingSpot));
+                }
+            }
+        }
+
         if (!isSnapped)
         {
             UpdateConstructionHighlightPosition();
         }
+    }
+
+    private void UpdateInfoAboutUpgrade(GameObject upgradeUi, AbstractTower selectedTower)
+    {
+        string towerIdentificator = selectedTower.TowerIdentificator;
+        Transform upgradeButton = upgradeUi.transform.FindDeepChild("UpgradeButton");
+        if (!currentUpgradingTurret.IsUpgradeAvailable)
+        {
+            upgradeButton.gameObject.SetActive(false);
+        }
+
+
+        switch (towerIdentificator)
+        {
+            case "MagicalTowerItem":
+
+                MageUpgradeUI mageUi = upgradeUi.GetComponentInChildren<MageUpgradeUI>();
+
+                mageUi.DamageNow = ((MageTower)selectedTower).iDamage;
+                mageUi.DamageAfter = (int)(((MageTower)selectedTower).iDamage * 1.5f);
+
+                mageUi.MaxTargetsNow = ((MageTower)selectedTower).iMaxTargets;
+                mageUi.MaxTargetsAfter = ((MageTower)selectedTower).iMaxTargets + 1;
+
+                mageUi.RangeNow = ((MageTower)selectedTower).iRange;
+                mageUi.RangeAfter = ((MageTower)selectedTower).iRange + 2f;
+
+                mageUi.SlowDownFactorNow = ((MageTower)selectedTower).iSlowDownFactor;
+                mageUi.SlowDownFactorAfter = ((MageTower)selectedTower).iSlowDownFactor - 0.1f;
+                mageUi.SetValues();
+                break;
+            case "CannonTowerItem":
+                CanonUpgradeUI canonUi = upgradeUi.GetComponentInChildren<CanonUpgradeUI>();
+
+                canonUi.DamageNow = ((CanonTower)selectedTower).iDamage;
+                canonUi.DamageAfter = (int)(((CanonTower)selectedTower).iDamage * 1.3f);
+
+                canonUi.CooldownNow = ((CanonTower)selectedTower).iCooldown;
+                canonUi.CooldownAfter = ((CanonTower)selectedTower).iCooldown * 0.9f;
+
+                canonUi.RangeNow = ((CanonTower)selectedTower).iRange;
+                canonUi.RangeAfter = ((CanonTower)selectedTower).iRange + 3f;
+
+                canonUi.SplashRangeNow = ((CanonTower)selectedTower).iSplashRange;
+                canonUi.SplashRangeAfter = ((CanonTower)selectedTower).iSplashRange * 1.3f;
+                canonUi.SetValues();
+                break;
+            case "ArcherTowerItem":
+                ArcherUpgradeUI archerUi = upgradeUi.GetComponentInChildren<ArcherUpgradeUI>();
+                archerUi.DamageNow = ((ArcherTower)selectedTower).iDamage;
+                archerUi.DamageAfter = (int)(((ArcherTower)selectedTower).iDamage * 1.5f);
+
+                archerUi.MaxTargetsNow = ((ArcherTower)selectedTower).iMaxTargets;
+                archerUi.MaxTargetsAfter = ((ArcherTower)selectedTower).iMaxTargets + 1;
+
+                archerUi.RangeNow = ((ArcherTower)selectedTower).iRange;
+                archerUi.RangeAfter = ((ArcherTower)selectedTower).iRange + 2f;
+
+                archerUi.SlowDownFactorNow = ((ArcherTower)selectedTower).iSlowDownRatio;
+                archerUi.SlowDownFactorAfter = ((ArcherTower)selectedTower).iSlowDownRatio - 0.1f;
+
+                archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown;
+                archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown - 0.5f;
+                archerUi.SetValues();
+                break;
+        }
+    }
+
+    public void SellTower(BuildingSpot buildingSpot)
+    {
+        string soldTowerName = buildingSpot.SellTower();
+        buildingSpot.SpawnRocks();
+
+        if (!string.IsNullOrEmpty(soldTowerName))
+        {
+            gameResources.ChangeCreditsCount(GetTowerCost(soldTowerName) + buildingSpot.GetUpgradesCost());
+        }
+        Destroy(currentUpgradeUI);
+    }
+    public void Upgrade()
+    {
+        currentUpgradingTurret.SendMessage("UpgradeTower");
     }
 
     public static int GetTowerCost(string towerName)
@@ -209,7 +319,7 @@ public class BuildController : MonoBehaviour
         {
             bs.SendMessage("DestroyMockRocks");
         }
-        
+
         foreach (Transform child in constructionHighlight.transform)
         {
             Destroy(child.gameObject);
@@ -282,6 +392,21 @@ public class BuildController : MonoBehaviour
         constructionHighlight.transform.position = transformPosition;
     }
 
+    public GameObject DisplayUpgradeUi(AbstractTower tower)
+    {
+        string towerIdentificator = tower.TowerIdentificator;
+        switch (towerIdentificator)
+        {
+            case "MagicalTowerItem":
+                return Instantiate(magicalTowerUpgradeUI);
+            case "CannonTowerItem":
+                return Instantiate(cannonTowerUpgradeUI);
+            case "ArcherTowerItem":
+                return Instantiate(archerTowerUpgradeUI);
+            default:
+                return null;
+        }
+    }
     public GameObject GetTowerInstance(string towerIdentificator)
     {
         switch (towerIdentificator)

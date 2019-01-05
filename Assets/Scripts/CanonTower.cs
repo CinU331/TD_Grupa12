@@ -5,11 +5,13 @@ using UnityEngine;
 public class CanonTower : AbstractTower
 {
     private bool isShotInProgress = false;
-    private float iSplashRange = 5;
     private float iTurnSpeed = 10;
     private float iBallSpeed = 25;
-    private float iCooldown = 6f;
-    private float iSlowDownRatio = 0.3f;
+
+    public float iSplashRange = 5;
+    public float iCooldown = 6f;
+    public float iSlowDownRatio = 0.3f;
+
     private ParticleSystem directionalSmoke;
     private ParticleSystem smallExplosion;
 

@@ -69,6 +69,7 @@ public class ChangingCamera : MonoBehaviour
 
     public void SetActiveThirdCam(bool playMusic)
     {
+        ResetUpgradeUI();
         startCamera = 2;
 
         TacticalCamera.GetComponent<Camera>().enabled = false;
@@ -102,5 +103,9 @@ public class ChangingCamera : MonoBehaviour
             audioSource.volume += speed;
             yield return new WaitForSeconds(0.1f);
         }
+    }
+    private void ResetUpgradeUI()
+    {
+        Destroy(GetComponent<BuildController>().currentUpgradeUI);
     }
 }

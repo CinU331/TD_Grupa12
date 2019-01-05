@@ -99,24 +99,29 @@ public class TacticalCameraMovement : MonoBehaviour {
         {
             cameraPosition.z += Input.GetAxis("Mouse Y") * panSpeed;
             cameraPosition.x += Input.GetAxis("Mouse X") * panSpeed;
+            ResetUpgradeUI();
         }
         else
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= (Screen.height - panBorderThickness))
             {
                 cameraPosition.z += panSpeed;
+                ResetUpgradeUI();
             }
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness)
             {
                 cameraPosition.z -= panSpeed;
+                ResetUpgradeUI();
             }
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= (Screen.width - panBorderThickness))
             {
                 cameraPosition.x += panSpeed;
+                ResetUpgradeUI();
             }
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness)
             {
                 cameraPosition.x -= panSpeed;
+                ResetUpgradeUI();
             }
         }
 
@@ -155,5 +160,9 @@ public class TacticalCameraMovement : MonoBehaviour {
         if ((Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2)) && 
             !(Input.GetMouseButton(1) || Input.GetMouseButton(2))) {
         }
+    }
+    private void ResetUpgradeUI()
+    {
+        Destroy(GetComponent<BuildController>().currentUpgradeUI);
     }
 }

@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class MageTower : AbstractTower
 {
-    private float iCooldown = 0.15f;
-    private int iMaxTargets = 3;
-    private float iSlowDownFactor = 0.7f;
+    public float iCooldown = 0.15f;
+    public int iMaxTargets = 3;
+    public float iSlowDownFactor = 0.7f;
 
     public GameObject objectToSpawn;
     public GameObject[] bolts;

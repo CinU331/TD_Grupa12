@@ -11,6 +11,7 @@ public abstract class AbstractTower : MonoBehaviour
     public int iCurrentUpgradeLevel = 1;
     public int iMaximumUpgradeLevel = 3;
     public int iBaseUpgradeCost = 0;
+    public BuildingSpot BuildingSpot;
 
     public Color rockColor;
 

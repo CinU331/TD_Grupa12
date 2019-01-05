@@ -6,8 +6,8 @@ public class ArcherTower : AbstractTower
 {
     private float iShootForce = 40f;
     public int iMaxTargets = 3;
-    private float iCooldown = 2f;
-    private float iSlowDownRatio = 0.8f;
+    public float iCooldown = 2f;
+    public float iSlowDownRatio = 0.8f;
     private DamageParameters damageParameters;
 
     public GameObject arrowToSpawn;
