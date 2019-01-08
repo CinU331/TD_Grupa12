@@ -94,6 +94,9 @@ public class ShopTrapController : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         switch (trap.TrapId)
         {
+            case (int)TrapType.Molotov:
+                gameResources.Molotovs++;
+                break;
             case (int) TrapType.SpikeTrap:
                 gameResources.SpikeTraps++;
                 break;

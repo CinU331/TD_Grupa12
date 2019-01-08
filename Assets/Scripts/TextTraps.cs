@@ -26,6 +26,9 @@ public class TextTraps : MonoBehaviour {
         
         switch (trap.TrapId)
         {
+            case (int)TrapType.Molotov:
+                countText = gameResources.Molotovs.ToString();
+                break;
             case (int) TrapType.SpikeTrap:
                 countText = gameResources.SpikeTraps.ToString();
                 break;
