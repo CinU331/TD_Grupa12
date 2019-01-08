@@ -80,7 +80,8 @@ public class MageTower : AbstractTower
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = false });
+                        inRange[i].SendMessage("PopupForMagicTower", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = false });
                         UpdateDamageCounter(inRange[i]);
                     }
                 }
@@ -93,7 +94,8 @@ public class MageTower : AbstractTower
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[i].transform.position;
                         bolts[i].SetActive(true);
-                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
+                        inRange[i].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = false });
+                        inRange[i].SendMessage("PopupForMagicTower", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = false });
                         UpdateDamageCounter(inRange[i]);
                     }
                 }
@@ -102,7 +104,8 @@ public class MageTower : AbstractTower
                     if (inRange[0] != null)
                     {
                         bolts[i].transform.GetChild(1).transform.position = inRange[0].transform.position;
-                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = true });
+                        inRange[0].SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = false });
+                        inRange[0].SendMessage("PopupForMagicTower", new DamageParameters { damageAmount = iDamage, duration = 0.05f, slowDownFactor = iSlowDownFactor, damageSourceObject = gameObject, showPopup = false });
                         bolts[i].SetActive(true);
                         UpdateDamageCounter(inRange[0]);
                     }

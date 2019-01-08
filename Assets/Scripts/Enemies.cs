@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Enemies : MonoBehaviour
@@ -34,13 +34,13 @@ public class Enemies : MonoBehaviour
     float startTime;
     float endTime;
 
-    //public struct DamageParameters
-    //{
-    //    public float damageAmount;
-    //    public float slowDownFactor;
-    //    public float duration;
-    //    public int criticProbability;
-    //}
+    private float timerForSeconds;
+    private int secondsFromTimer;
+    private float timerForDelay = 0f;
+    public float periodOfDelay = 1f;
+    private float damagePopup;
+    private bool canShowPopUp;
+
 
     void Start()
     {
@@ -58,25 +58,36 @@ public class Enemies : MonoBehaviour
 
     void Update()
     {
-        if (!isAlive) {
+        if (!isAlive)
+        {
             return;
         }
-        
+
         RecalculateSlowDownEffect();
 
-        if (!isAggroed) 
+        if (!isAggroed)
         {
             MoveAlongPath();
-        } 
-        else 
+        }
+        else
         {
             HandlePlayerAggro();
         }
 
-        HealthBarBillboarding();        
+        HealthBarBillboarding();
+
+        timerForSeconds += Time.deltaTime;
+        secondsFromTimer = Convert.ToInt32(timerForSeconds);
+        timerForDelay += Time.deltaTime;
+        if (timerForDelay >= periodOfDelay)
+        {
+            timerForDelay = timerForDelay - periodOfDelay;
+            canShowPopUp = true;
+        }
     }
 
-    private void RecalculateSlowDownEffect() {
+    private void RecalculateSlowDownEffect()
+    {
         if (isSlowed)
         {
             endTime = Time.time;
@@ -85,7 +96,7 @@ public class Enemies : MonoBehaviour
                 animator.SetBool("isStunned", false);
                 isSlowed = false;
                 slowDownFactor = 1;
-                
+
             }
         }
     }
@@ -111,7 +122,8 @@ public class Enemies : MonoBehaviour
         exitGate = Waypoints.waypoints[numberOfWaypoint];
     }
 
-    private void MoveAlongPath() {
+    private void MoveAlongPath()
+    {
         Vector3 directions = exitGate.position - transform.position;
         Move(directions);
 
@@ -123,7 +135,7 @@ public class Enemies : MonoBehaviour
                 {
                     gameResources.ChangeResourceCount(-4);
                 }
-                else 
+                else
                 {
                     gameResources.ChangeResourceCount(-1);
                 }
@@ -134,7 +146,7 @@ public class Enemies : MonoBehaviour
     }
 
 
-    private void Move(Vector3 movePoint) 
+    private void Move(Vector3 movePoint)
     {
         RotateTowardsMovementDirection(movePoint);
         if (movePoint.normalized * speed * slowDownFactor * Time.deltaTime != Vector3.zero) animator.SetBool("isMoving", true);
@@ -142,7 +154,7 @@ public class Enemies : MonoBehaviour
         transform.Translate(movePoint.normalized * speed * slowDownFactor * Time.deltaTime, Space.World);
     }
 
-    private void RotateTowardsMovementDirection(Vector3 movePoint) 
+    private void RotateTowardsMovementDirection(Vector3 movePoint)
     {
         Vector3 lookDirection = movePoint.normalized;
         if (lookDirection != Vector3.zero)
@@ -151,7 +163,7 @@ public class Enemies : MonoBehaviour
         }
     }
 
-    private void HealthBarBillboarding() 
+    private void HealthBarBillboarding()
     {
         Transform healthBar = transform.Find("HealthBar");
         Camera camera = Camera.main;
@@ -160,15 +172,30 @@ public class Enemies : MonoBehaviour
         healthBar.transform.LookAt(camera.transform.position - vector);
     }
 
+    public void PopupForMagicTower(DamageParameters damageParameters)
+    {
+        damagePopup += damageParameters.damageAmount;
+        if (timerForSeconds > secondsFromTimer)
+        {
+            if (canShowPopUp)
+            {
+                PopupParent.CreatePopup(damagePopup.ToString(), transform, new Color(255, 218, 0));
+                damagePopup = 0;
+                canShowPopUp = false;
+            }
+        }
+    }
+
     public void DealDamage(DamageParameters damageParameters)
     {
         if (damageParameters.showPopup)
         {
-            if(damageParameters.damageSourceObject.tag == "Player")
+            if (damageParameters.damageSourceObject.tag == "Player")
                 PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform);
             else
-                PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform, new Color(255,218,0));
+                PopupParent.CreatePopup(damageParameters.damageAmount.ToString(), transform, new Color(255, 218, 0));
         }
+
         if (!isSlowed || damageParameters.slowDownFactor <= slowDownFactor)
         {
             duration = damageParameters.duration;
@@ -186,7 +213,7 @@ public class Enemies : MonoBehaviour
         }
 
         GameObject player = GameObject.FindWithTag("Player");
-        if (damageParameters.damageSourceObject != null && damageParameters.damageSourceObject == player) 
+        if (damageParameters.damageSourceObject != null && damageParameters.damageSourceObject == player)
         {
             StartPlayerAggro();
         }
@@ -194,15 +221,15 @@ public class Enemies : MonoBehaviour
 
     public void DealCriticlaDamage(DamageParameters damageParameters)
     {
-        int randomInt = Random.Range(0, 100);
+        int randomInt = UnityEngine.Random.Range(0, 100);
         //Debug.Log("random: " + randomInt + ", criticProbability: " + damageParameters.criticProbability);
         if (randomInt < damageParameters.criticProbability) { damageParameters.damageAmount = damageParameters.damageAmount * 2; } //Debug.Log("Krytyk!"); }
         DealDamage(damageParameters);
     }
 
-    private void StartPlayerAggro() 
+    private void StartPlayerAggro()
     {
-        if (!isAggroed) 
+        if (!isAggroed)
         {
             aggroStartingPoint = transform.position;
         }
@@ -211,22 +238,23 @@ public class Enemies : MonoBehaviour
         timeSinceAggro = 0f;
     }
 
-    private void StopPlayerAggro() 
+    private void StopPlayerAggro()
     {
         animator.SetBool("isAttacking", false);
         isDuringAttackAnimation = false;
         isAggroed = false;
     }
 
-    private void HandlePlayerAggro() 
+    private void HandlePlayerAggro()
     {
         timeSinceAggro += Time.deltaTime;
 
         GameObject player = GameObject.FindWithTag("Player");
-        if (player != null) {
+        if (player != null)
+        {
             float distance = Vector3.Distance(player.transform.position, transform.position);
 
-            if (!isDuringAttackAnimation) 
+            if (!isDuringAttackAnimation)
             {
                 if (distance <= attackDistance)
                 {
@@ -241,27 +269,27 @@ public class Enemies : MonoBehaviour
                 {
                     Move(player.transform.position - transform.position);
                 }
-            } 
-            
-            if (!isDuringAttackAnimation && 
-                (timeSinceAggro >= detourMaxTimeInSec || 
-                     distance >= playerMaxDistance || 
+            }
+
+            if (!isDuringAttackAnimation &&
+                (timeSinceAggro >= detourMaxTimeInSec ||
+                     distance >= playerMaxDistance ||
                      Vector3.Distance(transform.position, aggroStartingPoint) >= detourMaxDistance))
             {
                 StopPlayerAggro();
             }
-            
+
         }
     }
-    
-	public void AttackAnimationFinished() 
+
+    public void AttackAnimationFinished()
     {
         isDuringAttackAnimation = false;
         animator.SetBool("isAttacking", false);
     }
 
-    public void DyingFinished() 
-	{
+    public void DyingFinished()
+    {
         if (GameObject.Find("OrcHB(Clone)"))
         {
             gameResources.ChangeCreditsCount(87 - numberOfWaypoint);
@@ -270,12 +298,12 @@ public class Enemies : MonoBehaviour
         {
             gameResources.ChangeCreditsCount((87 - numberOfWaypoint) / 10);
         }
-        
+
         if (WaveSpawner.aliveEnemies > 0)
         {
             WaveSpawner.aliveEnemies--;
         }
 
         Destroy(gameObject);
-	}
+    }
 }
