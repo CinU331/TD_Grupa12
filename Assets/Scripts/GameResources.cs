@@ -11,7 +11,7 @@ public class GameResources : MonoBehaviour {
 	public event CountChangedEvent TrapsChanged;
 
     private int mResources = 5;
-    private int mCredits = 300;
+    private int mCredits = 60;
 	private int mSpikeTraps = 1;
 	private int mSplashTraps = 1;
 	private int mMolotovs = 2;

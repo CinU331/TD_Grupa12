@@ -9,7 +9,7 @@ public class PlayerCharacterState : MonoBehaviour
     public LowHPEffect HpEffect;
     public float HealthRestoreCooldown = 5f;
     public float EnergyRestoreCooldown = 2f;
-    public float RegenratePerSecond = 1f;
+    public float RegenratePerSecond = 4f;
     public static float SprintingEnergyCostPerSecond = 10f;
     private float timeSinceLastDamage = 0;
     private static float timeSinceLastEnergyaUsage = 0;

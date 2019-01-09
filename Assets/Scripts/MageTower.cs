@@ -22,7 +22,7 @@ public class MageTower : AbstractTower
     private void Start()
     {
         iBaseUpgradeCost = 10;
-        iDamage = 5;
+        iDamage = 1;
         iGameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
 
         ColorUtility.TryParseHtmlString("#000066", out iUpgradeColor);
@@ -167,7 +167,7 @@ public class MageTower : AbstractTower
                 bolts[i].SetActive(false);
             }
 
-            iDamage = (int)(iDamage * 1.5f);
+            iDamage = (int)(iDamage * 2f);
             iRange += 2;
             iSlowDownFactor -= 0.1f;
             iGameResources.ChangeCreditsCount(-iBaseUpgradeCost * iCurrentUpgradeLevel);
@@ -175,9 +175,10 @@ public class MageTower : AbstractTower
 
             if (iCurrentUpgradeLevel == 2)
                 ColorUtility.TryParseHtmlString("#666600", out iUpgradeColor);
-            else if(iCurrentUpgradeLevel == 3)
+            else if (iCurrentUpgradeLevel == 3)
                 ColorUtility.TryParseHtmlString("#660000", out iUpgradeColor);
             ChangeColor();
+            BuildingSpot.SpawnRocks();
             Debug.Log("Upgraded");
         }
         else
@@ -209,9 +210,9 @@ public class MageTower : AbstractTower
             spawnedEffect.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
             spawnedEffect.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
 
-            foreach(GameObject gameObject in GameObject.FindGameObjectsWithTag("Respawn"))
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Respawn"))
             {
-                if(Vector3.Distance(spawnedEffect.transform.position, gameObject.transform.position) <= spawnedEffect.transform.GetChild(0).transform.localScale.x)
+                if (Vector3.Distance(spawnedEffect.transform.position, gameObject.transform.position) <= spawnedEffect.transform.GetChild(0).transform.localScale.x)
                 {
                     gameObject.SendMessage("DealDamage", new DamageParameters { damageAmount = 700f, duration = 2f, slowDownFactor = 0.1f, damageSourceObject = gameObject, showPopup = true });
                 }

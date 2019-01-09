@@ -35,8 +35,7 @@ public class ArcherTower : AbstractTower
         random = new System.Random();
         explosionEffect = transform.GetChild(6).GetComponent<ParticleSystem>();
 
-        iDamage = 100;
-        damageParameters = new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true };
+        iDamage = 10;
         iBaseUpgradeCost = 10;
         ColorUtility.TryParseHtmlString("#0000CC", out iUpgradeColor);
         ChangeColor();
@@ -68,7 +67,7 @@ public class ArcherTower : AbstractTower
                     temporaryArrowObject.GetComponent<CapsuleCollider>().isTrigger = true;
                     temporaryArrowObject.AddComponent<Rigidbody>().useGravity = false;
                     temporaryArrowObject.GetComponent<Rigidbody>().isKinematic = false;
-                    temporaryArrowObject.GetComponent<Arrow>().DamageParameters = damageParameters;
+                    temporaryArrowObject.GetComponent<Arrow>().DamageParameters = new DamageParameters { damageAmount = iDamage, duration = 0.8f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true };
                     temporaryArrowObject.GetComponent<Arrow>().creator = gameObject;
                     temporaryArrowObject.transform.localScale = new Vector3(2, 2, 2);
 
@@ -79,7 +78,7 @@ public class ArcherTower : AbstractTower
                     arrowsAndTargets.Add(new KeyValuePair<GameObject, Vector3>(temporaryArrowObject, temporaryDestination));
                 }
             }
-           
+
         }
 
 
@@ -164,7 +163,7 @@ public class ArcherTower : AbstractTower
             }
             arrowsAndTargets.Clear();
 
-            iDamage = (int)(iDamage * 1.5f);
+            iDamage = (int)(iDamage * 1.3f);
             iSlowDownRatio -= 0.1f;
             iCooldown -= 0.5f;
             iRange += 2.0f;
@@ -179,7 +178,7 @@ public class ArcherTower : AbstractTower
             {
                 ColorUtility.TryParseHtmlString("#CC0000", out iUpgradeColor);
             }
-
+            BuildingSpot.SpawnRocks();
             ChangeColor();
 
             UnityEngine.Debug.Log("Upgraded");

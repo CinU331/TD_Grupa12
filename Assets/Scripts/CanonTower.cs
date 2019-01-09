@@ -27,7 +27,7 @@ public class CanonTower : AbstractTower
     private void Start()
     {
 
-        iDamage = 500;
+        iDamage = 40;
         iBaseUpgradeCost = 15;
 
         ColorUtility.TryParseHtmlString("#000066", out iUpgradeColor);
@@ -43,11 +43,11 @@ public class CanonTower : AbstractTower
         InvokeRepeating("FindTarget", 0f, 0.05f);
         InvokeRepeating("UpdateRotation", 0f, 0.05f);
         InvokeRepeating("AttackEnemy", 0f, iCooldown);
-        
+
         directionalSmoke = transform.GetChild(2).GetChild(0).GetComponent<ParticleSystem>();
         ParticleSystem.MainModule mM = directionalSmoke.main;
         mM.startSize = 5;
-        
+
         smallExplosion = transform.GetChild(3).GetComponent<ParticleSystem>();
     }
 
@@ -79,7 +79,7 @@ public class CanonTower : AbstractTower
                 }
 
                 target.SendMessage("DealDamage", new DamageParameters { damageAmount = iDamage, duration = 2.000f, slowDownFactor = iSlowDownRatio, damageSourceObject = gameObject, showPopup = true });
-                if(iCurrentUpgradeLevel == 3)
+                if (iCurrentUpgradeLevel == 3)
                 {
                     Vector3 dir = target.transform.position - cannonBall.transform.position;
                     StartCoroutine(MoveOverSeconds(target, new Vector3(target.transform.position.x + dir.x * 5, target.transform.position.y, target.transform.position.z + dir.z * 5), 0.3f));
@@ -168,12 +168,12 @@ public class CanonTower : AbstractTower
         inRange.Clear();
     }
 
-    
+
     public void StopAllAnimations()
     {
 
     }
-    
+
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
@@ -200,7 +200,7 @@ public class CanonTower : AbstractTower
             else if (iCurrentUpgradeLevel == 3)
                 ColorUtility.TryParseHtmlString("#660000", out iUpgradeColor);
             ChangeColor();
-
+            BuildingSpot.SpawnRocks();
             Debug.Log("Upgraded");
         }
         else
