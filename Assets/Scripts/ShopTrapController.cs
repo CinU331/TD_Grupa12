@@ -37,6 +37,7 @@ public class ShopTrapController : MonoBehaviour, IPointerEnterHandler, IPointerE
         CostText.text = trap.Cost.ToString();
         gameResources = GameObject.Find("GameResources").GetComponent<GameResources>();
         gameResources.TrapsChanged += UpdateAvailability;
+        gameResources.CreditsChanged += UpdateAvailability;
         gameResources.ResourcesChanged += SetAppropriateColors;
 
         UpdateAvailability();
@@ -72,8 +73,11 @@ public class ShopTrapController : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         if (CurrentColor == COLOR_AVAILABLE)
         {
-            gameResources.ChangeCreditsCount(-trap.Cost);
-            IncrementTrapByOne();
+            if (gameResources.Credits >= trap.Cost)
+            {
+                gameResources.ChangeCreditsCount(-trap.Cost);
+                IncrementTrapByOne();
+            }
         }
     }
 
