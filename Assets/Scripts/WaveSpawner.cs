@@ -96,10 +96,13 @@ public class WaveSpawner : MonoBehaviour
                 cameraChanged = true;
             }
 
-            timeToNextWaveText.gameObject.SetActive(true);
-            Time.timeScale = 1.0f;
-            timeToNextWaveFloat -= Time.deltaTime;
-            timeToNextWave = Convert.ToInt32(timeToNextWaveFloat % 60);
+            if (wave != 0 && !PauseMenu.IsPaused)
+            {
+                timeToNextWaveText.gameObject.SetActive(true);
+                Time.timeScale = 1.0f;
+                timeToNextWaveFloat -= Time.deltaTime;
+                timeToNextWave = Convert.ToInt32(timeToNextWaveFloat % 60);
+            }
 
             nextWaveButton.gameObject.SetActive(true);
             endWaveInfo.text = "Prepare to the next wave!";
@@ -107,6 +110,7 @@ public class WaveSpawner : MonoBehaviour
             if (wave == 0)
             {
                 endWaveInfo.text = "Prepare to the first wave!";
+                timeToNextWaveText.gameObject.SetActive(false);
             }
 
             changingCamera.canChangeCamera = true;

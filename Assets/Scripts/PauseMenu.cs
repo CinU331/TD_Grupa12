@@ -1,7 +1,4 @@
-﻿using Assets.Scripts;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using Invector.CharacterController;
 
@@ -67,16 +64,13 @@ public class PauseMenu : MonoBehaviour
         }
         tacticalCameraMovement.isMovementRestricted = false;
         IsPaused = false;
-
-        
-
     }
 
     void Pause()
     {
         pauseMenuUI.SetActive(true);
 
-        if (characterCamera.GetComponent<Camera>().enabled == true)
+        if (characterCamera.GetComponent<Camera>().enabled)
         {
             charracterCam = true;
             tacticalCamera.GetComponent<Camera>().enabled = true;
