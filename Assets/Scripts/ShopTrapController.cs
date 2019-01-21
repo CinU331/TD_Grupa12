@@ -24,6 +24,7 @@ public class ShopTrapController : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         tooltipInstance = Instantiate(tooltipPrefab);
         tooltipInstance.SetActive(false);
+        tooltipInstance.transform.SetParent(transform);
         isTooltipVisible = false;
 
         Transform tooltipBackground = tooltipInstance.transform.Find("TooltipBackground");
@@ -48,7 +49,7 @@ public class ShopTrapController : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (isTooltipVisible)
         {
             backgroundTransform.position = new Vector3(backgroundTransform.rect.size.x / 4, backgroundTransform.rect.size.y / 4) +
-                                           Input.mousePosition +  new Vector3(-90, 20);
+                                           Input.mousePosition +  new Vector3(-90, 10);
         }
     }
 
