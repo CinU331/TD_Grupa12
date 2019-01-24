@@ -213,7 +213,11 @@ public class BuildController : MonoBehaviour
         Transform upgradeButton = upgradeUi.transform.FindDeepChild("UpgradeButton");
         if (!currentUpgradingTurret.IsUpgradeAvailable)
         {
-            upgradeButton.gameObject.SetActive(false);
+            upgradeButton.GetComponent<Button>().interactable = false;
+        }
+        if (gameResources.Credits < currentUpgradingTurret.iBaseUpgradeCost)
+        {
+            upgradeButton.GetComponent<Button>().interactable = false;
         }
 
 
