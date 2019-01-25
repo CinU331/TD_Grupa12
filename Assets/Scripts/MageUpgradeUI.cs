@@ -41,7 +41,7 @@ public class MageUpgradeUI : MonoBehaviour
 
         RectTransform backgroundTransform = GetComponentInParent<RectTransform>();
         backgroundTransform.position = new Vector3(backgroundTransform.rect.size.x / 4, backgroundTransform.rect.size.y / 4) +
-                                       Input.mousePosition + new Vector3(-90, 20);
+                                       Input.mousePosition + new Vector3(-190, 40);
     }
 
     // Update is called once per frame

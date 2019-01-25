@@ -13,7 +13,7 @@ public class BuildingSpot : MonoBehaviour
     public bool isOccupied = false;
     private float defaultRange = 2.5f;
     public List<GameObject> mockRocks;
-    private List<GameObject> spawnedRocks;
+    private List<GameObject> spawnedRocks=new List<GameObject>();
     public GameObject currentTower;
 
     private LineRenderer line;

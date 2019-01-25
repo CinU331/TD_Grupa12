@@ -183,9 +183,10 @@ public class BuildController : MonoBehaviour
         }
 
         int towersLayerMask = LayerMask.GetMask("Towers");
+        int terrainLayerMask = LayerMask.GetMask("Terrain");
         if (Physics.Raycast(ray, out hit, float.MaxValue, towersLayerMask))
         {
-            if (hit.transform.gameObject.CompareTag("Tower"))
+            if (hit.transform.gameObject.CompareTag("Tower") && hit.transform.gameObject.GetComponent<AbstractTower>().BuildingSpot != null)
             {
                 if (Input.GetMouseButtonUp(0))
                 {
@@ -199,6 +200,10 @@ public class BuildController : MonoBehaviour
                     sellButton.gameObject.GetComponent<Button>().onClick.AddListener(() => SellTower(currentUpgradingTurret.BuildingSpot));
                 }
             }
+        }
+        else if (Input.GetMouseButtonUp(0) && Physics.Raycast(ray, out hit, float.MaxValue, terrainLayerMask))
+        {
+            Destroy(currentUpgradeUI);
         }
 
         if (!isSnapped)
