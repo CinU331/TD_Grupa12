@@ -8,15 +8,19 @@ using UnityEngine;
 public class CanonUpgradeUI : MonoBehaviour
 {
     public float CooldownNow;
+    public float CooldownDifference;
     public float CooldownAfter;
 
     public float SplashRangeNow;
+    public float SplashRangeDifference;
     public float SplashRangeAfter;   
 
     public float RangeNow;
+    public float RangeDifference;
     public float RangeAfter;
 
     public int DamageNow;
+    public int DamageDifference;
     public int DamageAfter;
 
     public Transform Statistics;
@@ -51,15 +55,15 @@ public class CanonUpgradeUI : MonoBehaviour
     public void SetValues()
     {
         Statistics.Find("SplashRangeNow").GetComponent<TextMeshProUGUI>().text = SplashRangeNow.ToString(CultureInfo.InvariantCulture);
-        Statistics.Find("SplashRangeAfter").GetComponent<TextMeshProUGUI>().text = SplashRangeAfter.ToString(CultureInfo.InvariantCulture);
+        Statistics.Find("SplashRangeAfter").GetComponent<TextMeshProUGUI>().text = SplashRangeAfter.ToString(CultureInfo.InvariantCulture) + "(" + SplashRangeDifference.ToString() + ")";  ;
 
         Statistics.Find("DamageNow").GetComponent<TextMeshProUGUI>().text = DamageNow.ToString();
-        Statistics.Find("DamageAfter").GetComponent<TextMeshProUGUI>().text = DamageAfter.ToString();
+        Statistics.Find("DamageAfter").GetComponent<TextMeshProUGUI>().text = DamageAfter.ToString() + "(" + DamageDifference.ToString() + ")"; ;
 
         Statistics.Find("RangeNow").GetComponent<TextMeshProUGUI>().text = RangeNow.ToString(CultureInfo.InvariantCulture);
-        Statistics.Find("RangeAfter").GetComponent<TextMeshProUGUI>().text = RangeAfter.ToString(CultureInfo.InvariantCulture);
+        Statistics.Find("RangeAfter").GetComponent<TextMeshProUGUI>().text = RangeAfter.ToString(CultureInfo.InvariantCulture) + "(" + RangeDifference.ToString() + ")";
 
         Statistics.Find("CooldownNow").GetComponent<TextMeshProUGUI>().text = CooldownNow.ToString(CultureInfo.InvariantCulture);
-        Statistics.Find("CooldownAfter").GetComponent<TextMeshProUGUI>().text = CooldownAfter.ToString(CultureInfo.InvariantCulture);
+        Statistics.Find("CooldownAfter").GetComponent<TextMeshProUGUI>().text = CooldownAfter.ToString(CultureInfo.InvariantCulture) + "(" + CooldownDifference.ToString() + ")"; ;
     }
 }

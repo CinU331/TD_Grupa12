@@ -9,15 +9,19 @@ public class MageUpgradeUI : MonoBehaviour
 {
 
     public int MaxTargetsNow;
+    public int MaxTargetsDifference;
     public int MaxTargetsAfter;
 
     public float SlowDownFactorNow;
+    public float SlowDownFactorDifference;
     public float SlowDownFactorAfter;
 
     public float RangeNow;
+    public float RangeDifference;
     public float RangeAfter;
 
     public int DamageNow;
+    public int DamageDifference;
     public int DamageAfter;
 
     public Transform Statistics;
@@ -53,16 +57,16 @@ public class MageUpgradeUI : MonoBehaviour
     public void SetValues()
     {
         Statistics.Find("MaxTargetsNow").GetComponent<TextMeshProUGUI>().text = MaxTargetsNow.ToString();
-        Statistics.Find("MaxTargetsAfter").GetComponent<TextMeshProUGUI>().text = MaxTargetsAfter.ToString();
+        Statistics.Find("MaxTargetsAfter").GetComponent<TextMeshProUGUI>().text = MaxTargetsAfter.ToString() + "(" + MaxTargetsDifference.ToString() + ")";
 
         Statistics.Find("DamageNow").GetComponent<TextMeshProUGUI>().text = DamageNow.ToString();
-        Statistics.Find("DamageAfter").GetComponent<TextMeshProUGUI>().text = DamageAfter.ToString();
+        Statistics.Find("DamageAfter").GetComponent<TextMeshProUGUI>().text = DamageAfter.ToString() + "(" + DamageDifference.ToString() + ")";
 
         Statistics.Find("RangeNow").GetComponent<TextMeshProUGUI>().text = RangeNow.ToString(CultureInfo.InvariantCulture);
-        Statistics.Find("RangeAfter").GetComponent<TextMeshProUGUI>().text = RangeAfter.ToString(CultureInfo.InvariantCulture);
+        Statistics.Find("RangeAfter").GetComponent<TextMeshProUGUI>().text = RangeAfter.ToString(CultureInfo.InvariantCulture) + "(" + RangeDifference.ToString() + ")";
 
         Statistics.Find("SlowNow").GetComponent<TextMeshProUGUI>().text = SlowDownFactorNow.ToString(CultureInfo.InvariantCulture);
-        Statistics.Find("SlowAfter").GetComponent<TextMeshProUGUI>().text = SlowDownFactorAfter.ToString(CultureInfo.InvariantCulture);
+        Statistics.Find("SlowAfter").GetComponent<TextMeshProUGUI>().text = SlowDownFactorAfter.ToString(CultureInfo.InvariantCulture) + "(" + SlowDownFactorDifference.ToString() + ")";
 
     }
 

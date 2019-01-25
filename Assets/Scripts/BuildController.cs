@@ -225,58 +225,120 @@ public class BuildController : MonoBehaviour
             upgradeButton.GetComponent<Button>().interactable = false;
         }
 
-
+        
         switch (towerIdentificator)
         {
             case "MagicalTowerItem":
 
                 MageUpgradeUI mageUi = upgradeUi.GetComponentInChildren<MageUpgradeUI>();
 
-                mageUi.DamageNow = ((MageTower)selectedTower).iDamage;
-                mageUi.DamageAfter = (int)(((MageTower)selectedTower).iDamage * 1.5f);
+                if (selectedTower.iCurrentUpgradeLevel < 3)
+                {
+                    mageUi.DamageNow = ((MageTower)selectedTower).iDamage;
+                    mageUi.DamageAfter = (int)(((MageTower)selectedTower).iDamage * 2f);
+                    mageUi.DamageDifference = mageUi.DamageAfter - mageUi.DamageNow;
 
-                mageUi.MaxTargetsNow = ((MageTower)selectedTower).iMaxTargets;
-                mageUi.MaxTargetsAfter = ((MageTower)selectedTower).iMaxTargets + 1;
+                    mageUi.MaxTargetsNow = ((MageTower)selectedTower).iMaxTargets;
+                    mageUi.MaxTargetsAfter = ((MageTower)selectedTower).iMaxTargets + 1;
+                    mageUi.MaxTargetsDifference = mageUi.MaxTargetsAfter - mageUi.MaxTargetsNow;
 
-                mageUi.RangeNow = ((MageTower)selectedTower).iRange;
-                mageUi.RangeAfter = ((MageTower)selectedTower).iRange + 2f;
+                    mageUi.RangeNow = ((MageTower)selectedTower).iRange;
+                    mageUi.RangeAfter = ((MageTower)selectedTower).iRange + 2f;
+                    mageUi.RangeDifference = mageUi.RangeAfter - mageUi.RangeNow;
 
-                mageUi.SlowDownFactorNow = ((MageTower)selectedTower).iSlowDownFactor;
-                mageUi.SlowDownFactorAfter = ((MageTower)selectedTower).iSlowDownFactor - 0.1f;
+                    mageUi.SlowDownFactorNow = (float)Math.Round(((MageTower)selectedTower).iSlowDownFactor, 2);
+                    mageUi.SlowDownFactorAfter =  (float)Math.Round(((MageTower)selectedTower).iSlowDownFactor - 0.1f, 2);
+                    mageUi.SlowDownFactorDifference = (float)Math.Round(mageUi.SlowDownFactorAfter - mageUi.SlowDownFactorNow, 2);
+                }
+                else
+                {
+                    mageUi.DamageDifference = 0;
+                    mageUi.MaxTargetsDifference = 0;
+                    mageUi.RangeDifference = 0;
+                    mageUi.SlowDownFactorDifference = 0;
+
+                    mageUi.DamageNow = ((MageTower)selectedTower).iDamage;
+                    mageUi.MaxTargetsNow = ((MageTower)selectedTower).iMaxTargets;
+                    mageUi.RangeNow = ((MageTower)selectedTower).iRange;
+                    mageUi.SlowDownFactorNow = ((MageTower)selectedTower).iSlowDownFactor;
+                }
                 mageUi.SetValues();
                 break;
             case "CannonTowerItem":
                 CanonUpgradeUI canonUi = upgradeUi.GetComponentInChildren<CanonUpgradeUI>();
+                if (selectedTower.iCurrentUpgradeLevel < 3)
+                {
+                    canonUi.DamageNow = ((CanonTower)selectedTower).iDamage;
+                    canonUi.DamageAfter = (int)(((CanonTower)selectedTower).iDamage * 1.3f);
+                    canonUi.DamageDifference = canonUi.DamageAfter - canonUi.DamageNow;
 
-                canonUi.DamageNow = ((CanonTower)selectedTower).iDamage;
-                canonUi.DamageAfter = (int)(((CanonTower)selectedTower).iDamage * 1.3f);
+                    canonUi.CooldownNow = (float)Math.Round(((CanonTower)selectedTower).iCooldown, 1);
+                    canonUi.CooldownAfter = (float)Math.Round(((CanonTower)selectedTower).iCooldown * 0.9f, 1);
+                    canonUi.CooldownDifference = (float)Math.Round(canonUi.CooldownAfter - canonUi.CooldownNow, 1);
 
-                canonUi.CooldownNow = ((CanonTower)selectedTower).iCooldown;
-                canonUi.CooldownAfter = ((CanonTower)selectedTower).iCooldown * 0.9f;
+                    canonUi.RangeNow = ((CanonTower)selectedTower).iRange;
+                    canonUi.RangeAfter = ((CanonTower)selectedTower).iRange + 3f;
+                    canonUi.RangeDifference = canonUi.RangeAfter - canonUi.RangeNow;
 
-                canonUi.RangeNow = ((CanonTower)selectedTower).iRange;
-                canonUi.RangeAfter = ((CanonTower)selectedTower).iRange + 3f;
+                    canonUi.SplashRangeNow = ((CanonTower)selectedTower).iSplashRange;
+                    canonUi.SplashRangeAfter = ((CanonTower)selectedTower).iSplashRange * 1.3f;
+                    canonUi.SplashRangeDifference = canonUi.SplashRangeAfter - canonUi.SplashRangeNow;
+                }
+                else 
+                {
+                    canonUi.DamageDifference = 0;
+                    canonUi.CooldownDifference = 0;
+                    canonUi.RangeDifference = 0;
+                    canonUi.SplashRangeDifference = 0;
 
-                canonUi.SplashRangeNow = ((CanonTower)selectedTower).iSplashRange;
-                canonUi.SplashRangeAfter = ((CanonTower)selectedTower).iSplashRange * 1.3f;
+                    canonUi.DamageNow = ((CanonTower)selectedTower).iDamage;
+                    canonUi.CooldownNow = ((CanonTower)selectedTower).iCooldown;
+                    canonUi.RangeNow = ((CanonTower)selectedTower).iRange;
+                    canonUi.SplashRangeNow = ((CanonTower)selectedTower).iSplashRange;
+                }
+
                 canonUi.SetValues();
                 break;
             case "ArcherTowerItem":
                 ArcherUpgradeUI archerUi = upgradeUi.GetComponentInChildren<ArcherUpgradeUI>();
-                archerUi.DamageNow = ((ArcherTower)selectedTower).iDamage;
-                archerUi.DamageAfter = (int)(((ArcherTower)selectedTower).iDamage * 1.5f);
 
-                archerUi.MaxTargetsNow = ((ArcherTower)selectedTower).iMaxTargets;
-                archerUi.MaxTargetsAfter = ((ArcherTower)selectedTower).iMaxTargets + 1;
+                if (selectedTower.iCurrentUpgradeLevel < 3)
+                {
+                    archerUi.DamageNow = ((ArcherTower)selectedTower).iDamage;
+                    archerUi.DamageAfter = (int)(((ArcherTower)selectedTower).iDamage * 1.3f);
+                    archerUi.DamageDifference = archerUi.DamageAfter - archerUi.DamageNow;
 
-                archerUi.RangeNow = ((ArcherTower)selectedTower).iRange;
-                archerUi.RangeAfter = ((ArcherTower)selectedTower).iRange + 2f;
+                    archerUi.MaxTargetsNow = ((ArcherTower)selectedTower).iMaxTargets;
+                    archerUi.MaxTargetsAfter = ((ArcherTower)selectedTower).iMaxTargets + 1;
+                    archerUi.MaxTargetsDifference = archerUi.MaxTargetsAfter - archerUi.MaxTargetsNow;
 
-                archerUi.SlowDownFactorNow = ((ArcherTower)selectedTower).iSlowDownRatio;
-                archerUi.SlowDownFactorAfter = ((ArcherTower)selectedTower).iSlowDownRatio - 0.1f;
+                    archerUi.RangeNow = ((ArcherTower)selectedTower).iRange;
+                    archerUi.RangeAfter = ((ArcherTower)selectedTower).iRange + 2f;
+                    archerUi.RangeDifference = archerUi.RangeAfter - archerUi.RangeNow;
 
-                archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown;
-                archerUi.CooldownAfter = ((ArcherTower)selectedTower).iCooldown - 0.5f;
+                    archerUi.SlowDownFactorNow = ((ArcherTower)selectedTower).iSlowDownRatio;
+                    archerUi.SlowDownFactorAfter = ((ArcherTower)selectedTower).iSlowDownRatio - 0.1f;
+                    archerUi.SlowDownFactorDifference = archerUi.SlowDownFactorAfter - archerUi.SlowDownFactorNow;
+
+                    archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown;
+                    archerUi.CooldownAfter = ((ArcherTower)selectedTower).iCooldown - 0.5f;
+                    archerUi.CooldownDifference = archerUi.CooldownAfter - archerUi.CooldownNow;
+                }
+                else 
+                {
+                    archerUi.DamageNow = ((ArcherTower)selectedTower).iDamage;
+                    archerUi.MaxTargetsNow = ((ArcherTower)selectedTower).iMaxTargets;
+                    archerUi.RangeNow = ((ArcherTower)selectedTower).iRange;
+                    archerUi.SlowDownFactorNow = ((ArcherTower)selectedTower).iSlowDownRatio;
+                    archerUi.CooldownNow = ((ArcherTower)selectedTower).iCooldown;
+
+                    archerUi.DamageDifference = 0;
+                    archerUi.RangeDifference = 0;
+                    archerUi.MaxTargetsDifference = 0;
+                    archerUi.SlowDownFactorDifference = 0;
+                    archerUi.CooldownDifference = 0;
+                }
+
                 archerUi.SetValues();
                 break;
         }
