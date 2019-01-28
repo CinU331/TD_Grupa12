@@ -218,7 +218,11 @@ public class PlayerCharacterState : MonoBehaviour
             timeSinceLastEnergyaUsage = 0f;
             return true;
         }
-        else return false;
+        else
+        {
+            GameObject.Find("Food_Img").GetComponent<Animation>().Play();
+            return false;
+        }
     }
 
     public void DealDamage(DamageParameters damageParameters)

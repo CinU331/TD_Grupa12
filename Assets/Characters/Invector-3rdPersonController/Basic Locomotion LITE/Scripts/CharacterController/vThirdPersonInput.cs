@@ -132,11 +132,13 @@ namespace Invector.CharacterController
 
         protected virtual void SprintInput()
         {
-            if (Input.GetKeyDown(sprintInput) && !(PlayerCharacterState.CurrentEnergyPoints < 5) )
-                cc.Sprint(true);
-            else if (Input.GetKeyUp(sprintInput))
+            if (Input.GetKeyDown(sprintInput) && !(PlayerCharacterState.CurrentEnergyPoints < 2)) cc.Sprint(true);
+            else if (Input.GetKeyUp(sprintInput)) cc.Sprint(false);
+            if((PlayerCharacterState.CurrentEnergyPoints < 0))
+            {
                 cc.Sprint(false);
-            if((PlayerCharacterState.CurrentEnergyPoints < 0)) cc.Sprint(false);
+                GameObject.Find("Food_Img").GetComponent<Animation>().Play();
+            }
         }
 
         protected virtual void JumpInput()

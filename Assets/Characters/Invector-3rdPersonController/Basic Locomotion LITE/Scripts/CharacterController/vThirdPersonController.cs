@@ -55,6 +55,7 @@ namespace Invector.CharacterController
             if (isArmed)
             {
                 if (PlayerCharacterState.DecreaseEnergy(30)) animator.SetTrigger("Attack");
+                else return;
                 if (isSprinting) StartCoroutine(JumpAttack());
             }
             else StartCoroutine(TakeWeapon());
