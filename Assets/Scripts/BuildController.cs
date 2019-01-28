@@ -195,9 +195,13 @@ public class BuildController : MonoBehaviour
 
                     currentUpgradeUI = DisplayUpgradeUi(currentUpgradingTurret);
                     Transform upgradeButton = currentUpgradeUI.transform.FindDeepChild("UpgradeButton");
-                    upgradeButton.gameObject.GetComponent<Button>().onClick.AddListener(Upgrade);
+                    upgradeButton.GetComponentInChildren<Text>().text =
+                        "Upgrade (-" + GetUpgradeCost(currentUpgradingTurret) + ")";
+                    upgradeButton.GetComponent<Button>().onClick.AddListener(Upgrade);
                     Transform sellButton = currentUpgradeUI.transform.FindDeepChild("SellButton");
-                    sellButton.gameObject.GetComponent<Button>().onClick.AddListener(() => SellTower(currentUpgradingTurret.BuildingSpot));
+                    sellButton.GetComponentInChildren<Text>().text =
+                        "Sell (+" + GetAmountOfRefund(currentUpgradingTurret) + ")";
+                    sellButton.GetComponent<Button>().onClick.AddListener(() => SellTower(currentUpgradingTurret.BuildingSpot));
                 }
             }
         }
@@ -214,18 +218,30 @@ public class BuildController : MonoBehaviour
 
     private void UpdateInfoAboutUpgrade(GameObject upgradeUi, AbstractTower selectedTower)
     {
+
+
         string towerIdentificator = selectedTower.TowerIdentificator;
         Transform upgradeButton = upgradeUi.transform.FindDeepChild("UpgradeButton");
+        Transform sellButton= upgradeUi.transform.FindDeepChild("SellButton");
+        sellButton.GetComponentInChildren<Text>().text =
+            "Sell (+" + GetAmountOfRefund(currentUpgradingTurret) + ")";
         if (!currentUpgradingTurret.IsUpgradeAvailable)
         {
             upgradeButton.GetComponent<Button>().interactable = false;
+            upgradeButton.GetComponentInChildren<Text>().text =
+                "Upgrade";
+        }
+        else
+        {
+            upgradeButton.GetComponentInChildren<Text>().text =
+                "Upgrade (-" + GetUpgradeCost(currentUpgradingTurret) + ")";
         }
         if (gameResources.Credits < currentUpgradingTurret.iBaseUpgradeCost)
         {
             upgradeButton.GetComponent<Button>().interactable = false;
         }
 
-        
+
         switch (towerIdentificator)
         {
             case "MagicalTowerItem":
@@ -247,7 +263,7 @@ public class BuildController : MonoBehaviour
                     mageUi.RangeDifference = mageUi.RangeAfter - mageUi.RangeNow;
 
                     mageUi.SlowDownFactorNow = (float)Math.Round(((MageTower)selectedTower).iSlowDownFactor, 2);
-                    mageUi.SlowDownFactorAfter =  (float)Math.Round(((MageTower)selectedTower).iSlowDownFactor - 0.1f, 2);
+                    mageUi.SlowDownFactorAfter = (float)Math.Round(((MageTower)selectedTower).iSlowDownFactor - 0.1f, 2);
                     mageUi.SlowDownFactorDifference = (float)Math.Round(mageUi.SlowDownFactorAfter - mageUi.SlowDownFactorNow, 2);
                 }
                 else
@@ -256,6 +272,7 @@ public class BuildController : MonoBehaviour
                     mageUi.MaxTargetsDifference = 0;
                     mageUi.RangeDifference = 0;
                     mageUi.SlowDownFactorDifference = 0;
+                    mageUi.isUpgradeable = false;
 
                     mageUi.DamageNow = ((MageTower)selectedTower).iDamage;
                     mageUi.MaxTargetsNow = ((MageTower)selectedTower).iMaxTargets;
@@ -284,12 +301,13 @@ public class BuildController : MonoBehaviour
                     canonUi.SplashRangeAfter = ((CanonTower)selectedTower).iSplashRange * 1.3f;
                     canonUi.SplashRangeDifference = canonUi.SplashRangeAfter - canonUi.SplashRangeNow;
                 }
-                else 
+                else
                 {
                     canonUi.DamageDifference = 0;
                     canonUi.CooldownDifference = 0;
                     canonUi.RangeDifference = 0;
                     canonUi.SplashRangeDifference = 0;
+                    canonUi.isUpgradeable = false;
 
                     canonUi.DamageNow = ((CanonTower)selectedTower).iDamage;
                     canonUi.CooldownNow = ((CanonTower)selectedTower).iCooldown;
@@ -324,7 +342,7 @@ public class BuildController : MonoBehaviour
                     archerUi.CooldownAfter = ((ArcherTower)selectedTower).iCooldown - 0.5f;
                     archerUi.CooldownDifference = archerUi.CooldownAfter - archerUi.CooldownNow;
                 }
-                else 
+                else
                 {
                     archerUi.DamageNow = ((ArcherTower)selectedTower).iDamage;
                     archerUi.MaxTargetsNow = ((ArcherTower)selectedTower).iMaxTargets;
@@ -337,6 +355,7 @@ public class BuildController : MonoBehaviour
                     archerUi.MaxTargetsDifference = 0;
                     archerUi.SlowDownFactorDifference = 0;
                     archerUi.CooldownDifference = 0;
+                    archerUi.isUpgradeable = false;
                 }
 
                 archerUi.SetValues();
@@ -360,6 +379,21 @@ public class BuildController : MonoBehaviour
         currentUpgradingTurret.SendMessage("UpgradeTower");
     }
 
+    public static int GetAmountOfRefund(AbstractTower tower)
+    {
+        int cost = 0;
+        for (int i = tower.iCurrentUpgradeLevel - 1; i > 0; i--)
+        {
+            cost += tower.iBaseUpgradeCost * i;
+        }
+        return GetTowerCost(tower.TowerIdentificator) + cost;
+    }
+
+
+    public static int GetUpgradeCost(AbstractTower tower)
+    {
+        return tower.iBaseUpgradeCost * tower.iCurrentUpgradeLevel;
+    }
     public static int GetTowerCost(string towerName)
     {
         switch (towerName)
