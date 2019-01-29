@@ -21,19 +21,19 @@ public class LowHPEffect : MonoBehaviour {
 		
 	void OnRenderImage (RenderTexture source, RenderTexture destination)
 	{
-		if (currentHealthPoints > (MaxHealthPoints / 2) || Math.Abs(currentHealthPoints - MaxHealthPoints) < 1f)
-		{
+		//if (currentHealthPoints > (MaxHealthPoints / 2) || Math.Abs(currentHealthPoints - MaxHealthPoints) < 1f)
+		//{
 			Graphics.Blit (source, destination);
 			vignetteSettings.intensity = 0;
 			ppProfile.vignette.settings = vignetteSettings;
 			return;
-		}
+		//}
  
-		material.SetFloat("_bwBlend", 1 - currentHealthPoints / MaxHealthPoints);
-		Graphics.Blit(source, destination, material);
+		//material.SetFloat("_bwBlend", 1 - currentHealthPoints / MaxHealthPoints);
+		//Graphics.Blit(source, destination, material);
 		
-		vignetteSettings.intensity = 0.8f - currentHealthPoints / MaxHealthPoints;
-		ppProfile.vignette.settings = vignetteSettings;
+		//vignetteSettings.intensity = 0.8f - currentHealthPoints / MaxHealthPoints;
+		//ppProfile.vignette.settings = vignetteSettings;
 	}
 
 	public void InitState(float maxHP)
